@@ -1,0 +1,55 @@
+---
+layout: post
+title: "[iPhone SDK] スタティックライブラリをターゲットに対応させてリンク"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Three20のライブラリや，その他の外部ライブラリをプロジェクトでリンクするとき，そのターゲットが問題になる．<br />
+たとえば，ある自分のプロジェクトをターゲット，iphonesimulator-releaseでビルドしたものは，Three20のライブラリもiphonesimulator-releaseでビルドしたスタティックライブラリをリンクしないといけない．<br />
+このため．Debug版とRelease版を別々に用意して，ターゲット毎にリンク設定をかえないといけない．<br />
+Three20のようにソースコードで配布されているものは，iPhoneのSDKのバージョンがコロコロ変わる度々にビルドして使うことになる．そこで，ソースからビルドしたターゲット毎に異なるスタティックライブラリを，動的にかつ自動的にリンクできるようにXcodeを設定してみる．<br />
+<code><br />
+./2tch/<br />
+./2tch/Three20/<br />
+</code><br />
+<center><img alt="xcode_link01.png" src="{{ site.url }}/assets//xcode_link01.png" width="541" height="190" /></center><br />
+上記のスクリーンショットのようにプロジェクトの中にThree20のソースコードフォルダを配置する．今回サンプルに2tchのプロジェクトを使ってみた．<br />
+Three20のプロジェクトを開いてビルドすると，ターゲットに応じて，バイナリが生成される．今回は，Debug版で，iphonesimulatorがターゲットなので，たとえば，下記のスクリーンショットのようにバイナリが生成される．<br />
+<code><br />
+./2tch/<br />
+./2tch/Three20/<br />
+./2tch/Three20/build/Debug-iphonesimulator/<br />
+</code><br />
+<center><img alt="xcode_link02.png" src="{{ site.url }}/assets//xcode_link02.png" width="538" height="183" /></center><br />
+次にThree20をリンクさせたいプロジェクト（今回は2tch）を開いて，プロジェクトの設定を開き，<br />
+・リンク→他のリンクフラグ<br />
+・検索パス→ヘッダ検索パス<br />
+・検索パス→ライブラリ検索パス<br />
+の3つの項目を設定する．<br />
+このとき，全部のプロジェクト設定に反映させるために「構成」→「すべての構成」にしておく．そうでないと，現在の設定だけがターゲットになってしまう．<br />
+<center><img alt="xcode_link04.png" src="{{ site.url }}/assets//xcode_link04.png" width="547" height="273" /></center><br />
+そして，それぞれの値を以下のようにセットする．<br />
+・リンク→他のリンクフラグ<br />
+<code>-lObj -all_load -lThree20</code><br />
+・検索パス→ヘッダ検索パス<br />
+<code>$(SRCROOT)/Three20/</code><br />
+・検索パス→ライブラリ検索パス<br />
+<code>$(SRCROOT)/Three20/build/$(BUILD_STYLE)-$(PLATFORM_NAME)</code><br />
+<center><img alt="xcode_link05.png" src="{{ site.url }}/assets//xcode_link05.png" width="543" height="280" /></center><br />
+これで，2tch側のプロジェクトでターゲットを設定すると，自動的にリンク先がかわるようになります．ただし，Three20のプロジェクトでそのターゲットでバイナリをビルドしておかないといけません．<br />
+また，プロジェクト設定の表示はきちんとリアルタイムで反映されないようです．</p>
+<p><!--more--><br />
+-all_loadのリンカオプションが抜けていたので，修正しました．</p>

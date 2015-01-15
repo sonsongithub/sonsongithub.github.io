@@ -1,0 +1,130 @@
+---
+layout: post
+title: "[OpenGL] 行列計算"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">はじめに </h3>
+<p>ここではOpenGLにおける行列変換に関する説明を行います．行列変換といえば，難しそうですが，OpenGLのAPIにのっとって簡単に説明したいと思います．<br />
+<center><img src="{{ site.url }}/assets//normal.jpg" /></center><br />
+まずOpenGL上で簡単にできる行列計算は以下の３つです．<br />
+下の図はティーポットが何の行列計算も加えていないものです．<br />
+<br />
+<h3 class="line-header">平行移動 </h3>
+<pre>
+glTranslatef(0,0,3);    //Z軸方向へ３移動
+glutSolidTeapot(1);     //ティーポットを描画
+</pre>
+<p><center><img src="{{ site.url }}/assets//translate.jpg" /></center><br />
+<br />
+<h3 class="line-header">回転 </h3>
+<pre>
+glRotatef(45,0,1,0);    //Y軸周りに45°回転
+glutSolidTeapot(1);     //ティーポットを描画
+</pre>
+<p><center><img src="{{ site.url }}/assets//rotate.jpg" /></center><br />
+<br />
+<h3 class="line-header">拡大縮小 </h3>
+<pre>
+glScalef(2,1,1);               //X軸方向に2倍，Y軸方向に1倍，Z軸方向に2倍
+glutSolidTeapot(1);         //ティーポットを描画
+</pre>
+<p><center><img src="{{ site.url }}/assets//scale.jpg" /></center><br />
+<br />
+<h3 class="line-header">回転と平行移動の組み合わせ〜平行移動→回転 </h3>
+<pre>
+glRotatef(45,0,1,0);     //Y軸周りに45°回転
+glTranslatef(0,0,3);     //Z軸方向へ３移動
+glutSolidTeapot(1);     //ティーポットを描画
+</pre>
+<p><center><img src="{{ site.url }}/assets//trans_rotate.jpg" /></center><br />
+<br />
+<h3 class="line-header">回転と平行移動の組み合わせ〜回転→平行移動 </h3>
+<pre>
+glTranslatef(0,0,3);    //Z軸方向へ３移動
+glRotatef(45,0,1,0);    //Y軸周りに45°回転
+glutSolidTeapot(1);     //ティーポットを描画
+</pre>
+<p><center><img src="{{ site.url }}/assets//rotate_trans.jpg" /></center><br />
+と，ぜんぜん違う結果になります．詳しくことは，行列計算は右から乗算していくからなのですが，意識せずに，先にしたい行列計算は後に書くという風に考えると簡単です．拡大縮小のglScaleもいっしょです．<br />
+つまり先に書いたものは後のオブジェクトすべてに影響するということになります．しかし，これでは非常に不便です．オブジェクトをいくつも描画するときに一つ目はこう，２つ目はこうと，行列計算する方が絶対に楽です．１つ目の行列計算の影響を考えながら，２つ目以降をコーディングするのはすごく手間のかかる作業になります．そこでglPushMatrixとglPopMatrixが活躍します．<br />
+<br />
+<h3 class="line-header">glPushMatrixとglPopMatrix </h3>
+<p>たとえば，黄色のティーポットをY軸まわりに45°回転させ，水色のティーポットをX軸方向に４平行移動したいとします．このとき，こういうコードを書くと間違いです．</p>
+<pre>
+//１つ目のティーポット
+glRotatef(45,0,1,0);         //Y軸周りに45°
+glColor3f(1.0,1.0,0);        //色設定
+glutSolidTeapot(1);          //ティーポット描画
+//２つ目のティーポット
+glTranslatef(4,0,0);          //X軸方向へ４移動
+glColor3f(0.0,1.0,1.0);     //色設定
+glutSolidTeapot(1);          //ティーポット描画
+</pre>
+<p>描画結果はこうなります． [#t7f7897b]<br />
+<center><img src="{{ site.url }}/assets//glm_wrong.jpg" /></center><br />
+これでは水色のティーポットが平行移動した後，回転してしまっています．これではダメです．なんとかしましょう．これの打開策として，こんな方法があります．</p>
+<pre>
+//１つ目のティーポット
+glRotatef(45,0,1,0);         //Y軸周りに45°
+glColor3f(1.0,1.0,0);        //色設定
+glutSolidTeapot(1);          //ティーポット描画
+//２つ目のティーポット
+glRotatef(-45,0,1,0);        //Y軸周りに-45°
+glTranslatef(4,0,0);          //X軸方向へ４移動
+glColor3f(0.0,1.0,1.0);     //色設定
+glutSolidTeapot(1);          //ティーポット描画
+</pre>
+<p>これを実行すると，ちゃんと希望どおりの位置に水色のティーポットが描画されます．回転するものだから，その手前で逆回転させてやればいいという安直なコードです．しかし，何かしらうっとおしいです．そこでglPushMatrixとglPopMatrixの登場となります．<br />
+コーディングはこのようになります．</p>
+<pre>
+//１つ目のティーポット
+glPushMatrix();
+glRotatef(45,0,1,0);        //Y軸周りに45°
+glColor3f(1.0,1.0,0);       //色設定
+glutSolidTeapot(1);         //ティーポット描画
+glPopMatrix();
+//２つ目のティーポット
+glTranslatef(4,0,0);             //X軸方向へ４移動
+glColor3f(0.0,1.0,1.0);        //色設定
+glutSolidTeapot(1);             //ティーポット描画
+</pre>
+<p>これを実行すると，希望どおりの位置にティーポットたちが描画されます．<br />
+<center><img src="{{ site.url }}/assets//glpm_right.jpg" /></center><br />
+こんな風になります．では，glPushMatrixとglPopMatrixの意味を説明しましょう．極論で簡単にいうとglPushMatrixとglPopMatrixで囲んだ間の行列計算はglPopMatrix以下の行列計算に影響しないということになります．実際は行列のメモリのスタックをプッシュ，ポップしているだけなのです．たとえば，以下のコードだとどうなるでしょうか？</p>
+<pre>
+glScalef(2,1,2);
+//１つ目のティーポット
+glPushMatrix();
+glRotatef(45,0,1,0);        //Y軸周りに45°
+glColor3f(1.0,1.0,0);       //色設定
+glutSolidTeapot(1);         //ティーポット描画
+glPopMatrix();
+</pre>
+<pre>
+glRotatef(90,1,0,0);
+//２つ目のティーポット
+glPushMatrix();
+glTranslatef(4,0,0);          //X軸方向へ４移動
+glColor3f(0.0,1.0,1.0);     //色設定
+glutSolidTeapot(1);          //ティーポット描画
+glPopMatrix();
+</pre>
+<p>まず1つ目のティーポットはＹ軸周りに45°回転した後，上位のglScalefが計算され，X軸方向へ2倍，Y軸方向へ1倍，Z軸方向へ２倍されます．<br />
+2つ目のティーポットはX軸方向へ4移動した後，X軸周りに90°回転し，そのあとX軸方向へ2倍，Y軸方向へ1倍，Z軸方向へ２倍されます．<br />
+glPushMatrixとglPopMatrixの紹介でした．実際のメモリ上での挙動やエラーなどについてはリファレンス，赤本などを参考にしてください．</p>

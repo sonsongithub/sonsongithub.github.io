@@ -1,0 +1,46 @@
+---
+layout: post
+title: "[iPhone SDK] 多数の文字列を高速に書き出す試み"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>2tchではスレッドデータを保存する必要がある．<br />
+たとえば，今のv4のフォーマットだと，レイアウト情報込みのスレッドのデータは，1000〜1500個くらいのデータくらいからなる．<br />
+これをそのままNSCoderやNSDictionaryで書き出すと遅い．<br />
+Obj-Cのクラスのallocも少ないし，直接ファイルに書き出せることから，バイナリ形式で書き出すと爆速になると予測．<br />
+反面，バイナリ形式は，当然汎用性が下がるし，コードやデータのの可搬性も下がってしまう（まぁ，でもどうせ2tchでしか読み書きしないわけだから，バイナリでもさして将来的には困らないだろう）．<br />
+そこで，速度を上げるために直接バイナリ形式で書き出してみた．100kB〜200kBくらいのデータだと，バイナリで書き出した方が6倍くらい速かった．<br />
+今回は，int型とNSStringのデータだけだったので，fread, fwriteで読み出しと書き出しを実装してみた．まずは，書き込んだバイト数をint型で書き出して，次にNSStringの中身をバイト単位で書き出す．<br />
+読み出すときは，以下のコードの逆でintをfreadで読み出して，次にbyteLength分のデータをfreadで読み出して，NSStringをallocする．<br />
+lengthOfBytesUsingEncodingを使っているのは，lengthメソッドはUnicodeを解釈した後の長さなので，バイト単位で書き出すときの長さにはならないためである．<br />
+〜バイト単位でそのまま書き出す方法</p>
+<pre>
+char *p = (char*)[string cStringUsingEncoding:NSUTF8StringEncoding];
+int byteLength = [string lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+fwrite( &amp;byteLength, sizeof(byteLength), 1, fp);
+fwrite( p, sizeof(char), byteLength, fp);
+</pre>
+<p>他には，Unicode型？のunichar型を使って生データをNSStringから作る方法もある．</p>
+<pre>
+unichar *p = NULL;
+int length = [string length];
+p = (unichar*)malloc( sizeof(unichar) * ( length ) );
+[string getCharacters:p];
+fwrite( &amp;length, sizeof(length), 1, fp);
+fwrite( p, sizeof(unichar), length, fp);
+free( p );
+</pre>
+<p>この場合は，lengthで長さを使ってバッファの長さをきめることが出来る．</p>

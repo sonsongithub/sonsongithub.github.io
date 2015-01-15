@@ -1,0 +1,50 @@
+---
+layout: post
+title: "[MacOSX] MacPortsで，さらにoctave-forgeをインストールする"
+categories:
+- blog
+tags:
+- MacOSX
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>octaveには，imreadとか，画像を読み込んだりする機能があるはずなんだが・・・．これがエクストラパッケージになっているらしい．そこで，octaveで色々便利な機能を使うため，octave3.0.0にさらにパッケージをインストールする．</p>
+<pre>
+port -d install octave-forge
+〜中略
+Some functions failed to compile (search build.log for errors) but many
+other functions will still work correctly.  Run 'make check' to see
+what works.  Run 'make install' to install what has been built.
+make: *** [all] Error 1
+Warning: the following items did not execute (for octave-forge): org.macports.activate org.macports.build org.macports.destroot org.macports.install
+Error: Status 1 encountered during processing.
+</pre>
+<p>いくつかエラーが出るのだが，make installしてみたら？とメッセージが出てるので，とりあえず，やってみた．</p>
+<pre>
+cd /opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_release_ports_math_octave-forge/work/octave-forge-2006.07.09/main/
+make install
+</pre>
+<p>skipping parallelって表示されているし，その辺で何かしらエラーが出てるのか？<br />
+まぁ，いいや．インストール先は/opt/local/share/octave-forge．</p>
+<pre>
+/opt/local/share/octave-forge/m
+/opt/local/share/octave-forge/oct
+</pre>
+<p>octaveのデフォルトのmファイルとoctファイルは，以下の二つのパスにある．</p>
+<pre>
+/opt/local/share/octave/3.0.0/m・・・mファイル
+/opt/local/libexec/octave/3.0.0/oct/i386-apple-darwin9.2.2・・・octファイル
+</pre>
+<p>octave-forgeのmファイルとoctファイルをインストールする．<br />
+すると，動いた．<br />
+たぶん，ビルド自体はちゃんと動いていないのでよからぬところで不具合がでるかもしれませんが，レポートでした．</p>

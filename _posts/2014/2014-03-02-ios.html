@@ -1,0 +1,53 @@
+---
+layout: post
+title: iOSシミュレータからanimation GIFを作るツール群
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h1>githubとアニメーションGIF</h1>
+<p>githubだと，READMEにYouTubeへの埋め込みリンクが張れない・・・・．iPhoneやiPadの動作画面をHTMLに埋め込みたい人に送る今回のエントリです．</p>
+<p>githubでは，Markdown形式などで記述すると生身のテキストではなく，ブラウザにレンダリングされるREADMEファイルがあります． githubで公開されるソースはUIがメインじゃないものが多いのか，ご存知のようにYouTubeなどの動画埋め込みをサポートしておらず，READMEファイル等に動画を簡単に組み込めないのが現状です． workaroundとして，コーダーが採用しているのが，animation GIFの埋め込みです． しかし・・・このanimation GIFをさくっと簡単に作る方法が・・・・・ない・・・． そこで，その回避策を見つけたので，記事に書いてみることにします． 問題はお金で解決しましょう！！！</p>
+<h1><a href="https://itunes.apple.com/jp/app/simcap/id423124409?mt=12&at=11l7gF" target="_blank">SimCap - iOSの動作画面を動画でキャプチャする</a></h1>
+<p>まずキャプチャですが，iOSシミュレータを使うのか，実機を使うのかで使うアプリケーションが決まります． iOSシミュレータの場合，少し前まではgithubで公開されていたSIMBL経由で実行するアプリケーションがあったのですが，Relfactorというアプリケーションがリリースされて後，メンテナンスが終了してしまいました． 私は，iOSシミュレータ用に<a href="https://itunes.apple.com/jp/app/simcap/id423124409?mt=12&amp;at=11l7gF">SimCap</a>というアプリケーションを買って使っています．これはわりと使い勝手よいのでお勧めです． タップしたときの指の位置なども動画に含めることができ，SoundFlowerという音声出力をキャプチャするためのソフトウェアにも対応しており，音声も同時録音できるようです． 使うときの注意点は，LandscepeとPortraitを手で合わせないと，正しく録画されないところで，私はここは少しハマリました．</p>
+<p><a href="http://sonson.jp/wp/wp-content/uploads/2014/03/SimCap.png"><img src="{{ site.url }}/assets//SimCap.png" alt="SimCap" width="320" height="622" class="aligncenter size-full wp-image-3171" /></a></p>
+<h1><a href="http://www.airsquirrels.com" target="_blank">Reflector</a></h1>
+<p>言わずと知れたAirPlay経由でMac/Windowsに実機の画面を転送し，さらにパソコン上で動画を録画できる無敵のツールです．</p>
+<p><a href="http://www.airsquirrels.com" target="_blank"><img src="{{ site.url }}/assets//rf-logo-home.png" alt="http://www.airsquirrels.com/images/rf-logo-home.png" class="aligncenter" /></a></p>
+<p>実機の挙動をキャプチャするなら，Reflector一択です． 開発したアプリケーションの実際の動作をプレゼンテーションの最中に見せたいときに真価を発揮するReflectorですが，SimCapと同じく，キャプチャがメインの目的であっても買っておいて損の無いアプリケーションです．</p>
+<h1><a href="https://itunes.apple.com/jp/app/gif-brewery/id435989461?mt=12&at=11l7gF" target="_blank">GIF Brewery - 動画をanimation GIFに変換する．</a></h1>
+<p>幸運にもApp Storeで購入した一本目のアプリケーションが当たりでした． <a href="https://itunes.apple.com/jp/app/gif-brewery/id435989461?mt=12&at=11l7gF" target="_blank">GIF Brewery</a>というアプリケーションです． このアプリケーションの素晴らしいところは，基本的にすべて，操作がシンプルかつ基本的にやりたいことがすべて簡単に実行できる点です（若干UIに難があるのですが）．</p>
+<p><a href="http://sonson.jp/wp/wp-content/uploads/2014/03/GIFBrewery.png"><img src="{{ site.url }}/assets//GIFBrewery.png" alt="GIFBrewery" width="815" height="767" class="aligncenter size-full wp-image-3170" /></a></p>
+<p>列挙すると，</p>
+<ul>
+<li>動画はドラッグアンドドロップで開ける</li>
+<li>In点，Out点をスライダで指定する</li>
+<li>切り出しができる</li>
+<li>切り出し後のリサイズができる</li>
+<li>動画のフレームレートを使ってフレーム数とフレームの待機時間を自動調節</li>
+<li>何種類かの方法で減色し，サイズを圧縮できる</li>
+</ul>
+<p>というところがポイントです． 私は，これ以上アニメーションGIFに求めるところはないので，満足満足です．</p>
+<h1>シミュレータ→動画→GIF</h1>
+<p>それで書き出してみたのが，以下のGIFです． サイズも148KBで割りと軽いです． 2tchの用に画面の色数が少ないものは，単純な減色で圧縮しやすいので，比較としてはあまり参考にならないかも知れませんが．</p>
+<p>以上，githubのREADMEにちょっとした動画を上げたい人にお勧めのツール群でした．</p>
+<p><a href="https://raw.github.com/sonsongithub/UZInputCandidateAccessory/master/screenshot/UZInputCandidateAccessory.gif"><img src="{{ site.url }}/assets//UZInputCandidateAccessory.gif" width="320" height="568" class="aligncenter" /></a></p>
+<h1>AppStore</h1>
+<p><a href="https://itunes.apple.com/jp/app/simcap/id423124409?mt=12&at=11l7gF" target="_blank" rel="nofollow"><img width="75" class="alignleft" align="left" src="{{ site.url }}/assets//SimCap.75x75-65.png" style="border-radius: 11px 11px 11px 11px;-moz-border-radius: 11px 11px 11px 11px;-webkit-border-radius: 11px 11px 11px 11px;box-shadow: 1px 4px 6px 1px #999999;-moz-box-shadow: 1px 4px 6px 1px #999999;-webkit-box-shadow: 1px 4px 6px 1px #999999;margin: -5px 15px 1px 5px;" /></a>** <a href="https://itunes.apple.com/jp/app/simcap/id423124409?mt=12&at=11l7gF" target="_blank" rel="nofollow">SimCap 1.5.2（￥1,000）</a>**<a href="https://itunes.apple.com/jp/app/simcap/id423124409?mt=12&at=11l7gF" target="_blank" rel="nofollow"><img src="{{ site.url }}/assets//viewinitunes_jp.png" style="vertical-align:bottom;" width="90" alt="App" /></a><br />
+カテゴリ: 開発ツール, ビデオ<br />
+販売元: Just About Managing - Just About Managing（サイズ: 2.8 MB）<br style="clear: both;" /></p>
+<p><a href="https://itunes.apple.com/jp/app/gif-brewery/id435989461?mt=12&at=11l7gF" target="_blank" rel="nofollow"><img width="75" class="alignleft" align="left" src="{{ site.url }}/assets//gif_brewery.75x75-65.png" style="border-radius: 11px 11px 11px 11px;-moz-border-radius: 11px 11px 11px 11px;-webkit-border-radius: 11px 11px 11px 11px;box-shadow: 1px 4px 6px 1px #999999;-moz-box-shadow: 1px 4px 6px 1px #999999;-webkit-box-shadow: 1px 4px 6px 1px #999999;margin: -5px 15px 1px 5px;" /></a>** <a href="https://itunes.apple.com/jp/app/gif-brewery/id435989461?mt=12&at=11l7gF" target="_blank" rel="nofollow">GIF Brewery 2.3.2（￥500）</a>**<a href="https://itunes.apple.com/jp/app/gif-brewery/id435989461?mt=12&at=11l7gF" target="_blank" rel="nofollow"><img src="{{ site.url }}/assets//viewinitunes_jp.png" style="vertical-align:bottom;" width="90" alt="App" /></a><br />
+カテゴリ: ビデオ, ユーティリティ<br />
+販売元: Hello, Resolven - Patrick Rogers（サイズ: 1.3 MB）<br style="clear: both;" /></p>

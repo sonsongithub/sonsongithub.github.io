@@ -1,0 +1,44 @@
+---
+layout: post
+title: "[iPhone SDK] Ad Hocビルドで特定の人にアプリを配布する"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>やっとiPhone SDKについて書ける項目ができた・・・・．<br />
+不特定多数の人にソフトウェアを公開するにはApp Storeを使うしかないと私も考えていたが，よくよく考えるとAd Hocビルドがある．Ad Hocビルドはソフトウェアを使用する人のデバイスをUDIDを登録した配布プロファイルを利用する．Ad Hocビルドを利用すれば，100台までのデバイスにApp Storeを介さずにアプリケーションをインストールすることができる．<br />
+<b>概要</b><br />
+ビルドの流れを説明する．Xcodeの使い方やプロビジョニングファイルに関する説明はしない．NDAに抵触しそう．<br />
+１．配布したい相手のUDIDを教えてもらう．<br />
+２．UDIDを登録し，Ad Hoc配布プロビジョニングファイルをダウンロードする．<br />
+３．プロビジョニングファイルを利用してAd Hocビルドする．<a href="http://discussions.apple.com/message.jspa?messageID=7658067#7658067">参考情報Appleの掲示板</a><br />
+４．プロビジョニングファイルとビルドしたアプリケーションを配布したい相手に送る．<br />
+５．配布された人は，<a href="http://www.apple.com/support/downloads/iphoneconfigurationutility10formacosx.html">iPhone configuration utility</a>を使ってプロビジョニングファイルとアプリケーションをデバイスにインストールする．<br />
+６．ウマー<br />
+という流れ．<br />
+では，詳しく説明する．<br />
+<b>UDIDを調べる</b><br />
+UDIDは，<a href="http://www.apple.com/support/downloads/iphoneconfigurationutility10formacosx.html">iPhone configuration utility(iPhone構成ユーティリティ)</a>で調べることができる．また，App Storeで配布されている<a href="http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=285691333&mt=8">Ad Hoc Helper</a>というツールを使えば，直接iPhoneからメールでUDIDを送ることができる（このツールはなんとあのErica女史謹製！）．<br />
+<center><br />この識別子がUDID．<br />
+<img alt="adhoc20080725-01.jpg" src="{{ site.url }}/assets//adhoc20080725-01.jpg" width="265" height="158" /><br /></center><br />
+<b>Ad Hocでビルドし，配布する</b><br />
+just do it.<br />
+<b>インストールする</b><br />
+Ad Hocでビルドされたアプリケーションを受け取った人は，iPhone構成ユーティリティを使い自分のデバイスにインストールする．ドラッグアンドドロップでアプリケーションとプロファイルをiPhone構成ユーティリティにインストールする．そして，さらにデバイスを開いて，アプリケーションとプロビジョニングファイルをインストールする．<br />
+<center><br />プロビジョニングファイルをデバイスにインストール<br />
+<img alt="adhoc20080725-04.jpg" src="{{ site.url }}/assets//adhoc20080725-04.jpg" width="289" height="126" /><br /></center><br />
+<center><br />アプリケーションをデバイスにインストール<br />
+<img alt="adhoc20080725-05.jpg" src="{{ site.url }}/assets//adhoc20080725-05.jpg" width="289" height="150" /></p>
+<p></center></p>

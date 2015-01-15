@@ -1,0 +1,93 @@
+---
+layout: post
+title: "[Tips] ビットマップファイルのフォーマット"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>今まで公開してきたビットマップファイルの読み出し・書き出しのプログラムがバグだらけなので，<br />
+ソースコード，および記事を修正して，ここにアップロードしていく．<br />
+ここでは，特に24ビットのビットマップファイルのみを説明対象とする．<br />
+<br />
+<h3 class="line-header">ビットマップファイルの構造</h3>
+<p>ビットマップファイル自体は，2つのヘッダ情報とピクセル情報から構成される．<br />
+2つのヘッダファイルは，BitmapHeaderとBitmapInfoHeaderである．<br />
+ひとつめのBitmapHeaderは以下である．</p>
+<pre>
+typedef struct _BitmapHeader{
+char    distinct1;      // 'B'
+char    distinct2;      // 'M'
+int     filesize;       // 総ファイルサイズ
+short   reserve1;       // 予約領域・常に０
+short   reserve2;       // 予約領域・常に０
+int     offset;         // ファイルの先頭からデータまでのオフセット
+}BitmapHeader;
+</pre>
+<p>ふたつめのBitmapInfoHeaderは以下である．</p>
+<pre>
+typedef struct _BitmapInfoHeader{
+int     header;            // この構造体のサイズ
+int     width;             // Bitmapのサイズ・横幅
+int     height;            // Bitmapのサイズ・縦幅
+short   plane;　　　　　　   // plane数・常に１
+short   bits;              // Bitmapの色数(bit単位)
+int     compression;       // 圧縮されているか？
+int     comp_image_size;   // 画像全体のサイズ・使わない
+int     x_resolution;      // Bitmapの解像度・使わない
+int     y_resolution;      // 72と設定しておいてもかまわない
+int     pallet_num;        // パレット数・24bitカラー等の場合使わない
+int     important_pallet_num;
+// 重要なパレット数・使わない
+// 24bitカラー等の場合使わない
+}BitmapInfoHeader;
+</pre>
+<p>そして，３つめのデータ，ピクセルデータが並ぶ．<br />
+このピクセルデータがくせ者．<br />
+<br />
+<h3 class="line-header">ビットマップファイルのピクセルデータ</h3>
+<p>・1ピクセルずつの色情報<br />
+　直感的に，1ピクセルずつにRGBの順番にデータが入っているのが普通な気がするが，実はビットマップファイルでは，1ピクセルずつに，BGRの順番でデータが入っている．<br />
+　このため，RGBの順番でピクセルデータをプログラム上で管理する場合，読み込み，書き込み時に順番を入れ替える必要がある．<br />
+・横と縦のピクセルの並び<br />
+　一般的に画像の座標は，デバイス座標系で表す（とsonsonは考えているのだが）．このデバイス座標系では，左上が原点となり，右方向にX軸，下方向にY軸を取る．このため，画像データもデバイス座標系で保存するのが一般的である（とsonsonは考えているのだが）．<br />
+　そうすると，1次元配列でRGB24ビットの画像を保存する場合，例えば，以下のように表すことができる．</p>
+<pre>
+unsigned char *pixel = (unsigned char*)malloc(sizeof(unsigned char)*width*height*3);
+*(pixel+3*(x+y*width)  )=red;
+*(pixel+3*(x+y*width)+1)=blue;
+*(pixel+3*(x+y*width)+2)=green;
+</pre>
+<p>この場合，メモリ上に画像の左上から，1行ずつ並べていくように保存するイメージとなる．<br />
+　しかし，ビットマップファイルは，画像をデバイス座標系で言うと下から1行ずつ保存する．つまり，上下が逆さまなのだ．このため，デバイス座標系で管理する画像データを書き出す場合は，上下の方向を逆にする必要がある．つまり直感的に言うと下のようなコーディングとなる．</p>
+<pre>
+*(pixel+3*(x+(y-(height-1))*width)  )=red;
+*(pixel+3*(x+(y-(height-1))*width)+1)=blue;
+*(pixel+3*(x+(y-(height-1))*width)+2)=green;
+</pre>
+<p>あぁ，ﾏﾝﾄﾞｸｾ．<br />
+<center><br />
+<img alt="newBitmapLecture001.png" src="{{ site.url }}/assets//newBitmapLecture001.png" width="604" height="169" /><br />
+</center><br />
+・バイトマージン<br />
+　また，ビットマップファイルの横方向にはマージンがある．このマージンは横方向の1行のバイト数は4の倍数にするというものだ．24ビットのビットマップファイルは，1ピクセル当たり3バイトとなる．このとき，横幅が20ピクセルある場合，1行のバイト数は60バイトとなる．このときは，1行が4の倍数のバイト数となっているため，マージンはない．しかし，21ピクセルの場合は，1行のバイト数は，63バイトとなる．この場合は，1バイト分，０が追加される．また，22ピクセルの場合は，66バイトとなり，マージンは，2バイト分であり，2バイト分０が追加されることになる．<br />
+　あぁ，これもﾏﾝﾄﾞｸｾ．<br />
+<center><br />
+<img alt="newBitmapLecture002.png" src="{{ site.url }}/assets//newBitmapLecture002.png" width="435" height="187" /><br />
+</center><br />
+・サンプル<br />
+例えば，24ビット，横幅22ピクセル，高さ60ピクセルのビットマップファイルのピクセルデータは以下のようになる．<br />
+<center><br />
+<img alt="newBitmapLecture003.png" src="{{ site.url }}/assets//newBitmapLecture003.png" width="650" height="97" /><br />
+</center></p>

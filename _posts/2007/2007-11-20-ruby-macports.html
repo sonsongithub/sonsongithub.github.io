@@ -1,0 +1,62 @@
+---
+layout: post
+title: "[Ruby] MacPortsとXCodeの共存"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "ゲーム"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><strong>※再インストールのときにいろいろ試したら，どうやら，競合しない様子．<br />
+※ほかの不具合も怖いので，推奨しない！！ということにします．<br />
+※くわばら，くわばら．</strong><br />
+<strike>XCodeをインストールすると，Rubyが自動的に/usr/bin/rubyにインストールされる．<br />
+すると，/opt以下に入るMacPorts経由のRubyと競合がおこってしまう．<br />
+これは非常にめんどくさい．<br />
+XCodeでデフォルトでインストールされるRubyもいいんだけど，RubyBDBとか，いろいろPortsでインストールしたいものもあるので，MacPortsのRubyを使うことにする．<br />
+今までなら，/usr/bin/rubyを/opt/local/bin/rubyのシンボリックリンクにかえて，XCodeの方は無視してもよかったのだが，LeopardからCocoaRubyがあるので，DeveloperToolsの方も考慮しないといけない．<br />
+そういうことで，DeveloperToolsのRubyを/opt/local以下のRubyシンボリックリンクでおきかえてみる．<br />
+XCodeでインストールされるRubyは，</p>
+<pre>
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/share
+</pre>
+<p>に入っている．<br />
+これを全部リネームしてバックアップする．</p>
+<pre>
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin.DeveloperTools
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib.DeveloperTools
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/share.DeveloperTools
+</pre>
+<p>そして，MacPortsのbin，lib，shareのシンボリックリンクをここに張る．</p>
+<pre>
+cd /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin.DeveloperTools
+ln -s /opt/local/bin ./bin
+ln -s /opt/local/lib ./lib
+ln -s /opt/local/share ./share
+</pre>
+<p>これでほとんど終わりだが，DeveloperToolsのlibの中身をみると，</p>
+<pre>
+libruby.1.dylib
+libruby.dylib -&gt; libruby.1.dylib
+</pre>
+<p>となっているので，それを/opt/local/libでも設定してあげる．</p>
+<pre>
+cd /opt/local/lib
+ln -s libruby.1.dylib libruby.dylib
+</pre>
+<p>これでおk．<br />
+RubyCocoaのサンプルもこれならちゃんと動きますし，MacPortsも使える．えがった．えがった．</strike></p>

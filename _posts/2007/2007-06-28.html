@@ -1,0 +1,75 @@
+---
+layout: post
+title: "[お勉強] Javascriptでオブジェクト指向"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Javascript．<br />
+連想配列やら，いろいろなことができ便利なはずなのに，まともに勉強したことがない．<br />
+そこで，Javascriptのお勉強を胸にJavascriptでオブジェクト指向プログラミングをやってみたい．<br />
+とはいっても，知識がないので，いろいろなサイトを見て，勉強した．<br />
+ほとんど，そこいらのサル真似だけど，それがプログラミングの上達の道だからいたし方ない．<br />
+なるべく，僕が好きなC++とかの概念と結びつけながら感想，勉強のログを書き綴ってみる．<br />
+基本的に間違いだらけ・・・だと・・・思いますぜ．諸兄．<br />
+※クラス</p>
+<pre>
+function ClassA() {
+this.prop = 1;
+this.hello = function () {
+alert( "Hello ClassA" );
+}
+}
+objA = new ClassA();
+objA.hello();
+</pre>
+<p>これは，C++でいうと．こんな感じ？</p>
+<pre>
+class ClassA {
+public
+int prop;
+void hello();
+}
+ClassA::ClassA(){
+prop = 1;
+}
+void ClassA::hello(){
+alert( "Hello ClassA" );
+}
+objA = new ClassA;
+objA->hello();
+</pre>
+<p>Javascriptは連想配列でもプロパティを呼べるのがいけてる．</p>
+<pre>
+alert( objA.prop );
+alert( objA[ 'prop' ] );
+</pre>
+<p>※継承<br />
+継承は，prototypeという機能？を使う．<br />
+prototypeとは，そのオブジェクトの元となるモデル？みたいなものと理解した．</p>
+<pre>
+function ClassA() {
+this.prop = 1;
+this.hello = function () {
+alert( "Hello ClassA" );
+}
+}
+function SubClassA() {
+this.hello = function () {
+alert( this.prop );
+}
+}
+SubClassA.prototype = new ClassA();
+</pre>

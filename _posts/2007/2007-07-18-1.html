@@ -1,0 +1,79 @@
+---
+layout: post
+title: "[お勉強] thisとvarの違いを考察〜Javascriptでオブジェクト指向"
+categories:
+- blog
+tags:
+- Blog
+- Javascript
+- Programming
+- "お勉強"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Javascriptでオブジェクト指向を実装してみるに当たって，thisとvarの違いを試してみた．</p>
+<p>C++っぽく考えてみると，varはprotected変数で，thisは，動的に付け加えられるpublic変数といったところか．<br />
+このときおかしいなぁ・・・．と思えるのは，同じ変数名をvarとthisでそれぞれ利用できることだ．<br />
+this変数は，外部から変更およびアクセスが可能だが，varは，アクセス用のメソッドを用意することになる．<br />
+そう考えると，なんでわざわざvarを使う必要があるんだ・・・？ということになるがこれ以外に，私の試したところでは，コールバック的？なシーンでvarが使えるのだ．</p>
+<pre>
+&lt;div id="canvas20070718-2" style="width:100px;height:100px;border-style:solid;border-width:thin;"&gt;
+ここをクリックすると動作します．
+&lt;/div&gt;
+&lt;script src="./prototype.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+function hoge(){
+var val1 = "val1";
+this.val2 = "val2";
+this.func = function () {
+alert( 'varで宣言した変数-&gt;' + val1 );
+alert( 'thisで宣言した変数-&gt;' + this.val2 );
+}
+}
+$('canvas20070718-2').onmousedown = function() {
+var obj = new hoge();
+obj.func();
+obj.val1 = "val1 modified";
+obj.val2 = "val2 modified";
+obj.func();
+alert( '後から追加したことになった変数this.val1-&gt;' + obj.val1 );
+var obj2 = new hoge();
+obj2.func();
+alert( '後から追加したことになった変数this.val1-&gt;' + obj2.val1 );
+}
+&lt;/script&gt;
+</pre>
+<p>以上のコードは，val1がvarの変数，val2がthisの変数ということになる．<br />
+objでは，thisではないval1にアクセスし，値を代入しようとしているように見えるが，これはobjにthis.val1を追加していることになる．（ということであってると思うのだが）<br />
+obj2には，thisを使いしていないので，undefinedになるというわけだ．（ということであってると思うのだが）</p>
+<div id="canvas20070718-2" style="width:100px;height:100px;border-style:solid;border-width:thin;">ここをクリックすると動作します．</div>
+<p><script src="./prototype.js"></script><br />
+<script><br />
+function hoge(){<br />
+var val1 = "val1";<br />
+this.val2 = "val2";<br />
+this.func = function () {<br />
+alert( 'varで宣言した変数->' + val1 );<br />
+alert( 'thisで宣言した変数->' + this.val2 );<br />
+}<br />
+}<br />
+$('canvas20070718-2').onmousedown = function() {<br />
+var obj = new hoge();<br />
+obj.func();<br />
+obj.val1 = "val1 modified";<br />
+obj.val2 = "val2 modified";<br />
+obj.func();<br />
+alert( '後から追加したことになった変数this.val1->' + obj.val1 );<br />
+var obj2 = new hoge();<br />
+obj2.func();<br />
+alert( '後から追加したことになった変数this.val1->' + obj2.val1 );<br />
+}<br />
+</script></p>

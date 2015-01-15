@@ -1,0 +1,63 @@
+---
+layout: post
+title: "[Ruby] RubyでURI"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- Objective-C
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>何も考えずにダウンロードする場合は，open-uriを使う．</p>
+<pre>
+require 'open-uri'
+def get_open_uri
+begin
+f = open( 'http://www.yahoo.co.jp' )
+rescue
+puts "Error"
+else
+puts f.read
+f.close
+end
+end
+</pre>
+<p>しかし，この場合，タイムアウトとかの場合は考慮されない．<br />
+考慮する場合は，Net:HTTP，timeoutを使う．</p>
+<pre>
+require 'net/http'
+require 'timeout'
+require 'uri'
+TimeoutCount = 10
+def get(host, path, port = 80)
+begin
+timeout( TimeoutCount ) {
+begin
+Net::HTTP.start( host, port ) { |http|
+response , = http.get( '/index.html' )
+return response.body
+}
+rescue Net::ProtoRetriableError => e
+puts "Retry"
+retry
+end
+}
+rescue TimeoutError => e
+puts "TimeoutError"
+rescue
+puts "Exception"
+end
+end
+puts get("www.yahoo.co.jp","/")
+</pre>

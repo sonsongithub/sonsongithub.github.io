@@ -1,0 +1,57 @@
+---
+layout: post
+title: "[Ruby] 正規表現"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Ruby
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>最近，PukiWikiで改行を認識させることができることを知り，今までのデータの改造を迫られる．<br />
+そこで，早速Rubyで今までのWikiのデータから，すべからく行末の~を削除するプログラムに着手する．<br />
+今回は，そのときに出てきた謎なキーワードたちに関する日記である．多分．<br />
+<br />
+<h3 class="line-header">each </h3>
+<p>このキーワード．プログラムを読んでいるとやたら出てくる．<br />
+コレはいったい何だ？</p>
+<pre>
+data = ["Ruby", "Perl", "C", "Java", "Python" ]
+data.each{ | element |
+print element, "?n"
+}
+</pre>
+<p>C系統に慣れきった私には斬新すぎる！実行結果はこうなる．</p>
+<pre>
+>ruby each.rb
+Ruby
+Perl
+C
+Java
+Python
+</pre>
+<p>どうやら，配列の中身を| 変数名 |に自動的に割り当てて，{}で囲まれた中の処理を配列の要素一つ一つに対して行うもののようだ．<br />
+<br />
+<h3 class="line-header">めちゃめちゃ簡単な正規表現 </h3>
+<p>簡単にデータ改造用に使ったものを．</p>
+<pre>
+str = "あいうえお~?nかきくけこ?n"
+result = str.gsub(/~?n/,"?n")
+print str
+</pre>
+<p>実行結果</p>
+<pre>
+>ruby test.rb
+あいうえお
+かきくけこ
+</pre>

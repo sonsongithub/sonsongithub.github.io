@@ -1,0 +1,74 @@
+---
+layout: post
+title: "[Objective-C] Obj-C2.0〜アクセサ"
+categories:
+- blog
+tags:
+- Review
+- "その他"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>iPhone2.0以降，Leopard以降は，Obj-C2.0となった．ガーベッジコレクションをサポートし，今までとは若干違う部分が増えた様子．<br />
+iPhoneのプログラミングをするかもしれないし，ちょっと勉強してみる．<br />
+※参考文献<br />
+・<a href="http://devworld.apple.com/jp/documentation/cocoa/Conceptual/ObjectiveC/Articles/chapter_5_section_3.html">http://devworld.apple.com/jp/documentation/cocoa/Conceptual/ObjectiveC/Articles/chapter_5_section_3.html</a><br />
+・<a href="http://journal.mycom.co.jp/column/objc/index.html">http://journal.mycom.co.jp/column/objc/index.html</a><br />
+※アクセサ<br />
+以前の場合，@publicで直接アクセスするようにできた．</p>
+<pre>
+@interface Hoge : NSObject {
+@public
+NSString*	name;
+}
+@end
+〜
+Hoge* obj = [[Hoge alloc] init];
+obj->name = @"test";
+</pre>
+<p>危険だけど．以下がObjective-C2.0のとき．</p>
+<pre>
+@interface Hoge : NSObject {
+NSString*	name_;
+}
+@property (retain) NSString* name;
+@end
+@implementation Hoge
+@synthesize name = name_;
+@end
+</pre>
+<p>@synthesizeを宣言すると属性に応じたアクセサが自動的に生成される．<br />
+このため，上のコードでは，以下のようにアクセスできるようになる．</p>
+<pre>
+Hoge* obj = [[Hoge alloc] init];
+obj.name = @"test";
+NSLog( obj.name );
+</pre>
+<p>()の中は属性．属性には，以下のようにretain，assign，copy，nonatomicなどがある様子．<br />
+・getter=getterName, setter=setterName，アクセサのメソッドの名前を付けられる<br />
+・readonly，明示的に書き込みを禁止する<br />
+・readwrite，デフォルト．<br />
+・assign，参照だけを渡す<br />
+・retain，参照だけではなく，<br />
+・copy，参照元をコピーして，そのコピーしたものを保存．<br />
+・nonatomic，スレッドセーフ関連？マルチスレッド時に確実にアクセスできるようにするatomic設定を非設定にする属性（多分）．<br />
+たとえば，retainの場合は，以前のObj-C1.0だとこんなコードのアクセサが提供されると考える．</p>
+<pre>
+- (void) setName:(NSString*) input {
+if( name_ != input ) {
+if( name_ != nil )
+[name_ release];
+name_ = [input retain];
+}
+}
+</pre>
+<p>なーるほどね．<br />
+ということは，iPhone2.0で開発する場合は，assign属性でプロパティを設定して，deallocメソッドでreleaseするという従来通りの方法でやるということか．</p>

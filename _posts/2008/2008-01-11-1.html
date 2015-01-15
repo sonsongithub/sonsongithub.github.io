@@ -1,0 +1,67 @@
+---
+layout: post
+title: "[お勉強] プロセスを生成する〜popen"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- "お勉強"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>今度は，popenを使ってプロセスを生成してみる．<br />
+popenは，外部のプロセスが終わるまで親プロセス（生成元）は待機するようだ．<br />
+ソースコードは，例えば，こんな感じか．</p>
+<pre>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+int main(int argc, char *argv[]) {
+int buff_size = 1000;
+char*buffer = (char*) malloc( sizeof(char) * buff_size );
+int readed_num;
+FILE *p = popen( "../hoge/hoge", "r" );
+memset( (void*)buffer, '<pre wp-pre-tag-0></pre>', sizeof(buffer) );
+if( p != NULL ){
+readed_num = fread( buffer, sizeof(char), buff_size, p );
+while( readed_num > 0 ){
+readed_num = fread( buffer, sizeof(char), buff_size, p );
+printf( "%s", buffer );
+}
+pclose( p );
+return 0;
+}
+return 1;
+}
+</string.h></stdio.h></stdlib.h></pre>
+<p>実行結果は，こんな感じ．</p>
+<pre>
+$ ./popen
+0 sec passed.
+1 sec passed.
+2 sec passed.
+3 sec passed.
+4 sec passed.
+5 sec passed.
+6 sec passed.
+7 sec passed.
+8 sec passed.
+9 sec passed.
+hoge has finished.
+</pre>
+<p>プロセスは，ちゃんと別プロセスで生成される．</p>
+<pre>
+sonson    9528   0.0  0.0   599632    300 s001  S+    2:10PM   0:00.00 ../hoge/hoge
+sonson    9527   0.0  0.0   599632    304 s001  S+    2:10PM   0:00.00 ./popen
+</pre>
+<p>fork，system，popen，これだけあれば，一通りのことができそうだ．<br />
+後は，pthreadの勉強でもしてみるか．</p>

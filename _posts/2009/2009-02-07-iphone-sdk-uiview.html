@@ -1,0 +1,42 @@
+---
+layout: post
+title: "[iPhone SDK] UIVIewを再帰でdumpする"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>UIViewに含まれるViewをダンプするときに使う</p>
+<pre>
+void dumpSubview( UIView* view ) {
+NSLog( @"%s", class_getName([view class]) );
+for( UIView *subview in [view subviews] ) {
+dumpSubview( subview );
+}
+}
+</pre>
+<p>前に紹介したクラスのメソッドをダンプする関数と合わせて使うとよい？</p>
+<pre>
+void classDump( Class classObject ) {
+unsigned int outCount;
+Method *p = class_copyMethodList( classObject, &outCount );
+int i;
+NSLog( @"%s", class_getName( classObject ) );
+for( i = 0; i &lt; outCount; i++ ) {
+SEL sel = method_getName( *(p+i) );
+NSLog( @" %s", sel_getName(sel) );
+}
+}
+</pre>

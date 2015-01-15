@@ -1,0 +1,120 @@
+---
+layout: post
+title: "[iPhone] HelloWorld"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- Objective-C
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><strong>１．アプリケーションクラス</strong></p>
+<pre>
+int main(int argc, char **argv) {
+NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+return UIApplicationMain(argc, argv, [MyApp class]);
+[pool release];
+}
+</pre>
+<p>UIApplicationがアプリケーションのインスタンスとなる．<br />
+main文の中でallocされる．<br />
+<strong>２．アプリケーションクラスの実装</strong><br />
+初期化は，アプリケーション起動後に呼ばれるメソッド，applicationDidFinishLaunchingに実装するのが良いようだ．</p>
+<pre>
+@implementation MyApp
+- (void) applicationDidFinishLaunching: (id) unused {
+// Get screen rect
+CGRect  screenRect;
+screenRect = [UIHardware fullScreenApplicationContentRect];
+// Create window
+UIWindow*   window;
+window = [[UIWindow alloc] initWithContentRect:screenRect];
+// Create text view
+UITextView* textView = [[UITextView alloc] initWithFrame:[window bounds]];
+[textView setText:@"Hello World?"];
+// Set content view
+[window setContentView:textView];
+// Show window
+[window orderFront:self];
+[window makeKey:self];
+[window _setHidden:NO];
+}
+@end
+</pre>
+<p>HelloWorldでは，applicationDidFinishLaunchingで，Windowを作成し，その上にUITextViewを作成し，Hello World?の文字列をセットしている．<br />
+<strong>３．ナビゲーションバー</strong></p>
+<div align="center"><img alt="20070926-01.png" src="{{ site.url }}/assets//20070926-01.png" width="320" height="160" /></div>
+<p>iPhoneで特徴的な上部のバーをナビゲーションバーと呼ばれるらしい．<br />
+それもapplicationDidFinishLaunchingで実装する．<br />
+48は，ナビゲーションバーの高さだ．</p>
+<pre>
+// Make size
+CGRect sizeTextView = CGRectMake(0, 48, 320, 480);
+CGRect sizeNavigationBar = CGRectMake(0, 0, 320, 48);
+// Set content view
+textView_ = [[UITextView alloc] initWithFrame:sizeTextView];
+[textView_ setText:@"Hello World?"];
+[window_ setContentView:textView_];
+// Make navigation var
+UINavigationBar*bar = [[UINavigationBar alloc] initWithFrame:sizeNavigationBar];
+[bar showButtonsWithLeftTitle:@"Take" rightTitle:@"Take" leftBack:NO];
+[bar setBarStyle:5];
+[bar setDelegate:self];
+[window_ addSubview:bar];
+</pre>
+<p>ナビゲーションバーに割り当てられたボタンが押されたときのイベントは，delegateで処理する．<br />
+navigationBarメッセージを実装する．</p>
+<pre>
+- (void) navigationBar:(UINavigationBar*)navbar buttonClicked:(int)button {
+// Set Message
+[textView_ setText:@"Push Navigation Bar Button."];
+}
+</pre>
+<p>ボタンを押すと，textViewに文字列がセットされる．<br />
+ｳﾏｰｰｰｰｰ．<br />
+<strong>４．スクリーンショット</strong><br />
+お気づきだろうか？<br />
+上のスクリーンショットはどうとったのだろうか？<br />
+はい，スクリーンショット実装しました．<br />
+iPhone自体にsshでログインしてスクリーンショットを取るプログラムはあるのだが，ちょっとイヤ．<br />
+ということで，自分で作りたいなぁ・・・・と探していた．<br />
+昨日あたりにグダグダになりながら，CoreGraphicsあたりのライブラリを探し回り，見つけますた．スクリーンショット生成方法．<br />
+間違ってるところ多々の可能性もありますが，一応モメ．</p>
+<pre>
+CGRect   bounds = [UIHardware fullScreenApplicationContentRect];
+CGImageRef image = [window_ createSnapshotWithRect: bounds];
+char buff[512];
+// Make file name
+snprintf( buff, sizeof(buff), "/tmp/%d.png", (int)[[NSDate date] timeIntervalSince1970] );
+CFStringRef path = CFStringCreateWithCString( nil, buff, kCFStringEncodingASCII );
+CFURLRef url = CFURLCreateWithFileSystemPath( nil, path, kCFURLPOSIXPathStyle, 0 );
+// Make kUTTypePNG -> public.png
+CFStringRef type = CFStringCreateWithCString( nil, "public.png", kCFStringEncodingASCII );
+size_t count = 1;
+CFDictionaryRef options = NULL;
+// Writing
+CGImageDestinationRef dest = CGImageDestinationCreateWithURL(url, type, count, options);
+CGImageDestinationAddImage(dest, image, NULL);
+CGImageDestinationFinalize(dest);
+// Release
+CFRelease(dest);
+CGImageRelease( image );
+CFRelease( url );
+CFRelease( type );
+</pre>
+<p>1970から数えたm秒？でファイル名をセットして，/tmpにファイルを作成しています．<br />
+結構面倒くさかったのが，CFStringCreateWithCStringでファイルの保存形式をセットするところ．この文字列定数には，CoreGraphics？の定数をそのまま入力できない．<br />
+そこで，ムリクリ入れてみた．動いた．結果オーライ．<br />
+よし！これで大体のプログラミングの道具は揃った！！<br />
+気がする．</p>

@@ -1,0 +1,74 @@
+---
+layout: post
+title: "[Tips] 構造体の詰め物を消したい"
+categories:
+- blog
+tags:
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>構造体はメモリのアクセスバスの幅の関係でバイト単位で呼び出されることを想定し（合ってる？）自動的に詰め物がなされることがある．たとえば，以下の構造体では，charの間に詰め物が入る．</p>
+<pre>
+struct hoge {
+int 	a;
+char	b;
+};
+</pre>
+<p>たとえば，私のMacOSX10.5.2，gcc(4.0.1)のデフォルトコンパイル環境では，変数が4バイトずつになるように詰め物が入る．<br />
+このため，（構造体のサイズを測れば一目瞭然なのだが，）下のようにデータを1バイトずつダンプするとなぜかあるはずのないようなデータが出力される．</p>
+<pre>
+#include <stdio.h>
+struct hoge {
+int 	a;
+char	b;
+};
+void dump ( unsigned char* p, int length ) {
+int i;
+for( i = 0; i < length; i++ ) {
+printf( "%02X ", *p++ );
+}
+printf( "\n" );
+}
+int main ( int argc, void**argv ) {
+struct hoge data;
+data.a = 0x00110000;
+data.b = 0xA0;
+dump( (unsigned char*)&data, sizeof(data) );
+return 0;
+}
+</stdio.h></pre>
+<p>実行結果．</p>
+<pre>
+&gt; gcc pack.c -o pack
+&gt; ./pack
+&gt; 00 00 11 00 A0 10 E0 8F
+</pre>
+<p>リトルエンディアンなのでバイトの並びが逆に感じられるが（まぁ俺だけかもしれんけど），alignmentのせいで構造体が全部で8バイトあり，0xA0の後にゴミがついています．<br />
+まぁ，そもそもバイトオーダーとかalignmentなんて意識しないでもいいようにプログラミング環境を整えておくべきだし，そういうライブラリを作るべきではないのだが，ハードに近いプログラミングをしていたりするとそうもいかない．<br />
+gccのデフォルトは詰め物が入ってしまうけど，実際にドライバに渡すデータは詰め物なしにしたいということが往々にしてある．ﾏﾝﾄﾞｸｾ．<br />
+そういうときは，__attribute__や#pragma push(1)を使ったりして，この詰め物をキャンセルできる．<br />
+たとえば，MacOSX10.5.2 gccだとこんな感じ．</p>
+<pre>
+struct hoge {
+int 	a;
+char	b;
+}__attribute__((packed));
+</pre>
+<p>これで，構造体に詰め物がされなくなる．<br />
+この状態で，上記のプログラムを実行すると結果は，こうなる．</p>
+<pre>
+&gt; gcc pack.c -o pack
+&gt; ./pack
+&gt; 00 00 11 00 A0
+</pre>
+<p>以上，備忘録でした．<br />
+でも今日詰め物にはまったのは構造体の宣言方法ではなくダンプの仕方を間違っていたからでした．orz</p>

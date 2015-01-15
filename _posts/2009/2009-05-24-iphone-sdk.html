@@ -1,0 +1,22 @@
+---
+layout: post
+title: "[iPhone SDK] 異なるSDK環境が混在したときのフレームワーク設定"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK(English)
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>異なるSDKバージョンをひとつのプロジェクトで行き来すると，フレームワークのパスがおかしくなる．<br />
+この症状の原因の一つとして，フレームワークのサーチパスがあるようだ．<br />
+そういうときは，プロジェクトファイルの中身をテキストファイルとしてこじあけて，searchpathを探し，余計な（つまり現状とは異なるSDKの）フレームワークのサーチパスを削除する．</p>

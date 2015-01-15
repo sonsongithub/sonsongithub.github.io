@@ -1,0 +1,62 @@
+---
+layout: post
+title: "[iPhone SDK] NSDictionary or Class"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>NSDictionaryを使用する方法とオリジナルのクラスを設計する方法の二つをデータのシリアライズと保持に使える．<br />
+2chのsubject.txtデータとすると，<br />
+NSDictionaryを使ってやると，こんな感じ．</p>
+<pre>
+NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+title,							@"title",
+path,							@"path",
+[NSNumber numberWithInt:dat],	@"dat",
+[NSNumber numberWithInt:res],	@"res", nil];
+</pre>
+<p>クラスの方は，こんな感じか．</p>
+<pre>
+@interface SubjectData : NSObject {
+NSString	*title_;
+NSString	*path_;
+int			dat_;
+int			res_;
+}
+@property (nonatomic, retain) NSString* title;
+@property (nonatomic, retain) NSString* path;
+@property (nonatomic, assign) int dat;
+@property (nonatomic, assign) int res;
+@end
+</pre>
+<p>後，SubjectDataには，シリアライズ向けのinitWithCoderを実装．<br />
+そして，この二つでそれぞれ，700個のデータの書き出し，読み出し，作成にかかる時間を計ってみた．<br />
+[nscoderTestViewController] writeWithArchiver<br />
+0.412072<br />
+[nscoderTestViewController] loadWithArchiver<br />
+0.258862<br />
+[nscoderTestViewController] writeWithDictionary<br />
+0.534621<br />
+[nscoderTestViewController] loadWithDictionary<br />
+0.224575<br />
+[nscoderTestViewController] makeDataWithClass<br />
+0.118851<br />
+[nscoderTestViewController] makeDataWithDictionary<br />
+0.223689<br />
+読み出しと書き出しはあんまり変わらないっぽい．<br />
+ただデータの作成はクラスの方が速いっぽい．<br />
+これからは普通のデータは，Dictionaryは使わないようにして，NSCoderを使ってシリアライズするようにするか．</p>
+<p><!--more--><br />
+クラスが速いのは当たり前か．NSNumberを余計にallocするもんね・・・．</p>

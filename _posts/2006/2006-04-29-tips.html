@@ -1,0 +1,114 @@
+---
+layout: post
+title: "[Tips] ビットマップファイルの書き込み"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">書き込む画像データの作成</h3>
+<p>まず，データを用意する．<br />
+データは，1次元配列で以下のようなコードで用意する．</p>
+<pre>
+int x,y;
+int width = 131;
+int height= 121;
+　　
+unsigned char *pixel = (unsigned char*)malloc(sizeof(unsigned char)*width*height*3);
+for( x=0;x&lt;width;x++){
+for( y=0;y&lt;height;y++){
+int pix1=0,pix2=0;
+if(x&lt;width/2)
+pix1 = 255;
+if(y&lt;height/2)
+pix2 = 255;
+*(pixel+3*(x+y*width)  )=pix1;
+*(pixel+3*(x+y*width)+1)=pix2;
+*(pixel+3*(x+y*width)+2)=0;
+}
+}
+</pre>
+<p>このデータは左上四半分が黄色，右上四半分が緑色，左下四半分が赤色，右下四半分が黒色となる．<br />
+以下はその画像である．<br />
+<img align="center" src="{{ site.url }}/assets//test01.png" /><br />
+<br />
+<h3 class="line-header">画像データの書き込み</h3>
+<p>このデータを以下のWriteBitmapで書き込む．<br />
+まず，ビットマップファイルのヘッダを準備する．改めて書き込む必要があるのは，画像のサイズに関する部分だけだ．</p>
+<pre>
+// calculate alignment size
+if( nWidth*3%4 == 0)
+writeWidth = nWidth*3;
+else
+writeWidth = nWidth*3 + 4 - (nWidth*3)%4;
+</pre>
+<p>この部分で，ビットマップファイルの横幅のマージンを入れたバイト単位の横幅サイズを計算する．<br />
+そして，この構造体をそのまま書き込まないようにする．<br />
+一般的にC言語等では，構造体のサイズを2バイト単位(だったかな？)で確保するため，構造体をそのままファイルに書き込むと，空白のダミーデータが書き込まれてしまう．（確かこれを回避する構造体の宣言方法もあったはず）<br />
+よって，ビットマップファイルの時は，構造体の中のデータをひとつずつ書き込んでいく．<br />
+最後にピクセルデータを書き込んでいく．<br />
+ピクセルデータは，<a href="http://son-son.sakura.ne.jp/mt/blog/2006/04/tips_2.html">フォーマット</a>に従い，マージンを書き込む必要がある．</p>
+<pre>int WriteBitmap(char*pFileName, unsigned char *pPixel,int nWidth, int nHeight)
+{
+FILE				*fp;
+BitmapHeader		header;
+BitmapInfoHeader	info;
+int				x,y;
+unsigned char		dummy=0;
+int				writeWidth=0;
+// open file
+if(!( fp = fopen(pFileName, "wb") ))
+return 0;
+// initialize headers
+InitHeaders(&header, &info);
+// image size
+info.m_nWidth = nWidth;
+info.m_nHeight = nHeight;
+// calculate alignment size
+if( nWidth*3%4 == 0)
+writeWidth = nWidth*3;
+else
+writeWidth = nWidth*3 + 4 - (nWidth*3)%4;
+// set file size
+header.m_nFilesize =
+writeWidth*nHeight		// bitmap size
++ 14					// header size
++ 40;					// information header size
+#ifdef __ENDIAN		// Macのときは__ENDIANを定義し，エンディアン変換を行う．
+SwapByteOrderHeaders(&header, &info);
+#endif
+// write headers
+WriteHeader(&header,fp);
+WriteInfoHeader(&info,fp);
+// write pixels
+for( y=nHeight-1 ; y>=0 ; y--){
+// sort RGB -> BGR
+for( x=0 ; x < nWidth ; x++ ){
+fwrite((pPixel+3*(x+nWidth*y)+2),sizeof(unsigned char),1,fp);
+fwrite((pPixel+3*(x+nWidth*y)+1),sizeof(unsigned char),1,fp);
+fwrite((pPixel+3*(x+nWidth*y)  ),sizeof(unsigned char),1,fp);
+}
+// fill in margin memory with zero
+if( nWidth*3%4 != 0)
+for( int j=0;j<4-(nWidth*3)%4;j++)
+fwrite(&dummy,sizeof(unsigned char),1,fp);
+}
+fclose(fp);
+return 1;
+}
+</pre>
+<p>
+<h3 class="line-header">サンプルコード</h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/src/bitmapSrc">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/src/bitmapSrc</a></p>

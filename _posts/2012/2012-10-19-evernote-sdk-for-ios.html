@@ -1,0 +1,62 @@
+---
+layout: post
+title: Evernote SDK for iOSの罠
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _oembed_14ef72493943f1b49ed96cd91ca8a4bf: "{{unknown}}"
+  _oembed_93a7a70b5935f06d97497024cd7d98cc: "{{unknown}}"
+  _edit_last: '1'
+  _wp_old_slug: ''
+  _oembed_8c8ffd6e5c539bc5be0014137a670cb6: "{{unknown}}"
+  _oembed_9d019e539b8279f97625d7a4377e2ba4: "{{unknown}}"
+  _oembed_c74d7a7259bed52b380cc33fd8fe8d35: "{{unknown}}"
+  _oembed_bf36b4b63089adf03782324dfd2a2317: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>EvernoteがOAuthに移行するので，いまさら・・・移行作業を行っていたら，久々に地雷を踏んだので報告．</p>
+<p>Evernote SDKは，<a href="https://github.com/evernote/evernote-sdk-ios" target="_blank">https://github.com/evernote/evernote-sdk-ios</a>のgithubからダウンロードできる．<br />
+よくできていて，OAuthの面倒くさい，Web周りのお世話の面倒も見てくるできるSDKだ．<br />
+OAuthの認証の処理の流れは，以下．</p>
+<ol>
+<li>EvernoteSessionをクラスメソッドで初期化</li>
+<li>認証を開始</li>
+<li>認証が出来てない場合，cosumer keyとsecret keyを使ってプレ認証？し，OAuthの認証ページURLを取得</li>
+<li>WebViewを開く</li>
+<li>Evernoteへのログインページを開く</li>
+<li>ユーザがログイン</li>
+<li>ユーザがアクセスを承認</li>
+<li>WebViewがサーバとやりとりするURLの中からtokenを抜き取る</li>
+<li>ｳﾏｰ</li>
+</ol>
+<p>となる．<br />
+作ると面倒くさいが，中身だけ見ると処理は結構単純なのだが，ここにバグというか，謎仕様が．<br />
+私の環境だと，アクセスを承認した後にtokenを取得できないのである．<br />
+困った．githubのissuesにも登録されていない・・・・！<br />
+というわけで，デバッグ大会に突入したのである．<a href="http://twitter.com/setoh2000" target="_blank">@setoh2000</a>さん，ご協力ありがとうございました．</p>
+<p><strong>「結論」は，アカウント名にアンダースコアが入っていると，サーバの挙動が変わるため，現状のSDKではうまくいかないので，Evernote SDK for iOSに修正が必要．</strong></p>
+<p>これは，すでに<a href="https://github.com/evernote/evernote-sdk-ios/issues" target="_blank">issue</a>に登録してあります．</p>
+<p>Evernote SDKのやってることは，OAuthの認証の後に，特定のスキーマを持つURLへのアクセスを監視し，それを抜き取って，OAuthのtokenとしている．<br />
+その特定のスキーマとは，</p>
+<p><code><br />
+en-CONSUMERKEY://responsehogehoge...<br />
+</code></p>
+<p>である．<br />
+しかし，これが飛んでこない．かわりに飛んでくるのは，</p>
+<p><code><br />
+https://sandbox.evernote.com/Home.action?en-CONSUMERKEY://responsehogehoge...<br />
+</code></p>
+<p>こんなURLである．<br />
+それで，この特定のスキーマを持つURLへのアクセスを監視しているENOAuthViewControllerを改造し，https://sandbox.evernote.com/Home.action?en-CONSUMERKEY://を見つけ出すようにするとうまく動くようになった．</p>
+<p>この問題はどうやら，既知らしいのだが，Evernoteが対応していないっぽい．→<a href="http://kawairi.jp/weblog/vita/201206266455" target="_blank">参考リンク</a></p>
+<p>Evernoteさん早く直してください．</p>

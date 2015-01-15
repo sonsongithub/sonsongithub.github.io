@@ -1,0 +1,38 @@
+---
+layout: post
+title: github:enterpriseがすばらしい件。
+categories:
+- blog
+tags:
+- Blog
+- Programming
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>「えーマジＳＶＮ!!ＳＶＮが許されるのは小学生までだよね!」</p>
+<p>なんて言ってた私ですが，最近，gitの使い方（というか，better pratice?）をようやっとイメージできるようになってきて，赤面の至りです．<br />
+んで，オフィスにも本格的にgitだぜ！っていうことで<a href="http://gitlab.org">GITLAB</a>などのgithub cloneを使って鯖を作ろうなんて話になってたんですが・・・．</p>
+<p>「鯖たてるのダルいっす」</p>
+<p>ということで，<a href="https://enterprise.github.com">github:enterprise</a>を試してみました．<br />
+github:enterpriseは，自分のローカルエリア内外に専用のgithubサーバを立てられるソフトウェアをライセンシングしてもらうサービスです．<br />
+githubのプライベートリポジトリは，パブリックのgithubにアクセス制限を設けるものですが，github:enterpriseは，完全に自分/自社用の鯖を立てる感じです．<br />
+サーバは，仮想マシンのイメージでgithubから配布されます．</p>
+<p>セットアップは非常に簡単．<br />
+今回は試しだったので，VMWare Fusionを仮想マシンの実行環境に選定．<br />
+VMWare Fusionに，*.ova形式のイメージをインポートして，ポチするだけで，ローカルgithubが起動します</p>
+<p><center><img src="{{ site.url }}/assets//enterprise-install-terminal-small-1d1e4d768b8f67c21715289d18e862e4.png" alt="" /></center></p>
+<p>サーバの中にはsshやらでアクセスできない仕様になっています．<br />
+最初の起動時にIPをCUIっぽいインタフェースで設定した後は，すべてブラウザのフロントエンドから設定することになります．<br />
+ライセンスの設定も，サーバのアップデートもすべてのブラウザベース．ラクチン．</p>
+<p>レスポンスには満足で，ローカルにgithubがある安心感もよい．<br />
+本家本元とまったく同じなので，すごく楽でわかりやすい．<br />
+まぁ．なんだかんだ<a href="https://enterprise.github.com/pricing">コストはかかる</a>のでビジネスと相談ですが・・・・・・・・・試用の感想としてはアリです．マジで．</p>

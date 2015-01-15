@@ -1,0 +1,40 @@
+---
+layout: post
+title: "そろそろiPhone/iPod touch SDKについてまとめるか．"
+categories:
+- blog
+tags:
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><img src="{{ site.url }}/assets//iphone_sdk.png" align="right" />結論はやることは少ししかない．<br />
+我々にできることと言えば，1.2から2.0で大規模なAPI変更が行われないことを祈りつつ，過去の野良ビルド用ソースコードをリファクタリングすることになるだろう．<br />
+実機で動かそうにもDeveloper Programは，現在は米国でしか展開されていないため，実機でのプログラミングもできない．<br />
+シミュレータは，ファームウェア1.2相当なので実機と同等のプログラミング環境というわけでもない．<br />
+今まで，野良ビルドしてきたソースコードは，どうやら相当書き換えないといけないっぽい．とくにGUI周り．しかし，現状シミュレータは1.2なので，今までのソースコードをシミュレータで動くようにしてもそれが6月以降の2.0で動くかどうかはわからない．<br />
+以下，細かい項目について．<br />
+※SDKベータ版について<br />
+・現在公開されているSDK自体がベータ版．<br />
+・ベータ版は，InterfaceBuilder，Instrumentsが使えない．<br />
+・ベータ版のシミュレータはファームウェア1.2で，アップルが6月に公開を予定しているものよりとは異なる<br />
+・ドキュメントもついてくる．APIもドキュメントでちゃんと知ることができる．<br />
+・Developer Programに加入しないとiPhone/iPod touch実機で動作するarm用のビルドができない．<br />
+・同実行もできない．<br />
+・同実機上へのコピーもできない．<br />
+※Developer Program<br />
+・個人年額$99<br />
+・企業向けエンタープライズ$299<br />
+・技術サポート付き<br />
+・加入すると上記SDKビルド時の識別番号がもらえる？<br />
+※API<br />
+・APIは今までの環境とはかなり異なる様子．たとえば，カメラ周りはCameraの制御と写真ライブラリから画像をひっぱってくる機能をまとめImagePickerなんたらにと変更されている．<br />
+・Objective-C2.0．だけどガーベッジコレクションはついてない（なんだそれ・・）．</p>

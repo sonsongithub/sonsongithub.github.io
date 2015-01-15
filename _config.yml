@@ -1,0 +1,23 @@
+# Site settings
+title: sonson.jp
+email: your-email@domain.com
+description: "© 2014 Yuichi Yoshida, all rights reserved. Redistribution or public display not permitted without written permission from  Yuichi Yoshida."
+baseurl: ""
+url: "http://sonson.jp"
+
+# Build settings
+markdown: kramdown
+permalink: pretty
+
+twitter_username: sonson_twit
+github_username: sonsongithub
+
+paginate: 12
+paginate_path: "/blog/page/page:num"
+
+exclude:
+ - ruby
+ - README.md
+ - _pages
+ - bash
+ - LICENSE

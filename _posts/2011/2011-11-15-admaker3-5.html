@@ -1,0 +1,31 @@
+---
+layout: post
+title: AdMaker3.5のメモリリークっぽい．誰か検証してください．
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>検証用コードは<a href="http://sonson.jp/wp/wp-content/uploads/2011/11/AdMakerSDK_memory_test.zip">こちら</a>．</p>
+<p>AdMakerのdelegateに渡すViewControllerにretainをかけてるっぽい．<br />
+このため，drill down系のアプリに使うと，viewcontrollerがすべからくメモリリークする．</p>
+<p>まぁ，なんというかねぇ．</p>
+<p>私が間違っている可能性も大なので，検証用のコードで確認して見てください．</p>
+<p>FirstViewController内のボタンを押すと，drill downするようにしています．</p>
+<p>FirstViewController内の</p>
+<p>-(UIViewController*)currentViewControllerForAdMakerView:(UIView*)view;</p>
+<p>のメソッドの戻り値をselfにすると，ナビゲーションコントローラの戻るボタンを押すと，deallocされません．漏れてます．</p>
+<p>nilにすると，ナビゲーションコントローラの戻るボタンを押すと，きちんとdeallocされます．</p>

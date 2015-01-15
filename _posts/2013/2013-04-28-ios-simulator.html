@@ -1,0 +1,30 @@
+---
+layout: post
+title: iOS Simulatorの動作動画をキャプチャする
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+iOS Simulatorの動作動画をキャプチャするために，CopernicsっていうMac用の画面キャプチャソフトを使っていたのだけど，<br />
+10.8あたりで動作が安定しなくなってきたので，こちらのアプリケーションに切り替えた．<br />
+このソフトウェアは，アプリケーションというよりは，プラグイン．SIMBL（っていう入力メソッドをクラックして機能を追加する，で合ってます？）用のプラグインだ．</p>
+<p><a href="https://github.com/davbeck/iPhone-Simulator-Capture">https://github.com/davbeck/iPhone-Simulator-Capture</a></p>
+<p>まずは，<a href="http://www.culater.net/software/SIMBL/SIMBL.php">ここ</a>からSIMBLをダウンロードしてインストールしよう．<br />
+とりあえず，SIMBL-0.9.9.zipのバージョンのものでMacOSXの10.8.2上でSIMBLは動作するようだ．</p>
+<p>githubからソースコードをダウンロードし，XCodeでダウンロードしてビルドし，~/Library/Application Support/SIMBL/PluginsにビルドされたiPhone Simulator Capture.bundleをコピーすればよい．</p>
+<p>そうすると，iOS Simulatorのメニューに下の図のように表示される．</p>
+<p><img src="{{ site.url }}/assets//menu.png" alt="" /></p>

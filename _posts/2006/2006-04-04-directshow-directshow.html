@@ -1,0 +1,78 @@
+---
+layout: post
+title: "[DirectShow] DirectShowからアプリケーションへのメッセージ"
+categories:
+- blog
+tags:
+- Blog
+- DirectShow
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">DirectShowからアプリケーションへのメッセージ </h3>
+<p>複数のフィルタから構成されるグラフで，すべてのフレームのレンダリングが終わったとき，エラーが起きたときなど，DirectShow側からそのイベントが起きたタイミングを知ることができれば，便利である．コールバックで実装することも可能であるが，DirectShowでは，これをWindows のメッセージを機能を利用し，アプリケーション側にメッセージを送信することができる．そのプログラミングについて説明する．<br />
+<br />
+<h3 class="line-header">メッセージ送信の設定 </h3>
+<p>まず，IMediaEventExのインタフェースのポインタをグラフビルダから取得する．</p>
+<pre>
+hResult = m_pGraph->QueryInterface(IID_IMediaEventEx, (void **) &m_pMediaEvent);
+if (hResult != S_OK)return FALSE;
+</pre>
+<p>このインタフェースを利用し，イベントを処理する．IMediaEventExのメソッド，SetNotifyWindowを使い，ビルダがメッセージを送信するウィンドウを指定する．指定にはウィンドウハンドルを利用する．具体的には以下のように設定する．</p>
+<pre>
+hResult = m_pMediaEvent->SetNotifyWindow((OAHWND)this->m_hWnd, WM_DSHOW,0);
+if (hResult != S_OK)return FALSE;
+</pre>
+<p>第1引数がメッセージの送信先のウィンドウハンドル，第2引数がメッセージの識別子となる．第3引数がメッセージを受け取るときのパラメータWPARAMとなる．第2引数は，他のメッセージと重複することはあってはならないため，ユーザ用の未定義値を利用する．これには，WM_APPを利用する．</p>
+<pre>
+#define    WM_DSHOW    WM_APP+1
+</pre>
+<p>このウィンドウメッセージを処理する．<br />
+<br />
+<h3 class="line-header">受信側のコーディング </h3>
+<p>SDKのAPIを利用する場合は，WM_PAINTなどと並んで，WM_DSHOWを処理する．MFCの場合には，以下のようにオリジナルのメッセージハンドラを実装する．</p>
+<pre>
+BEGIN_MESSAGE_MAP(CDirectShowSkeltonMFCExView, CView)
+//\{\{AFX_MSG_MAP(CDirectShowSkeltonMFCExView)
+ON_WM_SIZE()
+ON_MESSAGE(WM_DSHOW,CDirectShowSkeltonMFCExView::OnWMDSHOW ) // 追加
+//\}\}AFX_MSG_MAP
+END_MESSAGE_MAP()
+</pre>
+<p>これで，MFCを利用する場合，メッセージ受信時にOnWMDSHOWが呼び出されることとなる．しかし，受信しても，グラフビルダで何が行ったかはこのままではわからない．DirectShowで発生するイベントは，すべてがそのまま送信されるのではない．DirectShow側の細かいイベントは，IMediaEventExインタフェースを通して，取り出すことになる．WM_DSHOWメッセージ受信時にIMediaEventExからDirectShowイベントを取得する．<br />
+このイベント処理は，EventHandleで実装する．</p>
+<pre>
+void HandleEvent(void){
+long evCode, param1, param2;
+HRESULT hResult;
+// イベントキューからイベントを取り出す
+while (hResult = m_pMediaEvent->GetEvent(&evCode, &param1, &param2, 0), SUCCEEDED(hResult)){
+// 上で取り出したイベントを消去する
+hResult = m_pMediaEvent->FreeEventParams(evCode, param1, param2);
+if ((EC_USER == evCode)){
+if( param1 == PARAM_MESSAGE_FROM_FILTER && param2==PARAM_MESSAGE_FROM_FILTER){
+this->MessageBox("フィルタからメッセージを受け取りました．","DirectShowSkeltonMFCEx",MB_OK);
+break;
+〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜
+}
+</pre>
+<p>　まず，IMediaEventExのGetEventメソッドでメッセージを取得する．取得したメッセージは，FreeEventParamsで消去する．DirectShowのメッセージは処理されるまで，バッファに残るため，このように処理したメッセージは明示的に消去する必要がある．取得した情報は，ここで自由に処理することができる．<br />
+<br />
+<h3 class="line-header">送信側のコーディング </h3>
+<p>DirectShowのメッセージは，フィルタからも送信することができる．これは，NotifyEventメソッドで送信することができる．</p>
+<pre>
+NotifyEvent( EC_USER, wParam, lParam );
+</pre>
+<p>　ここでの第1引数が，DirectShowメッセージの識別子であり，第2，3引数がDirectShowメッセージのパラメータとなる．<br />
+　DirectShowのビルダグラフもメッセージを送信する．たとえば，EC_COMPLETEは，すべてのストリームが再生が終わった場合に送信される．他にもデバイスを失ったときなどメッセージが送信されるタイミングがある．これは，ヘルプに記載されている．MSDNを参考にされたい．<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/win/DirectShow/ThroughEx">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/win/DirectShow/ThroughEx</a></p>

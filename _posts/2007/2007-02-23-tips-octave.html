@@ -1,0 +1,42 @@
+---
+layout: post
+title: "[Tips] OctaveをMacOSXにインストール"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta:
+  _oembed_8d16c010392952dfbdc0134108105cae: "{{unknown}}"
+  _oembed_e58cbdfe7aabe368dee9d65359400935: "{{unknown}}"
+  _oembed_d33ed7692e25d188f6e9934f69faea41: "{{unknown}}"
+  _oembed_ca75a24da1340fcc3ae6206f7ab93e55: "{{unknown}}"
+  _oembed_7e5b9dff57e394bd78d4ceeaf7a774fa: "{{unknown}}"
+  _oembed_e830dafa233505a080d4a73e08712336: "{{unknown}}"
+  _oembed_ae8d77e4deac77d86c5832c22879bda3: "{{unknown}}"
+  _oembed_85636ff284163b6f63b544bbcab6d420: "{{unknown}}"
+  _oembed_fbd34bb0295ddb1cd7720462ba125f28: "{{unknown}}"
+  _oembed_39912f9bc63641ae0641a613156107d7: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>何も考えずに</p>
+<pre>
+./configure
+</pre>
+<p>すると，フォートランのコンパイラがないと怒られる．<br />
+g77は，コンパイルしてインストールするにはgccが絡むらしいので，バイナリを下記のサイトから<br />
+ダウソしてつっこむ．<br />
+http://hpc.sourceforge.net/<br />
+もう一回configureを試みるとreadlineなるものがないと怒られる．<br />
+http://ftp.yz.yamagata-u.ac.jp/pub/GNU/readline/<br />
+ダウンロードしてさらにつっこむ．<br />
+しかし・・・．コンパイルが通らない．<br />
+ぬうううう．</p>

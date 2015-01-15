@@ -1,0 +1,41 @@
+---
+layout: post
+title: "[Tips] iPhoneを○○○する"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><strong>１．SIMカードなんてないよ．な人</strong><br />
+　iPhone Toolがお勧め．コマンドラインからサクっとできます．<br />
+　iPhoneinterfaceはもっといいとか，ないとか．<br />
+<strong>２．開発ツール</strong><br />
+　iPhone1,1_1.0.2_1C28<br />
+　iPhone1,1_1.0_1A543<br />
+　の二つがある．が，中身のディスクイメージファイルの暗号化が違う．<br />
+　それには，以下のスクリプトがあるらしい．</p>
+<pre>
+strings hoge.dmg | grep '^[0-9a-fA-F]*$' | awk '{ if (length($1) == 72) print; }'
+</pre>
+<p><strong>３．ディスクイメージファイルの<a href="http://iphone.fiveforty.net/wiki/index.php?title=Break_DMG_Password">復号化ツール</a></strong></p>
+<pre>
+　gcc -O2 vfdecrypt.c -o vfdecrypt -lcrypto
+</pre>
+<p>でコンパイルできる．<br />
+使い方は，</p>
+<pre>
+./vfdecrypt -i [イメージファイル] -k ここにキーをセット -o [出力先]
+</pre>
+<p>※おそらく，今後のiPhoneのファームウェアで色々変わってくるのか．</p>

@@ -1,0 +1,48 @@
+---
+layout: post
+title: "[iPhone SDK] Three20のリンクをさらにやりやすくする"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>今までの設定では，よくよく考えると，ひとつ不都合がある．<br />
+Three20のビルドターゲットは，Debug or Releaseとiphoneos or iphonesimulator．<br />
+Three20のスタティックライブラリをリンクしたいアプリケーションが，Debug, Release, AdHoc, AppStoreの4つのターゲットを持つとすると，わざわざ，Three20の方でもその4つのターゲットを追加して，ビルドすることになる．しかも，AppStore，AdHoc用，ともにiPhone向けのReleaseビルドと同じバイナリでいいため，これはあまりにも非効率的だ．<br />
+そこで，Three20のプロジェクトのビルドフェーズにスクリプトを追加して，なんとかする．<br />
+ターゲットを右クリックでビルドフェーズにスクリプトを追加できる．<br />
+<center><img alt="buildPhase01.png" src="{{ site.url }}/assets//buildPhase01.png" width="522" height="152" /></center><br />
+<center><img alt="buildPhase02.png" src="{{ site.url }}/assets//buildPhase02.png" width="261" height="113" /></center><br />
+さらに，スクリプトのプロパティのスクリプト欄にスクリプトを書けば，指定した順番で実行できる．<br />
+<center><img alt="buildPhase03.png" src="{{ site.url }}/assets//buildPhase03.png" width="453" height="238" /></center><br />
+<code><br />
+if [ "$BUILD_STYLE" = 'Release' ]<br />
+then<br />
+echo 'Release build'<br />
+if [ -d $SRCROOT/build/AdHoc-$PLATFORM_NAME ]<br />
+then<br />
+echo already exists<br />
+else<br />
+ln -s $SRCROOT/build/$BUILD_STYLE-$PLATFORM_NAME $SRCROOT/build/AdHoc-$PLATFORM_NAME<br />
+fi<br />
+if [ -d $SRCROOT/build/AppStore-$PLATFORM_NAME ]<br />
+then<br />
+echo already exists<br />
+else<br />
+ln -s $SRCROOT/build/$BUILD_STYLE-$PLATFORM_NAME $SRCROOT/build/AppStore-$PLATFORM_NAME<br />
+fi<br />
+fi<br />
+</code><br />
+ここで，$SRCROOT等の，環境変数を使っているが，これらは，<a href="http://developer.apple.com/iphone/library/documentation/DeveloperTools/Reference/XcodeBuildSettingRef/1-Build_Setting_Reference/build_setting_ref.html">開発ドキュメント</a>で確認できる．ビルド時のターゲットプラットフォームなんかを動的に指定できる．</p>

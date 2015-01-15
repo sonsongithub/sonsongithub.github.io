@@ -1,0 +1,84 @@
+---
+layout: post
+title: "[DirectShow] フィルタのメソッドをアプリケーションから呼び出す"
+categories:
+- blog
+tags:
+- Blog
+- DirectShow
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">DirectShowのフィルタのメソッドを呼び出す </h3>
+<p>フィルタが持つメソッドを呼び出すことができれば，プログラミングの幅は広がる．たとえば，特徴点検出フィルタを作っておき，プログラム側から定期的にフィルタのメソッドから特徴点の座標を取得することができる．<br />
+フィルタ側は，フィルタをコントロールするためのインタフェースを用意し，そのインタフェースを継承する．インタフェースの持つメソッドがフィルタのメソッドに対応し，インタフェースのメソッドを呼び出すことで，フィルタのメソッドを呼び出すことができるのである．<br />
+プログラム側からは，上で実装したフィルタをコントロールするためのインタフェースを作成し，そのインタフェースを通じて，フィルタのメソッドを呼び出すことになる．<br />
+<br />
+<h3 class="line-header">インタフェースを実装する </h3>
+<p>　IThrough.hの中身である．当然，このGUIDは，もとのThoughフィルタとは異なるものを割り当てる．</p>
+<pre>
+#ifndef __ITHROUGHEX__
+#define __ITHROUGHE__
+#define PARAM_MESSAGE_FROM_FILTER 1
+// IThroughExインタフェースのGUID
+/* ￣￣￣￣ */
+DEFINE_GUID( IID_IThroughEx,￣￣￣￣);
+//////////////////////////////////////////////////////////////////////
+// インタフェース
+MIDL_INTERFACE("￣￣￣￣")
+IThroughEx : public IUnknown
+{
+public:
+virtual HRESULT STDMETHODCALLTYPE Call( void ) = 0;
+};
+#endif
+</pre>
+<p>ここのSTDMETOHDCALLTYPEにプログラムから呼び出すメソッドを指定する．ここでは，Callをメソッドとして指定している．<br />
+<br />
+<h3 class="line-header">フィルタ側のプログラム </h3>
+<p>フィルタ側には，メッセージを判別するNonDelegatinQueryInterfaceと，呼び出すためのCallを実装する．</p>
+<pre>
+STDMETHOD(NonDelegatingQueryInterface)(REFIID riid, void **ppv);
+STDMETHODIMP Call( void );
+</pre>
+<p>　これをフィルタのヘッダファイルで宣言する．次にこれに対応するメソッドをThroughに実装する．</p>
+<pre>
+//////////////////////////////////////////////////////////////////////
+// 外部から呼び出されるためのインタフェースの提供
+STDMETHODIMP Through::NonDelegatingQueryInterface(REFIID riid, void **ppv){
+// フィルタのインターフェース
+if( riid==IID_IThrougx)
+return GetInterface( (IThrough *)this,ppv );
+return CTransformFilter::NonDelegatingQueryInterface( riid,ppv );
+}
+</pre>
+<pre>
+//////////////////////////////////////////////////////////////////////
+// 外部から呼び出されるインタフェースの実装
+STDMETHODIMP Through::Call(void){
+CAutoLock cAutolock(&m_ThroughLock);
+MessageBox( NULL, "プログラムからメソッドを呼び出されました．","ThroughFilter",MB_OK);
+return NOERROR;
+}
+</pre>
+<p>　実装部である．インタフェースが要求されたときに，IThroughが返されるように，NonDelegatingQueryInterfaceを実装する．Callは，必要な処理を書き込む．</p>
+<pre>
+IThrough	*m_pIThrough;
+</pre>
+<p>　フィルタのインタフェースとして，IThroughを宣言する．そして，インタフェースとして利用するようにポインタをフィルタから取得する．</p>
+<pre>
+hResult = m_pThroughEx->QueryInterface(IID_IThroughEx,(void **)&m_pIThroughEx);
+if (hResult != S_OK)return FALSE;
+</pre>
+<p>　これで，ThroughのCallをIThroughインタフェースから呼び出すことができる．<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/GLUTtexture">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/GLUTtexture</a></p>

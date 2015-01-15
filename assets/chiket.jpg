@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html class="no-js" lang="ja">
+	<head>
+				<link rel="profile" href="http://gmpg.org/xfn/11" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+		<title>sonson@Picture&amp;Software &laquo; Make something.</title>
+		
+				<link rel="alternate" type="application/rss+xml" title="sonson@Picture&amp;Software &raquo; フィード" href="http://sonson.jp/?feed=rss2" />
+<link rel="alternate" type="application/rss+xml" title="sonson@Picture&amp;Software &raquo; コメントフィード" href="http://sonson.jp/?feed=comments-rss2" />
+<link rel='stylesheet' id='jetpack-subscriptions-css'  href='http://sonson.jp/wp/wp-content/plugins/jetpack/modules/subscriptions/subscriptions.css?ver=3.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='jetpack-widgets-css'  href='http://sonson.jp/wp/wp-content/plugins/jetpack/modules/widgets/widgets.css?ver=20121003' type='text/css' media='all' />
+<link rel='stylesheet' id='tw-bootstrap-css'  href='http://sonson.jp/wp/wp-content/themes/the-bootstrap/css/bootstrap.min.css?ver=2.0.3' type='text/css' media='all' />
+<link rel='stylesheet' id='the-bootstrap-css'  href='http://sonson.jp/wp/wp-content/themes/the-bootstrap/style.min.css?ver=2.0.1' type='text/css' media='all' />
+<script type='text/javascript' src='http://sonson.jp/wp/wp-includes/js/jquery/jquery.js?ver=1.11.0'></script>
+<script type='text/javascript' src='http://sonson.jp/wp/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://sonson.jp/wp/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://sonson.jp/wp/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress 3.9.1" />
+<link rel='shortlink' href='http://wp.me/4A1MP' />
+
+	<meta property="og:title" content="sonson@Picture&amp;Software"/>
+	<meta property="og:site_name" content="sonson@Picture&amp;Software"/>
+	<meta property="og:image" content="http://sonson.jp/wp/wp-content/themes/the-bootstrap/images/default_icon.jpg"/>
+
+	
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="sonson@Picture&amp;Software" />
+<meta property="og:description" content="Make something." />
+<meta property="og:url" content="http://sonson.jp/" />
+<meta property="og:site_name" content="sonson@Picture&amp;Software" />
+<meta property="og:image" content="http://wordpress.com/i/blank.jpg" />
+<meta name="twitter:site" content="@jetpack" />
+	<!--[if lt IE 9]>
+		<script src="http://sonson.jp/wp/wp-content/themes/the-bootstrap/js/html5shiv.min.js" type="text/javascript"></script>
+		<script src="http://sonson.jp/wp/wp-content/themes/the-bootstrap/js/respond.min.js" type="text/javascript"></script>
+	<![endif]-->
+	<style type="text/css" id="syntaxhighlighteranchor"></style>
+	</head>
+	
+	<body class="home blog custom-background content-sidebar">
+		<div class="container">
+			<div id="page" class="hfeed row">
+								<header id="branding" role="banner" class="span12">
+										<hgroup>
+						<h1 id="site-title">
+							<a href="http://sonson.jp/" title="sonson@Picture&amp;Software" rel="home">
+								<span>sonson@Picture&amp;Software</span>
+							</a>
+						</h1>
+						<h2 id="site-description">Make something.</h2>
+					</hgroup>
+					
+					
+					<nav id="access" role="navigation">
+						<h3 class="assistive-text">Main menu</h3>
+						<div class="skip-link"><a class="assistive-text" href="#content" title="Skip to primary content">Skip to primary content</a></div>
+						<div class="skip-link"><a class="assistive-text" href="#secondary" title="Skip to secondary content">Skip to secondary content</a></div>
+												<div class="navbar navbar-inverse">
+							<div class="navbar-inner">
+								<div class="container">
+									<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+									<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+										<span class="icon-bar"></span>
+										<span class="icon-bar"></span>
+										<span class="icon-bar"></span>
+									</a>
+																		<div class="nav-collapse">
+											<form id="searchform" class="navbar-search pull-right" method="get" action="http://sonson.jp/">
+						<label for="s" class="assistive-text hidden">Search</label>
+						<input type="search" class="search-query" name="s" id="s" placeholder="Search" />
+					</form>								    </div>
+								</div>
+							</div>
+						</div>
+											</nav><!-- #access -->
+									</header><!-- #branding -->
+<section id="primary" class="span8">
+		<div id="content" role="main">
+		<article id="post-3260" class="post-3260 post type-post status-publish format-standard hentry category-blog category-17">
+		
+	<header class="page-header">
+	<h1 class="entry-title"><a href="http://sonson.jp/?p=3260" title="Permalink to 書評：UIKit徹底解説 iOSユーザーインターフェイスの開発" rel="bookmark">書評：UIKit徹底解説 iOSユーザーインターフェイスの開発</a></h1>		<div class="entry-meta">
+			<span class="sep">Posted on </span><a href="http://sonson.jp/?p=3260" title="7:15 PM" rel="bookmark"><time class="entry-date" datetime="2014-06-13T19:15:58+00:00" pubdate>2014年6月13日</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="http://sonson.jp/?author=1" title="View all posts by sonson" rel="author">sonson</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+		<div class="entry-content clearfix">
+		<p>献本御礼．</p>
+<p>宣伝＆書評エントリ．</p>
+<p>iOSのUIを実装するためのコードに焦点を当てた，初級から中級向けの本．<br />
+簡単なところは全部飛ばして書いてるのかなと読み始めると，割りと細かいところまで書いてあったりして，初心の頃に雑に理解してあったポイントを復習する意味でいいかもしれない．</p>
+<p>私がザクっと読んだところは，以下の三つ．</p>
+<ol>
+<li>画面遷移</li>
+<li>フォント管理</li>
+<li>コンテナビュー</li>
+</ol>
+<h4>画面遷移</h4>
+<p>画面遷移では，ビューコントローラに依存しないオリジナルの遷移アニメーションの設計が載っている．<br />
+この辺は，コードの再利用性やビューコントローラの実装がぐちゃぐちゃになることを避けるためにも是非，理解しておきたいところ．</p>
+<h4>フォント</h4>
+<p>フォントは割りと解説されてないところなので，本書中でも重要なところであると思う．<br />
+NSAttributedStringは，すでにNSStringにとって替わるクラスだ．<br />
+事実，NSStringのインスタンスを使って直接Quartzでレンダリングするメソッドはすべてdeprecatedになっている．これからは属性付きのテキストがデフォルトになってくるだろう．<br />
+プログラマはこの当たりを抑えておいておく必要がある．</p>
+<h4>コンテナビュー</h4>
+<p>後は，コンテナビューについて．<br />
+コンテナビューは，実は大地雷地帯で突っ込んだ実装すると，すぐに挙動が大変なことになる．<br />
+その点で，本書がマインスイーパの一助になると思う．<br />
+まぁ，でも，コンテナビュー・・・・を・・・使うことはお勧めしない・・・・って言ったら怒られるかな．</p>
+<div class="amazlet-box" style="margin-bottom:0px;">
+<div class="amazlet-image" style="float:left;margin:0px 12px 1px 0px;"><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4844336088/sonsonpicture-22/ref=nosim/" name="amazletlink" target="_blank"><img src="http://ecx.images-amazon.com/images/I/510e%2BqvIkFL._SL160_.jpg" alt="UIKit徹底解説 iOSユーザーインターフェイスの開発" style="border: none;" /></a></div>
+<div class="amazlet-info" style="line-height:120%; margin-bottom: 10px">
+<div class="amazlet-name" style="margin-bottom:10px;line-height:120%"><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4844336088/sonsonpicture-22/ref=nosim/" name="amazletlink" target="_blank">UIKit徹底解説 iOSユーザーインターフェイスの開発</a>
+<div class="amazlet-powered-date" style="font-size:80%;margin-top:5px;line-height:120%">posted with <a href="http://www.amazlet.com/" title="amazlet" target="_blank">amazlet</a> at 14.06.13</div>
+</div>
+<div class="amazlet-detail">西方 夏子 <br />インプレスジャパン <br />売り上げランキング: 590</div>
+<div class="amazlet-sub-info" style="float: left;">
+<div class="amazlet-link" style="margin-top: 5px"><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4844336088/sonsonpicture-22/ref=nosim/" name="amazletlink" target="_blank">Amazon.co.jpで詳細を見る</a></div>
+</div>
+</div>
+<div class="amazlet-footer" style="clear: left"></div>
+</div>
+<p><br/>
+<div class="facebook_like_button" style="float: left; margin-left: 0px;"><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fsonson.jp%2F%3Fp%3D3260&amp;layout=button_count&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;width=120" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:120px; height:25px"></iframe></div>
+
+<!-- This is the start of the WP Twitter Button code -->
+<div id="rk_wp_twitter_button" style="margin: 0px 0px 0px 0px; float: left"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sonson.jp/?p=3260" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div>
+<!-- This is the end of the WP Twitter Button code -->
+
+	</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+		<span class="cat-links block">Posted in <a href="http://sonson.jp/?cat=31" title="Blog の投稿をすべて表示" rel="category">Blog</a>, <a href="http://sonson.jp/?cat=17" title="本 の投稿をすべて表示" rel="category">本</a>.</span>	</footer><!-- #entry-meta -->
+	
+	</article><!-- #post-3260 -->
+<article id="post-3254" class="post-3254 post type-post status-publish format-standard hentry category-blog">
+		
+	<header class="page-header">
+	<h1 class="entry-title"><a href="http://sonson.jp/?p=3254" title="Permalink to potatotipsで発表してきたお" rel="bookmark">potatotipsで発表してきたお</a></h1>		<div class="entry-meta">
+			<span class="sep">Posted on </span><a href="http://sonson.jp/?p=3254" title="11:58 PM" rel="bookmark"><time class="entry-date" datetime="2014-05-15T23:58:16+00:00" pubdate>2014年5月15日</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="http://sonson.jp/?author=1" title="View all posts by sonson" rel="author">sonson</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+		<div class="entry-content clearfix">
+		<p><object type='application/x-shockwave-flash' wmode='opaque' data='http://static.slideshare.net/swf/ssplayer2.swf?id=34725745&doc=presentation-140515095658-phpapp02' width='770' height='631'><param name='movie' value='http://static.slideshare.net/swf/ssplayer2.swf?id=34725745&doc=presentation-140515095658-phpapp02' /><param name='allowFullScreen' value='true' /></object>
+<div class="facebook_like_button" style="float: left; margin-left: 0px;"><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fsonson.jp%2F%3Fp%3D3254&amp;layout=button_count&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;width=120" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:120px; height:25px"></iframe></div>
+
+<!-- This is the start of the WP Twitter Button code -->
+<div id="rk_wp_twitter_button" style="margin: 0px 0px 0px 0px; float: left"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sonson.jp/?p=3254" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div>
+<!-- This is the end of the WP Twitter Button code -->
+
+	</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+		<span class="cat-links block">Posted in <a href="http://sonson.jp/?cat=31" title="Blog の投稿をすべて表示" rel="category">Blog</a>.</span>	</footer><!-- #entry-meta -->
+	
+	</article><!-- #post-3254 -->
+<article id="post-3228" class="post-3228 post type-post status-publish format-standard hentry category-blog">
+		
+	<header class="page-header">
+	<h1 class="entry-title"><a href="http://sonson.jp/?p=3228" title="Permalink to JenkinsでTestFlight，再びハマるー備忘録" rel="bookmark">JenkinsでTestFlight，再びハマるー備忘録</a></h1>		<div class="entry-meta">
+			<span class="sep">Posted on </span><a href="http://sonson.jp/?p=3228" title="8:53 AM" rel="bookmark"><time class="entry-date" datetime="2014-04-28T08:53:48+00:00" pubdate>2014年4月28日</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="http://sonson.jp/?author=1" title="View all posts by sonson" rel="author">sonson</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+		<div class="entry-content clearfix">
+		<p>Botsを使っていた私ですが，なんだか色々使いにくいので，Jenkinsに戻ることにしました．<br />
+しかし，そのJenkinsについても証明書の取り扱いが面倒だったりする点が問題なのですが・・・・．今回はそれを回避するためにハマったポイントの備忘録です．</p>
+<h2>Jenkinsをまず消す</h2>
+<p>JenkinsでiOSバイナリをビルドする時に問題になってくるのが，証明書関連です．<br />
+Jenkinsのデフォルトのインストーラを使うと，Jenkinsユーザが作成され，そのJenkinsユーザによって実行されるデーモンとしてJenkinsが起動されます．<br />
+これが・・・・大問題．Jenkinsユーザで実行すると，デフォルトでキーチェーンにインストールした証明書等にアクセスできないためキーチェーンを修正したり，プロビジョニングプロファイルのパスを変更したりする必要があります．</p>
+<p>この問題点を解消するため，まずデフォルトのJenkinsを削除し，再インストールします．削除は，インストーラを使っていれば，アンインストールスクリプトが付属しています．</p>
+<pre><code>/Library/Application Support/Jenkins/Uninstall.command
+</code></pre>
+<h2>Jenkinsをユーザで起動する</h2>
+<p>まず，インストーラでもバイナリでもいいのですが，Jenkinsをインストールします．<br />
+インストーラを使う前提で説明しますが，インストールするとき，<strong>jenkins daemonで起動しないように</strong>しておきます．<br />
+そして，このインストールしたJenkinsを自分のユーザ権限で起動するように設定します．</p>
+<p>参考:<a href="https://gist.github.com/shunirr/3522219">Jenkins をOS X のログインユーザー権限のデーモンで自動起動しておく設定</a></p>
+<p>インストーラを使うと，/Library/Application Support/Jenkinsに起動スクリプトjenkins-runner.shがインストールされます．<br />
+編集する前に，/Library/Application Support/Jenkins/jenkins-runner.shは，sudo chmodとかで書き込み権限を追加しておきましょう．<br />
+おそらく，tmpdirの値を変更しないと起動しないと思います．</p>
+<pre><code>#!/bin/bash
+#
+# Startup script used by Jenkins launchd job.
+# Mac OS X launchd process calls this script to customize
+# the java process command line used to run Jenkins.
+# 
+# Customizable parameters are found in
+# /Library/Preferences/org.jenkins-ci.plist
+#
+# You can manipulate it using the "defaults" utility.
+# See "man defaults" for details.
+
+defaults="defaults read /Library/Preferences/org.jenkins-ci"
+
+war=`$defaults war` || war="/Applications/Jenkins/jenkins.war"
+
+javaArgs="-Dfile.encoding=UTF-8"
+
+minPermGen=`$defaults minPermGen` &amp;&amp; javaArgs="$javaArgs -XX:PermSize=${minPermGen}"
+permGen=`$defaults permGen` &amp;&amp; javaArgs="$javaArgs -XX:MaxPermSize=${permGen}"
+
+minHeapSize=`$defaults minHeapSize` &amp;&amp; javaArgs="$javaArgs -Xms${minHeapSize}"
+heapSize=`$defaults heapSize` &amp;&amp; javaArgs="$javaArgs -Xmx${heapSize}"
+
+tmpdir=`${HOME}/.jenkins/tmp` &amp;&amp; javaArgs="$javaArgs -Djava.io.tmpdir=${tmpdir}"
+
+home=`$defaults JENKINS_HOME` &amp;&amp; export JENKINS_HOME="$home"
+
+add_to_args() {
+    val=`$defaults $1` &amp;&amp; args="$args --${1}=${val}"
+}
+
+args=""
+add_to_args prefix
+add_to_args httpPort
+add_to_args httpListenAddress
+add_to_args httpsPort
+add_to_args httpsListenAddress
+add_to_args ajp13Port
+add_to_args ajp13ListenAddress
+
+echo "JENKINS_HOME=$JENKINS_HOME"
+echo "Jenkins command line for execution:"
+echo /usr/bin/java $javaArgs -jar "$war" $args
+exec /usr/bin/java $javaArgs -jar "$war" $args
+</code></pre>
+<p>このスクリプトをlaunchdで起動するように登録します．<br />
+次に<a href="https://gist.github.com/shunirr/3522219">参考サイト</a>にならって，/Users/sonson/Library/LaunchAgents/jenkins.plistを以下の内容で作成し，保存します．</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+    &lt;dict&gt;
+        &lt;key&gt;EnvironmentVariables&lt;/key&gt;
+        &lt;dict&gt;
+            &lt;key&gt;JENKINS_HOME&lt;/key&gt;
+            &lt;string&gt;${HOME}/.jenkins&lt;/string&gt;
+        &lt;/dict&gt;
+        &lt;key&gt;GroupName&lt;/key&gt;
+        &lt;string&gt;staff&lt;/string&gt;
+        &lt;key&gt;KeepAlive&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;Label&lt;/key&gt;
+        &lt;string&gt;jenkins&lt;/string&gt;
+        &lt;key&gt;ProgramArguments&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;/bin/bash&lt;/string&gt;
+            &lt;string&gt;/Library/Application Support/Jenkins/jenkins-runner.sh&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;RunAtLoad&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;UserName&lt;/key&gt;
+        &lt;string&gt;sonson&lt;/string&gt;
+    &lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+<p>次にlaunchdに以下のコマンドで起動登録しておきましょう．</p>
+<pre><code>launchctl load -wF -D user  ~/Library/LaunchAgents/jenkins.plist
+launchctl start jenkins
+</code></pre>
+<p>これで今，実行しているユーザ権限でJenkinsが起動するようになりました．<br />
+証明書の権限やパスで悩むことはないはずです！！！！！</p>
+<h2>JenkinsでTestFlightに自動アップロードする</h2>
+<p>Jenkinsのすばらしいところは，充実したプラグインです．iOSのビルド用のプラグインも充実しているので安心です．<br />
+まずは，Xcode build pluginでビルドの仕方を設定しましょう．</p>
+<p>すでにJenkinsはログイン中のユーザ権限で実行されるため，署名の実行も簡単です．</p>
+<p>Code sign identityには，キーチェーンで見られるiPhone Distribution: Hoge Bar (XXXXXXXXX)のようなタイトルを入力し，プロビジョニングプロファイルもそのままフルパスで入力してしまいましょう．</p>
+<p><img src="http://sonson.jp/wp/wp-content/uploads/2014/04/jenkins_codesign_01.png" alt="jenkins_codesign_01.png" class="aligncenter size-medium wp-image-3238" /></p>
+<p>TestFlight用にIPAファイルを作成するようにします．<br />
+後でアップロードするために，明示的にビルド先を指定しておきました．</p>
+<p><img src="http://sonson.jp/wp/wp-content/uploads/2014/04/jenkins_xcode_01.png" alt="jenkins_xcode_01.png" class="aligncenter size-medium wp-image-3238" /></p>
+<p>TestFlightにアップロードするためのTestFlightのトークンを設定しておきます．<br />
+TestFlightのプラグインをインストールしておけば，Jenkinsのルートから，Jenkinsの設定→システムの設定→下の方にTestFlightのトークンを入力するフォームがあるはずです．</p>
+<p><img src="http://sonson.jp/wp/wp-content/uploads/2014/04/jenkins_testflight_02.png" alt="jenkins_testflight_02.png" class="aligncenter size-medium wp-image-3238" /></p>
+<p>次に，ビルドしたIPAファイルと，dSYMファイルをアップロードするように設定します．</p>
+<p><img src="http://sonson.jp/wp/wp-content/uploads/2014/04/jenkins_testflight_01.png" alt="jenkins_testflight_01.png" class="aligncenter size-medium wp-image-3238" /></p>
+<p>これで自動アップロードの設定完了です．
+<div class="facebook_like_button" style="float: left; margin-left: 0px;"><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fsonson.jp%2F%3Fp%3D3228&amp;layout=button_count&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;width=120" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:120px; height:25px"></iframe></div>
+
+<!-- This is the start of the WP Twitter Button code -->
+<div id="rk_wp_twitter_button" style="margin: 0px 0px 0px 0px; float: left"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sonson.jp/?p=3228" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div>
+<!-- This is the end of the WP Twitter Button code -->
+
+	</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+		<span class="cat-links block">Posted in <a href="http://sonson.jp/?cat=31" title="Blog の投稿をすべて表示" rel="category">Blog</a>.</span>	</footer><!-- #entry-meta -->
+	
+	</article><!-- #post-3228 -->
+<article id="post-3217" class="post-3217 post type-post status-publish format-standard hentry category-blog">
+		
+	<header class="page-header">
+	<h1 class="entry-title"><a href="http://sonson.jp/?p=3217" title="Permalink to yidev@恵比寿勉強会" rel="bookmark">yidev@恵比寿勉強会</a></h1>		<div class="entry-meta">
+			<span class="sep">Posted on </span><a href="http://sonson.jp/?p=3217" title="2:57 PM" rel="bookmark"><time class="entry-date" datetime="2014-04-27T14:57:43+00:00" pubdate>2014年4月27日</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="http://sonson.jp/?author=1" title="View all posts by sonson" rel="author">sonson</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+		<div class="entry-content clearfix">
+		<p>子育てシフトから脱却しながら，yidevで久々に発表してきました．<br />
+内容は，少し前から公開している<a href="https://github.com/sonsongithub/UZTextView">UZTextView</a>と<a href="https://github.com/sonsongithub/UZMultipleLayeredPopoverController">UZMultipleLayeredPopoverController</a>について発表しました．</p>
+<object type='application/x-shockwave-flash' wmode='opaque' data='http://static.slideshare.net/swf/ssplayer2.swf?id=33979243&doc=presentation-140426161555-phpapp01' width='770' height='631'><param name='movie' value='http://static.slideshare.net/swf/ssplayer2.swf?id=33979243&doc=presentation-140426161555-phpapp01' /><param name='allowFullScreen' value='true' /></object>
+<h2><a href="https://github.com/sonsongithub/UZTextView">UZTextView</a>と<a href="https://github.com/sonsongithub/UZMultipleLayeredPopoverController">UZMultipleLayeredPopoverController</a></h2>
+<p>この<a href="http://sonson.jp/?p=3183">エントリ</a>でも発表していますが，色々な機能がついたテキストビューです．<br />
+<a href="https://github.com/sonsongithub/UZTextView">UZTextView</a>は，@k_katsumiさんのSECoreTextViewほど多機能（そもそもUZTextViewはエディタ機能がない）ではないですが，見通しよくCoreTextを使ったテキスト表示ができるビューです．<br />
+このビューは，2tchのコアのモジュールとして使われており，2ちゃんねる用にアスキーアートをレンダリングするためのコードを入れたりしてサブクラスを作って使っています．<br />
+この<a href="https://github.com/sonsongithub/UZTextView">UZTextView</a>は私が現在も使っているので，定期的にメンテナンスされているとお考えください．</p>
+<p>後は割と評判が良かった，<a href="https://github.com/sonsongithub/UZMultipleLayeredPopoverController">UZMultipleLayeredPopoverController</a>．<br />
+これは，無限にポップオーバー風にビューコントローラを表示できるライブラリです．<br />
+UIViewControllerのmodalViewControllerのように簡単に表示できます．</p>
+<h2>オープンソースにする意味</h2>
+<p>他にもすごいソースコードはゴマンとありますが，趣味で作るようなアプリケーションならば，モジュールをオープンソースにして切り出すと，ソースが疎結合になり，可読性，メンテナンス性があがります．<br />
+おすすめです．<br />
+ただ，やってる内に当初の目的を失うことが多々あるので，注意しないといけません．<br />
+自分のソースコードがスパゲチらないようにオープンソースにするというのも選択肢として，いかがでしょうか．</p>
+<h2>CoreText</h2>
+<p>CoreTextとTextKitのちょっとしたスタックの話をしたのですが，割と好評だったので，次回もうちょっと突っ込んで説明してみるかなぁという気持ちです．<br />
+あんまり期待しないでね．</p>
+<h2>蛇足</h2>
+<p>最後に紹介したら，やたらウケが良かったので再掲．<br />
+<a href="https://itunes.apple.com/jp/app/gif-brewery/id435989461?mt=12&#038;at=11l7gF">GIFBrewery</a>というアプリケーション．動画からGIFアニメーションを楽に作成できます．</p>
+<p><img src="http://sonson.jp/wp/wp-content/uploads/2014/03/GIFBrewery.png" alt="" width="50%" height="50%"/>
+<div class="facebook_like_button" style="float: left; margin-left: 0px;"><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fsonson.jp%2F%3Fp%3D3217&amp;layout=button_count&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;width=120" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:120px; height:25px"></iframe></div>
+
+<!-- This is the start of the WP Twitter Button code -->
+<div id="rk_wp_twitter_button" style="margin: 0px 0px 0px 0px; float: left"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sonson.jp/?p=3217" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div>
+<!-- This is the end of the WP Twitter Button code -->
+
+	</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+		<span class="cat-links block">Posted in <a href="http://sonson.jp/?cat=31" title="Blog の投稿をすべて表示" rel="category">Blog</a>.</span>	</footer><!-- #entry-meta -->
+	
+	</article><!-- #post-3217 -->
+<article id="post-3183" class="post-3183 post type-post status-publish format-standard hentry category-blog">
+		
+	<header class="page-header">
+	<h1 class="entry-title"><a href="http://sonson.jp/?p=3183" title="Permalink to オープンソースな2tchの部品" rel="bookmark">オープンソースな2tchの部品</a></h1>		<div class="entry-meta">
+			<span class="sep">Posted on </span><a href="http://sonson.jp/?p=3183" title="9:57 AM" rel="bookmark"><time class="entry-date" datetime="2014-03-03T09:57:00+00:00" pubdate>2014年3月3日</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="http://sonson.jp/?author=1" title="View all posts by sonson" rel="author">sonson</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+		<div class="entry-content clearfix">
+		<p>そろそろAppleにコミットしようとしている2tch v6.0ですが，内部で利用しているいくつかのコントロールをオープンソースで展開しています． オープンソースで展開することを意識してコードを書くと，ソースコードの見通しがよくなるんですよね・・・・． 一人で使うことを前提でコードを書くと，どうしてもコードがぐちゃぐちゃに・・・・．</p>
+<p>すべて<a href="https://github.com/sonsongithub" target="_blank">github</a>で公開しています．</p>
+<h1><a href="https://github.com/sonsongithub/UZTextView" target="_blank">UZTextView</a></h1>
+<p>選択可能なテキストビュークラスです． レス，スレッドタイトル，色々なところで利用しています． 文字選択やリンクを埋め込みたいテキストに利用できます． このクラスは，CocoaPodsで公開しています．</p>
+<p><img src="https://raw.github.com/sonsongithub/UZTextView/master/screenshot/UZTextView.gif" width="320" height="568" class="aligncenter" /></p>
+<h1><a href="https://github.com/sonsongithub/UZMultipleLayeredPopoverController" target="_blank">UZMultipleLayeredPopoverController &#8211; 軽量ポップオーバービューコントローラ</a></h1>
+<p>多段に表示することを目的としたUIPopOverControllerクラスの代替クラスです． UIPopOverControllerクラスは，多段表示したら審査で文句を言われたり，使い勝手が悪すぎるので，その辺を解決するために実装しました． 以下のようなコードでお手軽に実装できます．</p>
+<p>
+<pre class="brush: cpp; title: ; notranslate" title="">
+id viewController = [self.storyboard instantiateViewControllerWithIdentifier:@&quot;NavigationController&quot;];
+[self presentMultipleLayeredPopoverWithViewController:viewController
+　　　　　　　　　　　　　　　　　　　　　contentSize:CGSizeMake(320, 480)
+　　　　　　　　　　　　　　　　　　　　　　 fromRect:button.frame
+　　　　　　　　　　　　　　　　　　　　　　　 inView:self.view
+　　　　　　　　　　　　　　　　　　　　　　direction:UZMultipleLayeredPopoverAnyDirection];
+</pre>
+</p>
+<p><img src="https://raw.github.com/sonsongithub/UZMultipleLayeredPopoverController/master/screenshot/UZMultipleLayeredPopoverController.gif" width="384" height="512" class="aligncenter" /></p>
+<h1><a href="https://github.com/sonsongithub/UZInputCandidateAccessory" target="_blank">UZInputCandidateAccessory &#8211; オリジナル入力ショートカット</a></h1>
+<p>キーボードで文字を入力するときに，独自の入力ショートカット一覧をキーボードのアクセサリビューに表示するためのビューです． 割と簡単に使えるようにしました． 拡張するなら，画像とかにも対応するようにすれば，もっと色々おもしろいかもしれません．</p>
+<p><img src="https://raw.github.com/sonsongithub/UZInputCandidateAccessory/master/screenshot/UZInputCandidateAccessory.gif" width="320" height="568" class="aligncenter" /></p>
+<div class="facebook_like_button" style="float: left; margin-left: 0px;"><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fsonson.jp%2F%3Fp%3D3183&amp;layout=button_count&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;width=120" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:120px; height:25px"></iframe></div>
+
+<!-- This is the start of the WP Twitter Button code -->
+<div id="rk_wp_twitter_button" style="margin: 0px 0px 0px 0px; float: left"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sonson.jp/?p=3183" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div>
+<!-- This is the end of the WP Twitter Button code -->
+
+	</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+		<span class="cat-links block">Posted in <a href="http://sonson.jp/?cat=31" title="Blog の投稿をすべて表示" rel="category">Blog</a>.</span>	</footer><!-- #entry-meta -->
+	
+	</article><!-- #post-3183 -->
+<article id="post-3152" class="post-3152 post type-post status-publish format-standard hentry category-blog">
+		
+	<header class="page-header">
+	<h1 class="entry-title"><a href="http://sonson.jp/?p=3152" title="Permalink to iOSシミュレータからanimation GIFを作るツール群" rel="bookmark">iOSシミュレータからanimation GIFを作るツール群</a></h1>		<div class="entry-meta">
+			<span class="sep">Posted on </span><a href="http://sonson.jp/?p=3152" title="5:45 PM" rel="bookmark"><time class="entry-date" datetime="2014-03-02T17:45:18+00:00" pubdate>2014年3月2日</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="http://sonson.jp/?author=1" title="View all posts by sonson" rel="author">sonson</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+		<div class="entry-content clearfix">
+		<h1>githubとアニメーションGIF</h1>
+<p>githubだと，READMEにYouTubeへの埋め込みリンクが張れない・・・・．iPhoneやiPadの動作画面をHTMLに埋め込みたい人に送る今回のエントリです．</p>
+<p>githubでは，Markdown形式などで記述すると生身のテキストではなく，ブラウザにレンダリングされるREADMEファイルがあります． githubで公開されるソースはUIがメインじゃないものが多いのか，ご存知のようにYouTubeなどの動画埋め込みをサポートしておらず，READMEファイル等に動画を簡単に組み込めないのが現状です． workaroundとして，コーダーが採用しているのが，animation GIFの埋め込みです． しかし・・・このanimation GIFをさくっと簡単に作る方法が・・・・・ない・・・． そこで，その回避策を見つけたので，記事に書いてみることにします． 問題はお金で解決しましょう！！！</p>
+<h1><a href="https://itunes.apple.com/jp/app/simcap/id423124409?mt=12&#038;at=11l7gF" target="_blank">SimCap &#8211; iOSの動作画面を動画でキャプチャする</a></h1>
+<p>まずキャプチャですが，iOSシミュレータを使うのか，実機を使うのかで使うアプリケーションが決まります． iOSシミュレータの場合，少し前まではgithubで公開されていたSIMBL経由で実行するアプリケーションがあったのですが，Relfactorというアプリケーションがリリースされて後，メンテナンスが終了してしまいました． 私は，iOSシミュレータ用に<a href="https://itunes.apple.com/jp/app/simcap/id423124409?mt=12&amp;at=11l7gF">SimCap</a>というアプリケーションを買って使っています．これはわりと使い勝手よいのでお勧めです． タップしたときの指の位置なども動画に含めることができ，SoundFlowerという音声出力をキャプチャするためのソフトウェアにも対応しており，音声も同時録音できるようです． 使うときの注意点は，LandscepeとPortraitを手で合わせないと，正しく録画されないところで，私はここは少しハマリました．</p>
+<p><a href="http://sonson.jp/wp/wp-content/uploads/2014/03/SimCap.png"><img src="http://sonson.jp/wp/wp-content/uploads/2014/03/SimCap.png" alt="SimCap" width="320" height="622" class="aligncenter size-full wp-image-3171" /></a></p>
+<h1><a href="http://www.airsquirrels.com" target="_blank">Reflector</a></h1>
+<p>言わずと知れたAirPlay経由でMac/Windowsに実機の画面を転送し，さらにパソコン上で動画を録画できる無敵のツールです．</p>
+<p><a href="http://www.airsquirrels.com" target="_blank"><img src="http://www.airsquirrels.com/images/rf-logo-home.png" alt="http://www.airsquirrels.com/images/rf-logo-home.png" class="aligncenter" /></a></p>
+<p>実機の挙動をキャプチャするなら，Reflector一択です． 開発したアプリケーションの実際の動作をプレゼンテーションの最中に見せたいときに真価を発揮するReflectorですが，SimCapと同じく，キャプチャがメインの目的であっても買っておいて損の無いアプリケーションです．</p>
+<h1><a href="https://itunes.apple.com/jp/app/gif-brewery/id435989461?mt=12&#038;at=11l7gF" target="_blank">GIF Brewery &#8211; 動画をanimation GIFに変換する．</a></h1>
+<p>幸運にもApp Storeで購入した一本目のアプリケーションが当たりでした． <a href="https://itunes.apple.com/jp/app/gif-brewery/id435989461?mt=12&#038;at=11l7gF" target="_blank">GIF Brewery</a>というアプリケーションです． このアプリケーションの素晴らしいところは，基本的にすべて，操作がシンプルかつ基本的にやりたいことがすべて簡単に実行できる点です（若干UIに難があるのですが）．</p>
+<p><a href="http://sonson.jp/wp/wp-content/uploads/2014/03/GIFBrewery.png"><img src="http://sonson.jp/wp/wp-content/uploads/2014/03/GIFBrewery.png" alt="GIFBrewery" width="815" height="767" class="aligncenter size-full wp-image-3170" /></a></p>
+<p>列挙すると，</p>
+<ul>
+<li>動画はドラッグアンドドロップで開ける</li>
+<li>In点，Out点をスライダで指定する</li>
+<li>切り出しができる</li>
+<li>切り出し後のリサイズができる</li>
+<li>動画のフレームレートを使ってフレーム数とフレームの待機時間を自動調節</li>
+<li>何種類かの方法で減色し，サイズを圧縮できる</li>
+</ul>
+<p>というところがポイントです． 私は，これ以上アニメーションGIFに求めるところはないので，満足満足です．</p>
+<h1>シミュレータ→動画→GIF</h1>
+<p>それで書き出してみたのが，以下のGIFです． サイズも148KBで割りと軽いです． 2tchの用に画面の色数が少ないものは，単純な減色で圧縮しやすいので，比較としてはあまり参考にならないかも知れませんが．</p>
+<p>以上，githubのREADMEにちょっとした動画を上げたい人にお勧めのツール群でした．</p>
+<p><a href="https://raw.github.com/sonsongithub/UZInputCandidateAccessory/master/screenshot/UZInputCandidateAccessory.gif"><img src="https://raw.github.com/sonsongithub/UZInputCandidateAccessory/master/screenshot/UZInputCandidateAccessory.gif" width="320" height="568" class="aligncenter" /></a></p>
+<h1>AppStore</h1>
+<p><a href="https://itunes.apple.com/jp/app/simcap/id423124409?mt=12&#038;at=11l7gF" target="_blank" rel="nofollow"><img width="75" class="alignleft" align="left" src="http://a5.mzstatic.com/us/r30/Purple6/v4/a4/fb/05/a4fb0543-44af-dbb2-90ee-c570b10834e5/SimCap.75x75-65.png" style="border-radius: 11px 11px 11px 11px;-moz-border-radius: 11px 11px 11px 11px;-webkit-border-radius: 11px 11px 11px 11px;box-shadow: 1px 4px 6px 1px #999999;-moz-box-shadow: 1px 4px 6px 1px #999999;-webkit-box-shadow: 1px 4px 6px 1px #999999;margin: -5px 15px 1px 5px;" /></a>** <a href="https://itunes.apple.com/jp/app/simcap/id423124409?mt=12&#038;at=11l7gF" target="_blank" rel="nofollow">SimCap 1.5.2（￥1,000）</a>**<a href="https://itunes.apple.com/jp/app/simcap/id423124409?mt=12&#038;at=11l7gF" target="_blank" rel="nofollow"><img src="https://s.mzstatic.com/htmlResources/A3C1/web-storefront/images/viewinitunes_jp.png" style="vertical-align:bottom;" width="90" alt="App" /></a><br />
+カテゴリ: 開発ツール, ビデオ<br />
+販売元: Just About Managing &#8211; Just About Managing（サイズ: 2.8 MB）<br style="clear: both;" /></p>
+<p><a href="https://itunes.apple.com/jp/app/gif-brewery/id435989461?mt=12&#038;at=11l7gF" target="_blank" rel="nofollow"><img width="75" class="alignleft" align="left" src="http://a5.mzstatic.com/us/r30/Purple4/v4/65/8a/6d/658a6d33-97c7-6744-66d4-4fcd98eb80a2/gif_brewery.75x75-65.png" style="border-radius: 11px 11px 11px 11px;-moz-border-radius: 11px 11px 11px 11px;-webkit-border-radius: 11px 11px 11px 11px;box-shadow: 1px 4px 6px 1px #999999;-moz-box-shadow: 1px 4px 6px 1px #999999;-webkit-box-shadow: 1px 4px 6px 1px #999999;margin: -5px 15px 1px 5px;" /></a>** <a href="https://itunes.apple.com/jp/app/gif-brewery/id435989461?mt=12&#038;at=11l7gF" target="_blank" rel="nofollow">GIF Brewery 2.3.2（￥500）</a>**<a href="https://itunes.apple.com/jp/app/gif-brewery/id435989461?mt=12&#038;at=11l7gF" target="_blank" rel="nofollow"><img src="https://s.mzstatic.com/htmlResources/A3C1/web-storefront/images/viewinitunes_jp.png" style="vertical-align:bottom;" width="90" alt="App" /></a><br />
+カテゴリ: ビデオ, ユーティリティ<br />
+販売元: Hello, Resolven &#8211; Patrick Rogers（サイズ: 1.3 MB）<br style="clear: both;" /></p>
+<div class="facebook_like_button" style="float: left; margin-left: 0px;"><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fsonson.jp%2F%3Fp%3D3152&amp;layout=button_count&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;width=120" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:120px; height:25px"></iframe></div>
+
+<!-- This is the start of the WP Twitter Button code -->
+<div id="rk_wp_twitter_button" style="margin: 0px 0px 0px 0px; float: left"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sonson.jp/?p=3152" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div>
+<!-- This is the end of the WP Twitter Button code -->
+
+	</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+		<span class="cat-links block">Posted in <a href="http://sonson.jp/?cat=31" title="Blog の投稿をすべて表示" rel="category">Blog</a>.</span>	</footer><!-- #entry-meta -->
+	
+	</article><!-- #post-3152 -->
+<article id="post-3147" class="post-3147 post type-post status-publish format-standard hentry category-blog">
+		
+	<header class="page-header">
+	<h1 class="entry-title"><a href="http://sonson.jp/?p=3147" title="Permalink to 2tch version6.0" rel="bookmark">2tch version6.0</a></h1>		<div class="entry-meta">
+			<span class="sep">Posted on </span><a href="http://sonson.jp/?p=3147" title="4:41 PM" rel="bookmark"><time class="entry-date" datetime="2014-03-01T16:41:06+00:00" pubdate>2014年3月1日</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="http://sonson.jp/?author=1" title="View all posts by sonson" rel="author">sonson</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+		<div class="entry-content clearfix">
+		<p>やっとリリース手前まで来ました．</p>
+<p>iOS7以降のみ対応です． ユーザさんには見えない部分では，リファクタリングをメインに徹底的に再実装し，ソースコードが30%くらい減りました．</p>
+<p>UXとして大きく変わるところは，</p>
+<ul>
+<li>iOS7のアピアランスデザインに準拠</li>
+<li>文字選択ができるようになった</li>
+<li>サムネイルの挙動</li>
+<li>実況用に読み上げ機能を実装してみた</li>
+<li>iPad版のポップアップの挙動変更</li>
+<li>設定ビューの階層を大幅変更</li>
+<li>Push Notificationの安定性を向上</li>
+</ul>
+<p>です．</p>
+<p>テキスト選択は不要だと思っていたんですが，割りと便利なので採用しました． 特にGoogleで検索するのが便利です．</p>
+<p><iframe width="560" height="315" src="//www.youtube.com/embed/SdJa1e6btOw" frameborder="0" allowfullscreen></iframe></p>
+<p>主立ったバグも見えなくなってきたので，そろそろAppleに送信しようかと思っています．</p>
+<div class="facebook_like_button" style="float: left; margin-left: 0px;"><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fsonson.jp%2F%3Fp%3D3147&amp;layout=button_count&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;width=120" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:120px; height:25px"></iframe></div>
+
+<!-- This is the start of the WP Twitter Button code -->
+<div id="rk_wp_twitter_button" style="margin: 0px 0px 0px 0px; float: left"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sonson.jp/?p=3147" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div>
+<!-- This is the end of the WP Twitter Button code -->
+
+	</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+		<span class="cat-links block">Posted in <a href="http://sonson.jp/?cat=31" title="Blog の投稿をすべて表示" rel="category">Blog</a>.</span>	</footer><!-- #entry-meta -->
+	
+	</article><!-- #post-3147 -->
+<article id="post-3129" class="post-3129 post type-post status-publish format-standard hentry category-blog">
+		
+	<header class="page-header">
+	<h1 class="entry-title"><a href="http://sonson.jp/?p=3129" title="Permalink to オレオレポップオーバー〜UZMultipleLayeredPopoverController" rel="bookmark">オレオレポップオーバー〜UZMultipleLayeredPopoverController</a></h1>		<div class="entry-meta">
+			<span class="sep">Posted on </span><a href="http://sonson.jp/?p=3129" title="11:24 AM" rel="bookmark"><time class="entry-date" datetime="2014-01-14T11:24:40+00:00" pubdate>2014年1月14日</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="http://sonson.jp/?author=1" title="View all posts by sonson" rel="author">sonson</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+		<div class="entry-content clearfix">
+		<p>UIPopoverController，グダグダですよね． 階層的に表示すると審査で文句言われるし，ビューコントローラからUIPopoverControllerのインスタンスにアクセスできないし，UIPopoverControllerを破棄してもインスタンスは開放されないし，容易に多重表示されちゃうし・・・・． とりあえず，グダグダです．</p>
+<p>そこで，仕方がないのでiOS7のUIっぽいオリジナルのポップオーバーを作りました．</p>
+<p><iframe width="640" height="480" src="//www.youtube.com/embed/ePbiWwZu3w4" frameborder="0" allowfullscreen></iframe></p>
+<p>
+<pre class="brush: cpp; title: ; notranslate" title="">
+@interface UIViewController (UZMultipleLayeredPopoverController)
+ - (void)dismissCurrentPopoverController;
+ - (void)dismissMultipleLayeredPopoverController;
+ - (void)presentMultipleLayeredPopoverWithViewController:(UIViewController&lt;em&gt;)viewController
+ 　　　　　　　　　　　　　　　　　　　　　　contentSize:(CGSize)contentSize
+ 　　　　　　　　　　　　　　　　　　　　　　　 fromRect:(CGRect)fromRect
+ 　　　　　　　　　　　　　　　　　　　　　　　　 inView:(UIView&lt;/em&gt;)inView
+ 　　　　　　　　　　　　　　　　　　　　　　　direction:(UZMultipleLayeredPopoverDirection)direction;
+@end
+</pre>
+</p>
+<p>これら3つのメソッドだけで利用することができます． ポップオーバー上に表示するビューは，ビューコントローラをセットして作ります． このため，従来のUINavigcationControllerのように使うことができます． たとえば，以下のようなコードで，Storyboardから生成したビューコントローラをポップオーバー上に配置できます．</p>
+<p>
+<pre class="brush: cpp; title: ; notranslate" title="">
+id viewController = [self.storyboard instantiateViewControllerWithIdentifier:@&quot;NavigationController&quot;];
+[self presentMultipleLayeredPopoverWithViewController:viewController
+ 　　　　　　　　　　　　　　　　　　　　　contentSize:CGSizeMake(320, 480)
+ 　　　　　　　　　　　　　　　　　　　　　　 fromRect:button.frame
+ 　　　　　　　　　　　　　　　　　　　　　　　 inView:self.view
+ 　　　　　　　　　　　　　　　　　　　　　　direction:UZMultipleLayeredPopoverAnyDirection];
+</pre>
+</p>
+<p>ソースは，BSDライセンスでgithubで公開しています． 使ってみてください．</p>
+<p><a href="https://github.com/sonsongithub/UZMultipleLayeredPopoverController">github</a></p>
+<div class="facebook_like_button" style="float: left; margin-left: 0px;"><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fsonson.jp%2F%3Fp%3D3129&amp;layout=button_count&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;width=120" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:120px; height:25px"></iframe></div>
+
+<!-- This is the start of the WP Twitter Button code -->
+<div id="rk_wp_twitter_button" style="margin: 0px 0px 0px 0px; float: left"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sonson.jp/?p=3129" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div>
+<!-- This is the end of the WP Twitter Button code -->
+
+	</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+		<span class="cat-links block">Posted in <a href="http://sonson.jp/?cat=31" title="Blog の投稿をすべて表示" rel="category">Blog</a>.</span>	</footer><!-- #entry-meta -->
+	
+	</article><!-- #post-3129 -->
+<article id="post-3125" class="post-3125 post type-post status-publish format-standard hentry category-blog">
+		
+	<header class="page-header">
+	<h1 class="entry-title"><a href="http://sonson.jp/?p=3125" title="Permalink to githubとSourceTree周りで色々困った話" rel="bookmark">githubとSourceTree周りで色々困った話</a></h1>		<div class="entry-meta">
+			<span class="sep">Posted on </span><a href="http://sonson.jp/?p=3125" title="2:58 PM" rel="bookmark"><time class="entry-date" datetime="2013-12-30T14:58:11+00:00" pubdate>2013年12月30日</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="http://sonson.jp/?author=1" title="View all posts by sonson" rel="author">sonson</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+		<div class="entry-content clearfix">
+		<h1>Pushできない！！</h1>
+<p>先日，Photoshopでアイコンを作成し，まとめてリソースをgithubにPushしようとすると・・・・．<br />
+できない！！！！</p>
+<p>エラーメッセージを眺めると，</p>
+<p><code>error: RPC failed; result=22, HTTP code = 413<br />
+fatal: The remote end hung up unexpectedly<br />
+fatal: The remote end hung up unexpectedly</code></p>
+<p>このエラーメッセージでググると，阿鼻叫喚→<a href="https://www.google.co.jp/search?client=safari&amp;rls=en&amp;q=github+RPC+failed&amp;ie=UTF-8&amp;oe=UTF-8&amp;gws_rd=cr&amp;ei=xAG-UrjfK4eOkgWJ5oHYCg">Google</a></p>
+<p>@niwさんが私のTweetに反応するも，似たような（ちょっと違う）エラーで@niwさんが悩んでいることが判明し，解決せず．<br />
+@niwさんが悩んでいる問題も結構深刻で，リポジトリが大きくなると発生する．- <a href="https://help.github.com/articles/working-with-large-files">github</a></p>
+<p>ググってみんなの症状を読み進めていくと，大きいデータをPushしようとすると発生していることが共通項目としてあるということがわかってきた．<br />
+そこで，一旦，コミットを戻して，Photoshopのファイルをひとつずつコミットして，Pushすると・・・・成功！！</p>
+<p>数MBを超えるデータを更新して，Pushをするときは気をつけた方がいいですぞ！！！！</p>
+<h1>MavericksでSourceTreeがおかしい</h1>
+<p>Mavericksにアップデートしてから，SourceTreeを使っていると，毎度認証が必要なとき（たとえばprivateリポジトリにアクセスしたときなど）に変なアラートが出るようになった．</p>
+<p>@norio_nomuraによると，<a href="http://support.apple.com/kb/TS5362?viewlocale=en_US&amp;locale=en_US">Mavericks v10.9.1: Repeated prompts to unlock &#8220;Local Items&#8221; keychain</a>が，原因っぽい．<br />
+早速試してみると，全然治らない．<br />
+仕方がないので，SourceTreeを一旦削除して，再インストールしてみたら治った．<br />
+なんだったんだ．</p>
+<div class="facebook_like_button" style="float: left; margin-left: 0px;"><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fsonson.jp%2F%3Fp%3D3125&amp;layout=button_count&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;width=120" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:120px; height:25px"></iframe></div>
+
+<!-- This is the start of the WP Twitter Button code -->
+<div id="rk_wp_twitter_button" style="margin: 0px 0px 0px 0px; float: left"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sonson.jp/?p=3125" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div>
+<!-- This is the end of the WP Twitter Button code -->
+
+	</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+		<span class="cat-links block">Posted in <a href="http://sonson.jp/?cat=31" title="Blog の投稿をすべて表示" rel="category">Blog</a>.</span>	</footer><!-- #entry-meta -->
+	
+	</article><!-- #post-3125 -->
+<article id="post-3122" class="post-3122 post type-post status-publish format-standard hentry category-blog">
+		
+	<header class="page-header">
+	<h1 class="entry-title"><a href="http://sonson.jp/?p=3122" title="Permalink to iOS7についてそろそろまとめる" rel="bookmark">iOS7についてそろそろまとめる</a></h1>		<div class="entry-meta">
+			<span class="sep">Posted on </span><a href="http://sonson.jp/?p=3122" title="7:55 AM" rel="bookmark"><time class="entry-date" datetime="2013-12-28T07:55:05+00:00" pubdate>2013年12月28日</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="http://sonson.jp/?author=1" title="View all posts by sonson" rel="author">sonson</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+		<div class="entry-content clearfix">
+		<p><a href="http://mobiletou.ch/2013/12/ios開発者から見るios-7の要注目ポイントとは！？">初出</a></p>
+<h2>6(updates) = 1(update/year) X 6(year)</h2>
+<p>1年に1回と驚異的なスピードでメジャーアップデートされつづけるiOSは，フラットデザイン？なUIに一新され，ついにバージョン7になりました．<br />
+iOS2.0用のiOS SDKが公開されたのが2008年の初旬ですが，私はJailbreak環境での開発を2007年の9月頃から始めていましたので，ついに私のiOS開発歴も6年となりました．<br />
+1年に1回のアップデートは，ver5.0くらいで終わると私は予想していたのですが，その後も続くAppleのiOSアップデートの速さに驚くばかりです．</p>
+<p>iOS7へのアップデートの重要なポイントは，WWDC以降，色々なサイトで取り上げられていますが，開発者向けの情報に関してはどうでしょうか．<br />
+6年目のiOSに関してはベテラン（まぁ開始からですから・・・），信者としては駆け出しの私がちょっと書いてみたいと思います．</p>
+<h2>フラット万歳</h2>
+<p>開発者が受けるiOS7の表面上の恩恵は，なんといってもフラットデザインだと私は思っています．<br />
+好き嫌いの話をすると，私は，iOS6のUINavigationBarのボタン等はわかりやすくて好きでしたが，フラットデザインの楽さには勝てないというのが私の本音です<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>．<br />
+アイコン作成，グラデーションや影を再現する手間は並ではありません．<br />
+また，iOS7の設定アプリの挙動をつぶさに見るとわかりますが，セルを選択中に左の画像の色やテキストが反転しません．<br />
+こういった細かい動作を再現するためには画像リソースをたくさん用意したり，そのためだけにメソッドを実装しないといけないことが多いため，挙動面でもtoo muchだったUIの表現が簡素化されたことは，開発者にとって作業量を減らしてくれるありがたいデザインになったといえます．<br />
+UIKitを使わないで０からコードでUIを表現する人は別ですが，UIKItでUIを組み上げる人は，その中身に集中できることになったと私は考えます．<br />
+この辺のことはラジオで@fladdictさんもおしゃっていたように<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>, よりコンテンツやUX(つまり中身ですね)に集中しろというAppleからのメッセージなのかもしれません．</p>
+<h2>真面目にAPIについて</h2>
+<p>iOS7では，また新しいAPIが追加されました．どちらかというと，これらは機能を強化する目的のものが多いと私は考えます．<br />
+私がiOS7で注目しているトップ3+1の機能は，以下のものです．</p>
+<ol>
+<li>TextKit</li>
+<li>NSURLSession</li>
+<li>Custom transition</li>
+<li>One more thing, Core Bluetooth!</li>
+</ol>
+<h3>TextKit</h3>
+<p>iOS7では，CoreTextを使わずにより高度なテキスト処理が行えるようになりました．<br />
+キーとなるクラスは，NSTextStorage, NSLayoutManager, NSTextContainerの3つです．<br />
+UITextViewクラスからもこれらのクラスのインスタンスにアクセスでき、UITextView上でNSAttributedStringを組み合わせて複雑なレイアウトを組むことができます．<br />
+例えば，CoreTextを使って自前でレンダリングした場合も、NSLayoutManagerを使ってユーザがタップしたテキストを検出したりするコードを簡単に書けたり，NSAAttributedStringを使ってHTMLのaタグのようなテキストも実現できます．<br />
+これらの実装はOSXでは，少し前から提供されており、やっとiOSがそれに追いついてきたとも言えます．</p>
+<p>しかし、OSXのすべての機能が利用できるわけでもなく、クリカッブルテキストも機能は限定的です．<br />
+具体的には，クリカッブルテキストのイベントは自由に受け取ることはできず、リンクが貼られたテキストの色を自由に設定することもできません．<br />
+未だ完璧ではないTextKitですが、従来システムでは面倒なCoreTextで実装しなければならなかった機能を簡単に実現できる点から、iOS7の重要なアドバンテージの一つであると私は考えています．<br />
+TextKit周りは，拙作<a href="https://github.com/sonsongithub/UZTextView">UZTextView</a>のエントリを書くときにもう少し詳しく書きたいと思っています．</p>
+<h3>NSURLSession</h3>
+<p>ダウンロードタスクを別プロセスのデーモンに任せてしまい，バックグラウンドでもダウンロードできるようにする優れもの．<br />
+説明は他のサイトにお任せしますｗ</p>
+<h3>Custom transition</h3>
+<p>iOS7では，プログラマがUIViewControllerの画面遷移のアニメーションをUIViewControllerと切り離して定義できるようになりました（今更感が否めませんが・・・）．<br />
+私もこれを実現するためにUIStoryBoardSegueをオーバーライドしてとか，涙ぐましいことをやりましたが，iOS7からその必要はありません．<br />
+UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioningプロトコルをしゃべるクラスを実装し，UIViewControllerのsetTransitioningDelegateに遷移を定義するUIViewControllerTransitioningDelegateプロトコルを実装したクラスのオブジェクトを渡すだけで大筋の足場が完成します．<br />
+おおざっぱに言うと，UIViewControllerAnimatedTransitioningプロトコルは，画面遷移のアニメーションを実装するもので，UIViewControllerTransitioningDelegateプロトコルは，画面遷移時に使うアニメーションを定義するものです（UIViewControllerTransitioningDelegateで，UIViewControllerAnimatedTransitioningを返すみたいな感じ）．<br />
+この機能も，UIViewControllerとアニメーションのコードを切り離したいというプログラマの念願をかなえてくれるiOS7の目玉機能だと私は思います（更感が否めませんが・・・しつこい）．</p>
+<h3>+1, iBeaconとBTLEへの思い</h3>
+<p>最後に！One more thing, やっと，本来の力を見せ始めたCoreBluetooth！<br />
+私は，2年くらい前のどっかのイベントでもこれからくるのはBluetooth LEだ！！って言まして，全然BTLEの人気が来ないので，泣きそうだったんですが，ようやく立ち上がり始めてきてうれしい限りです．<br />
+iBeaconは，BTLEの電波にロケーション情報を載せてブロードキャストし，CoreLocationフレームワークでそれらを簡単に受け取ることができる仕組みです．<br />
+こういう考え方の典型例として，<a href="http://blog.masuidrive.jp/2013/04/18/tomodachi/">@masuidriveのブログのアイデアや</a>，拙作<a href="https://itunes.apple.com/jp/app/anonyfollow-bluetoothdesurechigaiforo/id566947449?mt=8">AnonyFollow</a>があります．<br />
+これは共にコンセプトが同じもので，Bluetooth LEで誰とでもすれ違いフォローができる電波Pokenを作ろうというコンセプトです．<br />
+個人事業者にとっては，CoreBluetoothのおもしろみは，iOSとOSX同士のライトな連携にあると私は思っています．<br />
+結局，デバイスを個人や小資本で大量生産するのは不可能なので，最終的に趣味プログラマーはそっちへ収束すると私は考えますが・・・そんな閉塞感をiBeaconが打破してくれて，かっこいい，かつユニークなデバイスや環境が満を持して登場！！！・・・・というのが今の私のBTLEへの思いです．</p>
+<h2>まとめ</h2>
+<p>以上，ざらっと，iOS7について半年経ってからまとめてみました．<br />
+他にも，CIをサポートするBot，doxygenスタイルでコメントを書くと自動的にヘルプにしてくれる機能などがXcodeに追加されていたりします．<br />
+これからは，ブログであまり人が取り上げそうにないことを中心に書いていきたいと思っています．<br />
+次回は，TestFlightへの自動アップロードを中心にBotのパスについて解説したいと思います．</p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn:1">
+<p>行き過ぎたskeuomorphismは，本来のデザインの意味や目的を失わせると私は考えます．MacOSX10.8やiOS6のメモ帳アプリのデザインは，私にとって意味不明でした．これらコンピュータ上で動くメモ帳は，いわゆるメモ帳とはまったく機能も役割も異なるものです．これらのアプリケーションは，本来のメモ帳が持つ自由に記入できる能力はまったくない，単純な正規化されたテキストいれるだけの箱です．そういったアプリケーションに物理的な本来のメモ帳のデザインを取り入れることは，ユーザに誤解を与えるだけだと私は考えています．&#160;<a href="#fnref:1" rev="footnote">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://twitter.com/fladdict/status/387715016650403840">参考リンク</a> &#8211; Twitter&#160;<a href="#fnref:2" rev="footnote">&#8617;</a></p>
+</li>
+</ol>
+</div>
+<div class="facebook_like_button" style="float: left; margin-left: 0px;"><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fsonson.jp%2F%3Fp%3D3122&amp;layout=button_count&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;width=120" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:120px; height:25px"></iframe></div>
+
+<!-- This is the start of the WP Twitter Button code -->
+<div id="rk_wp_twitter_button" style="margin: 0px 0px 0px 0px; float: left"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sonson.jp/?p=3122" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div>
+<!-- This is the end of the WP Twitter Button code -->
+
+	</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+		<span class="cat-links block">Posted in <a href="http://sonson.jp/?cat=31" title="Blog の投稿をすべて表示" rel="category">Blog</a>.</span>	</footer><!-- #entry-meta -->
+	
+	</article><!-- #post-3122 -->
+<nav class="pagination pagination-centered clearfix"><ul class='page-numbers'>
+	<li><span class='page-numbers current'>1</span></li>
+	<li><a class='page-numbers' href='http://sonson.jp/?paged=2'>2</a></li>
+	<li><a class='page-numbers' href='http://sonson.jp/?paged=3'>3</a></li>
+	<li><a class='page-numbers' href='http://sonson.jp/?paged=4'>4</a></li>
+	<li><span class="page-numbers dots">&hellip;</span></li>
+	<li><a class='page-numbers' href='http://sonson.jp/?paged=100'>100</a></li>
+	<li><a class="next page-numbers" href="http://sonson.jp/?paged=2">次へ &raquo;</a></li>
+</ul>
+</nav>	</div><!-- #content -->
+	</section><!-- #primary -->
+
+<section id="secondary" class="widget-area span4" role="complementary">
+			<aside id="recent-posts-3" class="widget well widget_recent_entries">		<h2 class="widget-title">最近の投稿</h2>		<ul>
+					<li>
+				<a href="http://sonson.jp/?p=3260">書評：UIKit徹底解説 iOSユーザーインターフェイスの開発</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3254">potatotipsで発表してきたお</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3228">JenkinsでTestFlight，再びハマるー備忘録</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3217">yidev@恵比寿勉強会</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3183">オープンソースな2tchの部品</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3152">iOSシミュレータからanimation GIFを作るツール群</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3147">2tch version6.0</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3129">オレオレポップオーバー〜UZMultipleLayeredPopoverController</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3125">githubとSourceTree周りで色々困った話</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3122">iOS7についてそろそろまとめる</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3120">書評 &#8211; 上を目指すプログラマーのためのiPhoneアプリ開発テクニック iOS 7編</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3101">2tch v5.0.5</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3087">パーセントエスケープで勘違い</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=3035">2tch v5.0.1</a>
+						</li>
+					<li>
+				<a href="http://sonson.jp/?p=2949">2tch v5.0.1 &#8211; すみません，問題修正バージョンです</a>
+						</li>
+				</ul>
+		</aside></section><!-- #secondary .widget-area -->
+				<footer id="colophon" role="contentinfo" class="span12">
+										<div id="page-footer" class="well clearfix">
+						<span class="credits alignleft">&copy; 2014 <a href="http://sonson.jp/">sonson@Picture&amp;Software</a>, all rights reserved.</span>						<div id="site-generator">
+							<a	href="http://wordpress.org/"
+								title="Semantic Personal Publishing Platform"
+								target="_blank"
+								rel="generator">Proudly powered by WordPress</a>
+						</div>
+					</div><!-- #page-footer .well .clearfix -->
+									</footer><!-- #colophon -->
+							</div><!-- #page -->
+		</div><!-- .container -->
+	<!-- 30 queries. 2.296 seconds. -->
+		<div style="display:none">
+	</div>
+<script type='text/javascript' src='http://sonson.jp/wp/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shCore.js?ver=3.0.9'></script>
+<script type='text/javascript' src='http://sonson.jp/wp/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushCpp.js?ver=3.0.9'></script>
+<script type='text/javascript'>
+	(function(){
+		var corecss = document.createElement('link');
+		var themecss = document.createElement('link');
+		var corecssurl = "http://sonson.jp/wp/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shCore.css?ver=3.0.9";
+		if ( corecss.setAttribute ) {
+				corecss.setAttribute( "rel", "stylesheet" );
+				corecss.setAttribute( "type", "text/css" );
+				corecss.setAttribute( "href", corecssurl );
+		} else {
+				corecss.rel = "stylesheet";
+				corecss.href = corecssurl;
+		}
+		document.getElementsByTagName("head")[0].insertBefore( corecss, document.getElementById("syntaxhighlighteranchor") );
+		var themecssurl = "http://sonson.jp/wp/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shThemeDefault.css?ver=3.0.9";
+		if ( themecss.setAttribute ) {
+				themecss.setAttribute( "rel", "stylesheet" );
+				themecss.setAttribute( "type", "text/css" );
+				themecss.setAttribute( "href", themecssurl );
+		} else {
+				themecss.rel = "stylesheet";
+				themecss.href = themecssurl;
+		}
+		//document.getElementById("syntaxhighlighteranchor").appendChild(themecss);
+		document.getElementsByTagName("head")[0].insertBefore( themecss, document.getElementById("syntaxhighlighteranchor") );
+	})();
+	SyntaxHighlighter.config.strings.expandSource = 'ソースを表示';
+	SyntaxHighlighter.config.strings.help = 'SyntaxHighlighterについて';
+	SyntaxHighlighter.config.strings.alert = 'SyntaxHighlighter\n\n';
+	SyntaxHighlighter.config.strings.noBrush = '指定のブラシが見つかりませんでした: ';
+	SyntaxHighlighter.config.strings.brushNotHtmlScript = 'HTMLスクリプトのオプションのためにブラシが構成されませんでした: ';
+	SyntaxHighlighter.defaults['pad-line-numbers'] = false;
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.all();
+</script>
+<script type='text/javascript' src='http://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201425'></script>
+<script type='text/javascript' src='http://s.gravatar.com/js/gprofiles.js?ver=2014Junaa'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://sonson.jp/wp/wp-content/plugins/jetpack/modules/wpgroho.js?ver=3.9.1'></script>
+<script type='text/javascript' src='http://sonson.jp/wp/wp-content/themes/the-bootstrap/js/bootstrap.min.js?ver=2.0.3'></script>
+<script type='text/javascript' src='http://sonson.jp/wp/wp-content/themes/the-bootstrap/js/the-bootstrap.min.js?ver=2.0.1'></script>
+
+	<script src="http://stats.wordpress.com/e-201425.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	st_go({v:'ext',j:'1:3.0',blog:'67692023',post:'0',tz:'9'});
+	var load_cmc = function(){linktracker_init(67692023,0,2);};
+	if ( typeof addLoadEvent != 'undefined' ) addLoadEvent(load_cmc);
+	else load_cmc();
+	</script>	</body>
+</html>
+
+<!-- Dynamic Page Served (once) in 2.298 seconds -->
+<!-- Cached page served by WP-Cache -->

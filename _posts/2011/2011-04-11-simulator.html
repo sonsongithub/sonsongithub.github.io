@@ -1,0 +1,43 @@
+---
+layout: post
+title: simulatorとdeviceのライブラリを統合する
+categories:
+- blog
+tags:
+- Blog
+- Core AR
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>iOS SDKによる開発では，自前で作ったスタティックライブラリ，AdMakerのような配布されているライブラリは，シミュレータ用とデバイス用の二つになってしまいます．<br />
+これはあまり美しくありません．<br />
+しかも，最近では，iPhoneのアップデートでARM6とARM7の2種類のCPUが市場に出回ることになり，ARM6とARM7にそれぞれライブラリを用意するといった面倒くさいこともありえる状況です．</p>
+<p>一方で，AdMobで配布されているようなライブラリは，シミュレータ用とデバイス用のスタティックライブラリはひとつのファイルにまとめられています．これはどういうことでしょう・・・・・．</p>
+<p>実は，lipoという便利なライブラリ結合ツールが用意されていたのです．<br />
+このコマンドラインのライブラリは，容易にライブラリを結合することが出来ます．</p>
+<p>例えば，AdMakerを例にとると，ライブラリファイルは，以下の二つです．</p>
+<p>libAdMaker_sim.a<br />
+libAdMaker_dev.a</p>
+<p>この二つは，以下のコマンドでひとつにまとめることができます．</p>
+<p>> lipo -create ./libAdMaker_sim.a ./libAdMaker_dev.a -output ./libAdMaker.a</p>
+<p>これでlibAdMaker.aひとつにまとまります．<br />
+ライブラリファイルの中身を調べたい場合もこのlipoコマンドで調べられます．</p>
+<p>> lipo -info ./libAdMaker.a<br />
+Architectures in the fat file: libAdMaker.a are: armv6 armv7 i386 </p>
+<p>ちゃんとシミュレータとデバイスのライブラリが統合されているようです．<br />
+ついでにAdMobも調べて見ましょう．</p>
+<p>> lipo -info ./libGoogleAdMobAds.a<br />
+Architectures in the fat file: libGoogleAdMobAds.a are: i386 armv6 armv7 </p>
+<p>AdMobも同様なようです．</p>
+<p>これでライブラリファイルのマルチバイナリ対応ができました．<br />
+便利ですね．</p>

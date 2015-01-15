@@ -1,0 +1,134 @@
+---
+layout: post
+title: JenkinsでTestFlight，再びハマるー備忘録
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wpcom_is_markdown: '1'
+  _wpas_done_all: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Botsを使っていた私ですが，なんだか色々使いにくいので，Jenkinsに戻ることにしました．<br />
+しかし，そのJenkinsについても証明書の取り扱いが面倒だったりする点が問題なのですが・・・・．今回はそれを回避するためにハマったポイントの備忘録です．</p>
+<h2>Jenkinsをまず消す</h2>
+<p>JenkinsでiOSバイナリをビルドする時に問題になってくるのが，証明書関連です．<br />
+Jenkinsのデフォルトのインストーラを使うと，Jenkinsユーザが作成され，そのJenkinsユーザによって実行されるデーモンとしてJenkinsが起動されます．<br />
+これが・・・・大問題．Jenkinsユーザで実行すると，デフォルトでキーチェーンにインストールした証明書等にアクセスできないためキーチェーンを修正したり，プロビジョニングプロファイルのパスを変更したりする必要があります．</p>
+<p>この問題点を解消するため，まずデフォルトのJenkinsを削除し，再インストールします．削除は，インストーラを使っていれば，アンインストールスクリプトが付属しています．</p>
+<pre><code>/Library/Application Support/Jenkins/Uninstall.command
+</code></pre>
+<h2>Jenkinsをユーザで起動する</h2>
+<p>まず，インストーラでもバイナリでもいいのですが，Jenkinsをインストールします．<br />
+インストーラを使う前提で説明しますが，インストールするとき，<strong>jenkins daemonで起動しないように</strong>しておきます．<br />
+そして，このインストールしたJenkinsを自分のユーザ権限で起動するように設定します．</p>
+<p>参考:<a href="https://gist.github.com/shunirr/3522219">Jenkins をOS X のログインユーザー権限のデーモンで自動起動しておく設定</a></p>
+<p>インストーラを使うと，/Library/Application Support/Jenkinsに起動スクリプトjenkins-runner.shがインストールされます．<br />
+編集する前に，/Library/Application Support/Jenkins/jenkins-runner.shは，sudo chmodとかで書き込み権限を追加しておきましょう．<br />
+おそらく，tmpdirの値を変更しないと起動しないと思います．</p>
+<pre><code>#!/bin/bash
+#
+# Startup script used by Jenkins launchd job.
+# Mac OS X launchd process calls this script to customize
+# the java process command line used to run Jenkins.
+# 
+# Customizable parameters are found in
+# /Library/Preferences/org.jenkins-ci.plist
+#
+# You can manipulate it using the "defaults" utility.
+# See "man defaults" for details.
+
+defaults="defaults read /Library/Preferences/org.jenkins-ci"
+
+war=`$defaults war` || war="/Applications/Jenkins/jenkins.war"
+
+javaArgs="-Dfile.encoding=UTF-8"
+
+minPermGen=`$defaults minPermGen` &amp;&amp; javaArgs="$javaArgs -XX:PermSize=${minPermGen}"
+permGen=`$defaults permGen` &amp;&amp; javaArgs="$javaArgs -XX:MaxPermSize=${permGen}"
+
+minHeapSize=`$defaults minHeapSize` &amp;&amp; javaArgs="$javaArgs -Xms${minHeapSize}"
+heapSize=`$defaults heapSize` &amp;&amp; javaArgs="$javaArgs -Xmx${heapSize}"
+
+tmpdir=`${HOME}/.jenkins/tmp` &amp;&amp; javaArgs="$javaArgs -Djava.io.tmpdir=${tmpdir}"
+
+home=`$defaults JENKINS_HOME` &amp;&amp; export JENKINS_HOME="$home"
+
+add_to_args() {
+    val=`$defaults $1` &amp;&amp; args="$args --${1}=${val}"
+}
+
+args=""
+add_to_args prefix
+add_to_args httpPort
+add_to_args httpListenAddress
+add_to_args httpsPort
+add_to_args httpsListenAddress
+add_to_args ajp13Port
+add_to_args ajp13ListenAddress
+
+echo "JENKINS_HOME=$JENKINS_HOME"
+echo "Jenkins command line for execution:"
+echo /usr/bin/java $javaArgs -jar "$war" $args
+exec /usr/bin/java $javaArgs -jar "$war" $args
+</code></pre>
+<p>このスクリプトをlaunchdで起動するように登録します．<br />
+次に<a href="https://gist.github.com/shunirr/3522219">参考サイト</a>にならって，/Users/sonson/Library/LaunchAgents/jenkins.plistを以下の内容で作成し，保存します．</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+    &lt;dict&gt;
+        &lt;key&gt;EnvironmentVariables&lt;/key&gt;
+        &lt;dict&gt;
+            &lt;key&gt;JENKINS_HOME&lt;/key&gt;
+            &lt;string&gt;${HOME}/.jenkins&lt;/string&gt;
+        &lt;/dict&gt;
+        &lt;key&gt;GroupName&lt;/key&gt;
+        &lt;string&gt;staff&lt;/string&gt;
+        &lt;key&gt;KeepAlive&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;Label&lt;/key&gt;
+        &lt;string&gt;jenkins&lt;/string&gt;
+        &lt;key&gt;ProgramArguments&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;/bin/bash&lt;/string&gt;
+            &lt;string&gt;/Library/Application Support/Jenkins/jenkins-runner.sh&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;RunAtLoad&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;UserName&lt;/key&gt;
+        &lt;string&gt;sonson&lt;/string&gt;
+    &lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+<p>次にlaunchdに以下のコマンドで起動登録しておきましょう．</p>
+<pre><code>launchctl load -wF -D user  ~/Library/LaunchAgents/jenkins.plist
+launchctl start jenkins
+</code></pre>
+<p>これで今，実行しているユーザ権限でJenkinsが起動するようになりました．<br />
+証明書の権限やパスで悩むことはないはずです！！！！！</p>
+<h2>JenkinsでTestFlightに自動アップロードする</h2>
+<p>Jenkinsのすばらしいところは，充実したプラグインです．iOSのビルド用のプラグインも充実しているので安心です．<br />
+まずは，Xcode build pluginでビルドの仕方を設定しましょう．</p>
+<p>すでにJenkinsはログイン中のユーザ権限で実行されるため，署名の実行も簡単です．</p>
+<p>Code sign identityには，キーチェーンで見られるiPhone Distribution: Hoge Bar (XXXXXXXXX)のようなタイトルを入力し，プロビジョニングプロファイルもそのままフルパスで入力してしまいましょう．</p>
+<p><img src="{{ site.url }}/assets//jenkins_codesign_01.png" alt="jenkins_codesign_01.png" class="aligncenter size-medium wp-image-3238" /></p>
+<p>TestFlight用にIPAファイルを作成するようにします．<br />
+後でアップロードするために，明示的にビルド先を指定しておきました．</p>
+<p><img src="{{ site.url }}/assets//jenkins_xcode_01.png" alt="jenkins_xcode_01.png" class="aligncenter size-medium wp-image-3238" /></p>
+<p>TestFlightにアップロードするためのTestFlightのトークンを設定しておきます．<br />
+TestFlightのプラグインをインストールしておけば，Jenkinsのルートから，Jenkinsの設定→システムの設定→下の方にTestFlightのトークンを入力するフォームがあるはずです．</p>
+<p><img src="{{ site.url }}/assets//jenkins_testflight_02.png" alt="jenkins_testflight_02.png" class="aligncenter size-medium wp-image-3238" /></p>
+<p>次に，ビルドしたIPAファイルと，dSYMファイルをアップロードするように設定します．</p>
+<p><img src="{{ site.url }}/assets//jenkins_testflight_01.png" alt="jenkins_testflight_01.png" class="aligncenter size-medium wp-image-3238" /></p>
+<p>これで自動アップロードの設定完了です．</p>

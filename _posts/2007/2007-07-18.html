@@ -1,0 +1,85 @@
+---
+layout: post
+title: "[お勉強] 箱クラスで描画2〜IE6にも対応したい！！"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "ゲーム"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>ご期待に沿えて，実装してみた．所要時間１０秒．</p>
+<div id="canvas20070718" style="width:490px;height:300px;border:thin red dotted;"></div>
+<p>
+どうだ？うまくいったか？</p>
+<p>いったくさい．<br />
+コードは以下．prototype.jsを使いますた．<br />
+変数がかぶらないようにしたんだけど，無用の心配・・・？<br />
+こういうときのスコープってどうなってるんだろう．<br />
+次回確かめてみよう．</p>
+<pre>
+&lt;script src="./prototype.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+objs3 = new Array();
+function Area3( inputx, inputy, inputnumber ) {
+var x = inputx;
+var y = inputy;
+var number = inputnumber;
+this.setup = setup;
+function setup() {
+var area = "area" + number;
+$('canvas20070718').innerHTML += "&lt;div id='" + area + "'&gt;"+area+"&lt;/div&gt;\n"
+$(area).style.position = "absolute";
+$(area).style.left = x + "px";
+$(area).style.top  = y + "px";
+$(area).style.width  = 50 + "px";
+$(area).style.height = 50 + "px";
+$(area).style.backgroundColor = "#AAAAAA";
+}
+}
+function clicked3(event) {
+var obj = new Area3( Event.pointerX(event), Event.pointerY(event), objs.size() );
+obj.setup();
+objs3.push( obj );
+}
+Event.observe( 'canvas20070718', 'click', clicked3, false);
+&lt;/script&gt;
+</pre>
+<p><script src="./prototype.js"></script><br />
+<script><br />
+objs3 = new Array();<br />
+function Area3( inputx, inputy, inputnumber ) {<br />
+var x = inputx;<br />
+var y = inputy;<br />
+var number = inputnumber;<br />
+this.setup = setup;<br />
+function setup() {<br />
+var area = "area" + number;<br />
+$('canvas20070718').innerHTML += "
+<div id='" + area + "'>"+area+"</div>
+<p>\n"<br />
+$(area).style.position = "absolute";<br />
+$(area).style.left = x + "px";<br />
+$(area).style.top  = y + "px";<br />
+$(area).style.width  = 50 + "px";<br />
+$(area).style.height = 50 + "px";<br />
+$(area).style.backgroundColor = "#AAAAAA";<br />
+}<br />
+}<br />
+function clicked3(event) {<br />
+var obj = new Area3(	Event.pointerX(event), Event.pointerY(event), objs3.size() );<br />
+obj.setup();<br />
+objs3.push( obj );<br />
+}<br />
+Event.observe( 'canvas20070718', 'click', clicked3, false);<br />
+</script></p>

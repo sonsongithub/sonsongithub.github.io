@@ -1,0 +1,47 @@
+---
+layout: post
+title: "[iPhone] 開発環境更新"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>iPhoneのAPIのハックが進んでいるらしい．<br />
+苦労して判明させてきたAPIたちも，もっと正しく判明していることがわかった．<br />
+ここのSubversionレポジトリから入手できる模様．<br />
+以下，備忘録．<br />
+<strong>※インストール</strong></p>
+<pre>
+・リポジトリ
+svn co http://svn.berlios.de/svnroot/repos/iphone-binutils/trunk/include include
+</pre>
+<p>ダウンロードしたincludeを/usr/local/arm-apple-darwin/arm-apple-darwinにコピーする．このとき，heavenlyとChaintoolでインストールしたincludeは，include.oldとでもして，回避しておく．<br />
+これでおk．<br />
+<strong>※ほかのフォルダのエイリアス</strong></p>
+<pre>
+/System/Library/Frameworks/ApplicationServices.framework/Frameworks/CoreGraphics.framework/Headers
+/System/Library/Frameworks/CoreServices.framework/Frameworks/CFNetwork.framework/Headers
+</pre>
+<p>の二つのフォルダのエイリアスを，</p>
+<pre>
+/usr/local/arm-apple-darwin/arm-apple-darwin/include/CoreGraphics
+/usr/local/arm-apple-darwin/arm-apple-darwin/include/CFNetwork
+</pre>
+<p>に作る．<br />
+<strong>※OpenGLES</strong><br />
+※補足・・・OpenGLESのビルド<br />
+このincludeでは，OpenGLES定数のヘッダが不完全なので，Andrew J. Willmott氏がハックしたものを使う．<br />
+<a href="http://www.cs.cmu.edu/~ajw/public/iphone-gl/">この辺</a>からどぞ．<br />
+あああああああ．<br />
+このヘッダいいじゃん・・・・．</p>

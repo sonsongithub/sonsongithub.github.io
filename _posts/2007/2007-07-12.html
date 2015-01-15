@@ -1,0 +1,79 @@
+---
+layout: post
+title: "[お勉強] 箱クラスで描画〜Javascriptでオブジェクト指向"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Ruby
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Areaというクラスで箱を描画しまくるスクリプト．</p>
+<pre>
+&lt;div id="canvas" style="width:490px;height:300px;border-style:solid;"&gt;&lt;/div&gt;
+&lt;script src="./prototype.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+objs = new Array();
+function Area( inputx, inputy, inputnumber ) {
+var x = inputx;
+var y = inputy;
+var number = inputnumber;
+this.setup = setup;
+function setup() {
+area = "area" + number;
+$('canvas').innerHTML += "&lt;div id='" + area + "'&gt;"+area+"&lt;/div&gt;\n"
+$(area).style.position = "absolute";
+$(area).style.left = x + "px";
+$(area).style.top  = y + "px";
+$(area).style.width  = 50 + "px";
+$(area).style.height = 50 + "px";
+$(area).style.backgroundColor = "#AAAAAA";
+}
+}
+$('canvas').onmousedown = function (event) {
+obj = new Area(	event.pageX, event.pageY, objs.size() );
+obj.setup();
+objs.push( obj );
+}
+&lt;/script&gt;
+</pre>
+<div id="canvas" style="width:490px;height:300px;border-style:solid;"></div>
+<p>この上の枠内をクリックすると，IDを持った箱が表示されます．<br />
+データを後で利用していないのでオブジェクト指向でやる意味がないのかもしれませんが，これはこの後の複線です．<br />
+<script src="./prototype.js"></script><br />
+<script><br />
+objs = new Array();<br />
+function Area( inputx, inputy, inputnumber ) {<br />
+var x = inputx;<br />
+var y = inputy;<br />
+var number = inputnumber;<br />
+this.setup = setup;<br />
+function setup() {<br />
+area = "area" + number;<br />
+$('canvas').innerHTML += "
+<div id='" + area + "'>"+area+"</div>
+<p>\n"<br />
+$(area).style.position = "absolute";<br />
+$(area).style.left = x + "px";<br />
+$(area).style.top  = y + "px";<br />
+$(area).style.width  = 50 + "px";<br />
+$(area).style.height = 50 + "px";<br />
+$(area).style.backgroundColor = "#AAAAAA";<br />
+}<br />
+}<br />
+$('canvas').onmousedown = function (event) {<br />
+obj = new Area(	event.pageX, event.pageY, objs.size() );<br />
+obj.setup();<br />
+objs.push( obj );<br />
+}<br />
+</script></p>

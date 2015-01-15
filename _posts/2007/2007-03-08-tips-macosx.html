@@ -1,0 +1,61 @@
+---
+layout: post
+title: "[Tips] MacOSXのJavaアプリでDockを起動させない"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta:
+  _oembed_18702d9976a4c5d2ad9f9a58f7270e77: "{{unknown}}"
+  _oembed_f932969a00ca7eb911f57da50797d08c: "{{unknown}}"
+  _oembed_0ea70412db6d78b84b79bbeeab13611f: "{{unknown}}"
+  _oembed_d42c982571c66d5fe2bfdef3d47c9acf: "{{unknown}}"
+  _oembed_88c96a6b35ddeaa1cd6e25ebda276aa9: "{{unknown}}"
+  _oembed_ca1148b62ac8a607fc51b1d00a5692c4: "{{unknown}}"
+  _oembed_8034e0f9f188fa081b661aa40cfca031: "{{unknown}}"
+  _oembed_258aea06dc0c5472c3fc436570a6a6d7: "{{unknown}}"
+  _oembed_8dfd1da4295e863f4deca768d964be71: "{{unknown}}"
+  _oembed_7bc54b3af427d9db8f31c8b118cf93b8: "{{unknown}}"
+  _oembed_0268af6abfddeac812e84d89a8189c91: "{{unknown}}"
+  _oembed_7d93ce0d792387f95100f4619fb9e684: "{{unknown}}"
+  _oembed_3c1178efd140efdad713c57c0d8fba6c: "{{unknown}}"
+  _oembed_00dd293729594c9228aafca0d6368d22: "{{unknown}}"
+  _oembed_6c45ffbec427efbb934648e1170dfb30: "{{unknown}}"
+  _oembed_5910323191da62702b9fcd4c34b5d03b: "{{unknown}}"
+  _oembed_34d9ff2049fec9af1b20264df9a2c599: "{{unknown}}"
+  _oembed_2a8b7a5e74089f3486eeced367cbf6c4: "{{unknown}}"
+  _oembed_f43c3bc19864a7807fcc0a8659e17cc2: "{{unknown}}"
+  _oembed_2d36e309b571d32b3d038ce698a421a3: "{{unknown}}"
+  _oembed_0394300e75d5220853e020b8040956d1: "{{unknown}}"
+  _oembed_55809f1a5fe448684d386a5607ffdebd: "{{unknown}}"
+  _oembed_47f37e8c5b68e6611fadae89bd6a35f6: "{{unknown}}"
+  _oembed_ed338f331244f4923dc10d9e3ba2f0a3: "{{unknown}}"
+  _oembed_a671990e8ec525908ee74bc0f3994fd9: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>MacOSXで，AWTなんかを使うと，コマンドラインで起動しても<br />
+Dockが起動し，Menuが作成される．<br />
+これは，バックグラウンドで動作するアプリケーションを構築するにはあまりよろしくない．<br />
+なぜなら，そのときにログインしているユーザにGUIの制御権が譲渡されるからである．<br />
+これは，AppleのQ&Aでも指摘されているが．<br />
+これは，java.awt.headlessの値をtrueにすることで防ぐすることができる．<br />
+javaコマンドでjarファイルを実行するとき，以下のようにシステムプロパティを設定する．</p>
+<pre>
+java -Djava.awt.headless=true &lt;classname&gt;
+</pre>
+<p>参考文献<br />
+http://developer.apple.com/jp/technotes/tn2005/tn2083.html<br />
+http://developer.apple.com/jp/qa/qa2001/qa1328.html<br />
+http://java.sun.com/j2se/1.4.2/docs/guide/awt/AWTChanges.html#headless<br />
+http://forum.java.sun.com/thread.jspa?threadID=715133<br />
+http://www.tsuhtan.net/java/pja/</p>

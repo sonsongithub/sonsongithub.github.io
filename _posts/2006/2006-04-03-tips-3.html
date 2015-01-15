@@ -1,0 +1,92 @@
+---
+layout: post
+title: "[Tips] 番外編・PlatformSDKによるDirectShowのセットアップ"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta:
+  _oembed_547dfc9a1ab0ff72e83d995297cd1d93: "{{unknown}}"
+  _oembed_695dc0158207c9944e73e2e71cf0841e: "{{unknown}}"
+  _oembed_f467b705641a25d1855559d97c831655: "{{unknown}}"
+  _oembed_ac4485dee270bd9ee718e7783974b7b3: "{{unknown}}"
+  _oembed_a816c4b3d9f6e3b85ce706273d22511c: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">基本環境 </h3>
+<p>まず，環境はMicrosoft DirectX 9.0 SDK (February 2005)であり，VisualStudio2003がインストールされているとする．<br />
+また，それぞれのインストールパスはデフォルトパスとする．<br />
+<br />
+<h3 class="line-header">PlatformSDKのセットアップ </h3>
+<p>Microsoftサイトから抜粋．<br />
+DirectX 9.0 SDK Update (April 2005) 以降、全ての DirectShow コンポーネント (ヘッダー、ライブラリ、ユーティリティ、ツール、サンプル) が取り除かれています．DirectShow を必要とするアプリケーションを開発する場合には、Platform SDK (April 2005 - Windows Server 2003 SP1) を使うことを推奨します。<br />
+とのこと．このPlatformSDKがなかなかなかなかなかなかなか見つからない．<br />
+検索エンジンにもひっかからない．いい加減にして欲しい．<br />
+http://www.microsoft.com/downloads/details.aspx/FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en<br />
+ここからダウンロードし，インストールする．<br />
+インストールは以降の作業でのリンカエラー，コンパイルエラーを防止するため，とりあえず，バカっぽいが全部インストールする．<br />
+<center><img src="{{ site.url }}/assets//install.JPG" /></center><br />
+<br />
+<h3 class="line-header">DirectShowのデバッグライブラリのコンパイル </h3>
+<p>ここが大変．<br />
+まず，ふつうにnmakeコマンドでメイクすると，エラーがでる．<br />
+おそらく，これはmakefileのライブラリファイルのパスの設定が悪いためなのだが，個々のmakefileをすべて設定するのは面倒くさすぎる．これは，おそらく対策があるのだろうが，sonsonは，makefileに詳しくないので，とりあえず場当たりの対策でコンパイルを試みる．<br />
+<center><img src="{{ site.url }}/assets//envSet.JPG" /></center><br />
+マイコンピュータの環境変数設定で，<br />
+INCLUDE<br />
+C:/Program Files/Microsoft Platform SDK/Include;<br />
+および，<br />
+LIB<br />
+C:/Program Files/Microsoft Platform SDK/Lib;<br />
+をセットする．<br />
+しかし，最新のPlatformSDKは，ATLのバージョンが古い．このため，これに含まれるatlbase.hを利用すると，<br />
+fatal error LNK1104: cannot open file 'atlthunk.lib'<br />
+ここで，</p>
+<pre>
+</pre>
+<p>C:/Program Files/Microsoft Platform SDK/Include/atl/<br />
+C:/Program Files/Microsoft Platform SDK/Include/srt/<br />
+C:/Program Files/Microsoft Platform SDK/Include/mfc/<br />
+ではなく，VisualStudioの各インクルードパス，ライブラリパスを環境変数にセットする．<br />
+あるいは，この古いatlbase.hを利用したい場合は，atlbase.hの#pragmaを調整する．<br />
+C:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/atlmfc/include<br />
+atlbase.h<br />
+を<br />
+//eliminated 2005/09/21<br />
+//#pragma comment(lib, "atlthunk.lib")<br />
+のようにコメントアウトし，コンパイルする．</p>
+<pre>
+</pre>
+<p>最後に<br />
+C:/Program Files/Microsoft Platform SDK/Samples/Multimedia/DirectShow/BaseClasses<br />
+パスに移動し，nmakeでstrmbasd.libをビルドする．<br />
+最後にこれで作成されたstrmbasd.libのパスを今まで使っていたDirectShowのBaseClassesのところに割り当てる．<br />
+<br />
+<h3 class="line-header">問題点 </h3>
+<p>今までのPlatformSDKとバージョンがむちゃくちゃになっている点が問題．<br />
+この辺をちゃんと整理すれば，もっときれいにできるはず．<br />
+つーか，こんなにコロコロライブラリの仕様変えないでよ・・・・・．<br />
+<br />
+<h3 class="line-header">課題 </h3>
+<p>実は，この設定では，他のサンプルプログラムがメイクできない．<br />
+これについては，以後何とかする予定である．<br />
+また，すべての設定したパスも戻しておいた方がいい．<br />
+後で何が起こるかわからない．<br />
+一応，動作確認として，ここで公開しているフィルタとDirectShowを利用したプログラムをメイクしてみたが，大丈夫だった．<br />
+ただ，DirectShowを利用したものには，かなり多重リンカで警告がでる．なんとかしたい．おそらく，基本ライブラリ（たとえば，freeとか？）が重複している．<br />
+<br />
+<h3 class="line-header">結論 </h3>
+<p>とりあえず，動くことは動く．<br />
+ただし，安定環境のためにも，従来のライブラリを使った方が・・・・いいかもしれない．<br />
+この環境構築は，以降PlatformSDKのDirectShow以外が使えなくなったときの布石として位置づけよう．</p>

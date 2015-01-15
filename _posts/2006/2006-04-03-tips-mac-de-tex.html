@@ -1,0 +1,76 @@
+---
+layout: post
+title: "[Tips] Mac de TeX"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>MacOSXでTeXの環境を整えよう．<br />
+<br />
+<h3 class="line-header">各種インストール </h3>
+<p>
+<h3 class="line-header">TeX本体 </h3>
+<p>はっきりいって，ほとんど何もする必要はない．<br />
+便利なインストールパッケージなどが公開されているからだ．<br />
+ちょっと前は，コンパイルしてインストールする必要があったが，今では便利なインストールパッケージが京都教育大学の桐木さんから配布されている．<br />
+これを利用しよう．<br />
+GhostScriptも同梱されているし，非常に便利だ．感謝，感謝．<br />
+<a href="http://www.r.dendai.ac.jp/~kiriki/ptex/">pTeX Package for MacOSX</a><br />
+<br />
+<h3 class="line-header">MxDvi </h3>
+<p>次にDVIファイルを閲覧するためのMxDviをインストール．<br />
+内山さんのホームページで公開されている．非常に便利である．<br />
+<a href="http://uat.thx.inst.keio.ac.jp/~uchiyama/macptex.html">MxDVI</a><br />
+<br />
+<h3 class="line-header">設定すること </h3>
+<p>インストールは，以上のパッケージとアプリケーションをダウンロードし，インストールするだけである．<br />
+次にTeXを使えるように環境変数を設定する．<br />
+ちなみにターミナル環境は，tcshである．<br />
+<br />
+<h3 class="line-header">.tcshrcの中身 </h3>
+<pre>
+#!/bin/tcsh
+alias fcd 'source /usr/local/bin/fcd.csh'
+alias ls ls -v
+set path = (${path} /Applications)
+set path = (${path} /usr/local/bin )
+set path = (${path} /Developer/Tools )
+set dspmbyte=utf8
+</pre>
+<p>これが中身．必要なのはpathの2行目だけ．これでplatexのパスが通る．後のパスは必要なら使う感じ．例えば，texファイルや設定ファイルをmiエディタを使って開くときに/Applicationsのパスを通しておくと，</p>
+<pre>
+open -a mi hoge.tex
+</pre>
+<p>なんて感じでファイルを開ける．<br />
+<br />
+<h3 class="line-header">PDFへの変換 </h3>
+<p>TeXのPDFへの変換は，dvipdfmxを利用する．<br />
+これは上述の<a href="http://www.r.dendai.ac.jp/~kiriki/ptex/">pTeX Package for MacOSX</a>に含まれている．<br />
+便利なパッケージだ．<br />
+ただし，もしdvipdfmxを利用するならば，X11が必須である．<br />
+アップルから<a href="http://www.apple.com/downloads/macosx/apple/x11formacosx.html">ダウンロード</a>するか，MacOSXのインストールCDのOptional Install.pkgを利用してインストールする．<br />
+sonsonは，ターミナルからサクッと変換するためのスクリプトを作った．<br />
+ダサイけど，楽です．結構．<br />
+<br />
+<h3 class="line-header">tex2pdfの中身 </h3>
+<pre>
+#!/bin/tcsh
+platex $1tex
+dvipdfmx $1dvi
+open -a /Applications/Adobe? Reader? 7.0.5/Adobe? Reader? 7.0.5.app/ $1pdf
+</pre>
+<p>これでTeXファイルがサクッとDVIになり，PDFに変換され表示される．ウマー．</p>

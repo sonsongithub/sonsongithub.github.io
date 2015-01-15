@@ -1,0 +1,63 @@
+---
+layout: post
+title: "[お勉強] 引数を簡単に処理する〜google-gflags"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>なにげなく，Google Codeをさまよっていると，おもしろいものをハッケソ．<br />
+<a href="http://code.google.com/p/google-gflags/">google-gflags</a>．<br />
+mainの引数をうまいこと変数に割り当ててくれるソフツだ．</p>
+<pre>
+#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include "google/gflags.h"
+// definition for arguments
+DEFINE_bool(flagBool, false, "Bool type flag");
+DEFINE_int32(flagInt32, 0, "Int 32 type flag");
+DEFINE_int64(flagInt64, 0, "Int 64 type flag");
+DEFINE_uint64(flagUint64, 0, "Unsigned int 64 type flag");
+DEFINE_double(flagDouble, 0, "Double type flag");
+DEFINE_string(flagString, "default string", "String type flag");
+// main
+int main ( int argc, char **argv ) {
+google::ParseCommandLineFlags(&argc, &argv, true);
+if( FLAGS_flagBool )
+printf( "flagBool\n" );
+printf( "%d\n", FLAGS_flagInt32 );
+printf( "%d\n", FLAGS_flagInt64 );
+printf( "%d\n", FLAGS_flagUint64 );
+printf( "%lf\n", FLAGS_flagDouble );
+printf( "%s\n", FLAGS_flagString.c_str() );
+return 0;
+}
+</stdlib.h></stdio.h></string></pre>
+<pre>
+DEFINE_int32(flagInt32, 0, "Int 32 type flag");
+</pre>
+<p>こう宣言すると，FLAGS_flagInt32という変数に，コマンドラインで実行したときの引数flagInt32の値が代入される．二つめの引数は，未入力のときのデフォルトの値，３つめの値は，--helpを指定したときに表示される各オプションのdescriptionとなる．これは便利だ．<br />
+大規模で開発するときに，各人が適当に引数をつけてプログラミングしやすいようにつくってあるっぽい．わざわざ全体をいじらなくても，引数を試すことできる．また，デフォルトは，ソースごとごとにDEFINE_＊が必要なのだが，グローバル変数として，他のソースコードからも参照することができる．これは別のソースコードで以下のようにDECLARE_＊を記述して実現できる．</p>
+<pre>
+DECLARE_bool(flagBool);
+</pre>
+<p>うーむ．こいつは，便利だ．Googleさん，いただきます．<br />
+ライセンスもBSDライセンスっぽいし．使えそうだし．<br />
+※若干，STLのstringで悩んだ．<a href="http://www.geocities.jp/ky_webid/cpp/library/001.html">こういうところ</a>参考にしますた．<br />
+<a href="http://son-son.sakura.ne.jp/archive/gflags.tar.gz">サンプル</a></p>
+<p><!--more--><br />
+<a href="http://code.google.com/p/google-gflags/">http://code.google.com/p/google-gflags/</a><br />
+MacOSXの場合，ここから，ソースをダウンロードして，configure，makeですんなりダウンロードできたお．</p>

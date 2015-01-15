@@ -1,0 +1,68 @@
+---
+layout: post
+title: "[Tips] Octave，そしてDarwinPorts"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta:
+  _oembed_b26d3fd5460644036d47ed8fc91abd8d: "{{unknown}}"
+  _oembed_87fd4d98b9df709ea5dc28029d729b19: "{{unknown}}"
+  _oembed_f831b1cb24200ee00018ccdd60d62b0c: "{{unknown}}"
+  _oembed_259805327cb9c8de2fe175480d03d233: "{{unknown}}"
+  _oembed_38f73812243310f6e5914614ad46ff83: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Octaveのインストールがうまくいかない．<br />
+そういうことで，DarwinPorts経由でのインストールを試みる．<br />
+DarwinPortsとは，MacOSX用のパッケージ管理ソフトみたいなものである．<br />
+aptくらい使えるものなのか？</p>
+<h3 class="line-header">DarwinPorts</h3>
+<p>ここからソースコードをダウンロードし，インストールする．<br />
+http://darwinports.opendarwin.org/<br />
+意外にサクっと入る．<br />
+インストールパスは，/optになる．</p>
+<h3 class="line-header">octaveのインストール</h3>
+<pre>
+&lt;sudo ports install octave
+</pre>
+<p>これが偉い時間がかかる．どうやら，gccをビルドしてインストールしているみたいだ．<br />
+これでoctaveに関連するパッケージやらなんやらが全部インストールされる．<br />
+しかし．若干のエラーが出た．</p>
+<pre>
+--->  Attempting to fetch tetex-src-3.0.tar.gz from ftp://tug.ctan.org/tex-archive/systems/unix/teTeX/current/distrib/
+--->  Attempting to fetch tetex-texmf-3.0po.tar.gz from ftp://tug.ctan.org/tex-archive/systems/unix/teTeX/current/distrib/
+--->  Attempting to fetch tetex-texmf-3.0po.tar.gz from ftp://cam.ctan.org/tex-archive/systems/unix/teTeX/current/distrib/
+--->  Attempting to fetch tetex-texmf-3.0po.tar.gz from ftp://dante.ctan.org/tex-archive/systems/unix/teTeX/current/distrib/
+--->  Attempting to fetch tetex-texmf-3.0po.tar.gz from http://distfiles-od.opendarwin.org/teTeX
+--->  Attempting to fetch tetex-texmf-3.0po.tar.gz from http://distfiles-msn.opendarwin.org/teTeX
+--->  Attempting to fetch tetex-texmf-3.0po.tar.gz from http://distfiles-bay13.opendarwin.org/teTeX
+--->  Attempting to fetch tetex-texmf-3.0po.tar.gz from http://distfiles-od.opendarwin.org/
+--->  Attempting to fetch tetex-texmf-3.0po.tar.gz from http://distfiles-msn.opendarwin.org/
+--->  Attempting to fetch tetex-texmf-3.0po.tar.gz from http://distfiles-bay13.opendarwin.org/
+Error: Target com.apple.fetch returned: fetch failed
+Error: The following dependencies failed to build: teTeX
+Error: Status 1 encountered during processing.
+</pre>
+<p>どうやら，tetex-texmf-3.0po.tar.gzがダウンロードできていない様子．<br />
+そこで，ftp://dante.ctan.org/tex-archive/systems/unix/teTeX/3.0/distribここいら当たりから直接そのパッケージをダウンロードする．<br />
+ダウンロードするパッケージは，</p>
+<pre>
+/opt/local/var/db/dports/distfiles
+</pre>
+<p>のパスにパッケージ毎に保存される．<br />
+今のパッケージは，teTeXなので</p>
+<pre>
+/opt/local/var/db/dports/distfiles/teTeX
+</pre>
+<p>にインストールし，再度ports実行すると，ダウンロードでつまづかなくなる．<br />
+まぁ，かなり時間がかかりましたが・・・．</p>

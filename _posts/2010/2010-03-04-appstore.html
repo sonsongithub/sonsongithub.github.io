@@ -1,0 +1,54 @@
+---
+layout: post
+title: AppStoreでのWiFiあるいはPlaceEngineを使ったアプリ粛正のまとめ
+categories:
+- blog
+tags:
+- Blog
+- Flash
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Twitterで議論したけど，今でも，適当な情報が流れているので，まとめ．<br />
+今日，PlaceEngineを使っている主立ったセカイカメラ，Yahoo!地図などのアプリがAppStoreから削除されていることがわかった．<br />
+さらに，eWiFiというiPhoneでWiFiの電波状況やアクセスポイントを調べるアプリもAppStoreから削除されていることもわかった．<br />
+また，otoolで分析した人によると，削除されたアプリの中には，PrivateFrameworkのPreferencesを読み込んでいるものがあることが報告された．<br />
+このことは，オープンソースのiSpotterなどにも利用されている．<br />
+そこで，削除された理由を考察してみる．<br />
+１．削除されたアプリはPrivateFrameworkを使っていたから<br />
+これはいつ削除されても文句言えない．<br />
+<a href="http://code.google.com/p/ispotter/source/browse/trunk/MSNetworksManager.m">http://code.google.com/p/ispotter/source/browse/trunk/MSNetworksManager.m</a><br />
+この辺のソースコードを見ると，どうやってアクセスするかはわかる．しかし，このアプリはAppStoreで<a href="http://itunes.apple.com/jp/app/ispotter/id324504756?mt=8">公開</a>されている・・・・．<br />
+PrivateFrameworkとUndocumeted APIの使用に起因するAppStoreからの排除は，画一的になされない傾向にあるので，こういった例外が見られることは多々あるｗ<br />
+２．AppleがPlaceEngineを排除したかった<br />
+つまり，iPhoneがデフォルトで持っているCoreLocation以外の位置サービスの実装あるいは使用をAppleが差し止めたいということ．<br />
+これは，ちょっと考えにくい．<br />
+一部，Appleが広告に乗り出すとかいう話とあいまって，この節が唱えられているけど，Appleの製品に対するコンセプトから広告はないんじゃないかと私は予想する．<br />
+また，こういった深いビジネスの読みとは関係なく，クゥジットがPrivateFrameworkを使ったソースコードをベンダーに提供したことが単に理由かとも考える．クゥジットがどんなカタチでソフトウェアをベンダーに提供しているかわからないが，もしそうなら，ちょっと問題があるよ．<br />
+３．WiFiに低レイヤーにアクセスするものは乱麻を断つ<br />
+3.2，4.0と続くiPhoneOSの今後のロードマップでWiFi周りのAPIが大きく変更されるので，粛正した・・・・．という可能性もあるかもしれない．今までの経緯で私の経験でも，Undocumented APIを使っていたら，OSのバージョンアップの際に変更になるから修正してくれという依頼がAppleから来たことがある．もしかすると，次のアップデートでちゃんとしたWiFi周りのSDKのAPIが用意されるのかもしれない．<br />
+BSDのAPIを使ってWiFiの低レイヤーにアクセスできるらしい，この辺はOSのバージョンが変わっても変更されないだろうから，そういった手法を使ったアプリなら，今回の粛正を逃れられた可能性がある．もしかすると，上記のiSpotterもAppStoreに提出したアプリは，PrivateFrameworkを使っていないのかもしれない．</p>
+<pre>
+現在、App Store審査(無線LANデバイスへ
+のアクセス方法）により、PlaceEngineを利
+用したiPhoneアプリが非公開となっており、
+詳細を確認中です。大変ご不便をおかけして
+申し訳ありません。 対象アプリ(順不同): WG
+Connect, Yahoo!地図, セカイカメラ, 大江戸
+妖怪集, DaMoNo, DaMoNo2 (2010.03.04)
+</pre>
+<p>この辺のクウジットさんの対応に尾ひれはひれついて，情報が錯綜したのかな．<br />
+PlaceEngineを使っているアプリに，人気アプリが多かったのが，混乱の種だったのかもしれません．なんか，アップルの削除の基準が相変わらず不明瞭なので，しばらく見ないとわからないですね・・・・．というわけで，WiFiだから粛正されたとか，意味わからないこと言っている人もいるけど，それはないｗ<br />
+しばらく様子見です．</p>
+<p><!--more--><br />
+※もうちょっとましな日本語にしました</p>

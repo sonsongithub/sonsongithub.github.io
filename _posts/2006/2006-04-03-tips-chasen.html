@@ -1,0 +1,142 @@
+---
+layout: post
+title: "[Tips] ChaSenのインストール for MacOSX"
+categories:
+- blog
+tags:
+- Blog
+- DirectShow
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta:
+  _oembed_a8b94d6d2fc89aa77782106c0e612c80: "{{unknown}}"
+  _oembed_28181b825861eb686364ff508da25681: "{{unknown}}"
+  _oembed_0681fc99064347738df11a3d43cffad5: "{{unknown}}"
+  _oembed_7d895021e5b3310ede4218e613ccf300: "{{unknown}}"
+  _oembed_6d8d564c0d29bf0f388b027a71ecf1e1: "{{unknown}}"
+  _oembed_c70d476d69fc21844ebdfc90817ade92: "{{unknown}}"
+  _oembed_aa279f8816f022b29a0472dbe1136a04: "{{unknown}}"
+  _oembed_66070c0d1240b8591c96c0baeb712d43: "{{unknown}}"
+  _oembed_76debb1a54eea1b0a16761c2fa36286f: "{{unknown}}"
+  _oembed_57e82f8e72d5a9f5ea07dff4e37b5686: "{{unknown}}"
+  _oembed_c4d0afb8ee8851411935cb782d5fef2f: "{{unknown}}"
+  _oembed_57ccc8f41af4427a5c1cf89a2f8ec7fe: "{{unknown}}"
+  _oembed_fd0a071b17849f3617586e2ef6e9cb68: "{{unknown}}"
+  _oembed_86983cc134896e2d39cc31ac36d8b618: "{{unknown}}"
+  _oembed_8f33bfee34bf828522aaf61d21c45c4d: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>泣きそうだった・・．つらかった．<br />
+まとめます．<br />
+<br />
+<h3 class="line-header">早く言ってよ． </h3>
+<p>ChaSenには，Packageが用意されていた！！！<br />
+早速ダウンロードして，インストールする．<br />
+http://www.apple.com/jp/downloads/macosx/utilities/chasen.html<br />
+<br />
+<h3 class="line-header">辞書を用意する前に． </h3>
+<p>MacはUTF-8なので，辞書もUTF-8にする必要がある．<br />
+そこで，変換ツールのnkfをインストールする．<br />
+http://www.ie.u-ryukyu.ac.jp/~kono/nkf/<br />
+こいつをダウンロードし，makeし，できたnkfを/usr/local/binにインストールする．<br />
+次にファイルを一括変換できるようにシェルスクリプトを用意する．</p>
+<pre>
+#!/bin/sh
+for file in $*
+do
+if [ -f $file ]; then
+nkf --utf8 $file > tmpfile
+mv tmpfile $file
+fi
+done
+exit
+</pre>
+<p>nkf_fileとでもして，保存．改行コード，文字コードに注意．/usr/local/binにインストールする．<br />
+<br />
+<h3 class="line-header">辞書の作成 </h3>
+<p>次にipdicをダウンロードする．<br />
+http://chasen.aist-nara.ac.jp/chasen/distribution.html.ja<br />
+ダウンロードしたパッケージを解凍し，configure，makeする．<br />
+そして，辞書ファイル，*.dicをすべて，/usr/local/lib/chasen/dic/ipadicにインストールする．</p>
+<pre>
+sudo cp *.dic /usr/local/lib/chasen/dic/ipadic
+</pre>
+<p>そうすると，/usr/local/lib/chasen/dic/ipadicのパスに*.chaと*.dicが集まる．<br />
+ここで，</p>
+<pre>
+cd /usr/local/lib/chasen/dic/ipadic
+nkf_file *.cha
+nkf_file *.dic
+</pre>
+<p>として，UTF-8に文字コードを変換する．<br />
+ついでに，/usr/local/etcパスにあるchasenrcもUTF-8に変換する．</p>
+<pre>
+cd /usr/local/etc
+nkf_file chasenrc
+</pre>
+<p>ここで，お膳立ては終わり．</p>
+<pre>
+cd /usr/local/lib/chasen/dic/ipadic
+sudo  `chasen-config --mkchadic`/makemat -i w
+sudo `chasen-config --mkchadic`/makeda -i w chadic *.dic
+</pre>
+<p>これで，辞書ファイルの作成は終了．お疲れッス．<br />
+<br />
+<h3 class="line-header">確認 </h3>
+<pre>
+>echo 'OpenGLプログラミングを勉強する' | chasen -i w
+O       オー      O       記号-アルファベット
+p       ピー      p       記号-アルファベット
+e       イー      e       記号-アルファベット
+n       エヌ      n       記号-アルファベット
+G       ジー      G       記号-アルファベット
+L       エル      L       記号-アルファベット
+プログラミング プログラミング プログラミング 名詞-サ変接続
+を       ヲ       を       助詞-格助詞-一般
+勉強      ベンキョウ   勉強      名詞-サ変接続
+する      スル      する      動詞-自立   サ変・スル   基本形
+EOS
+</pre>
+<p>
+<h3 class="line-header">ソースから </h3>
+<p>
+<h3 class="line-header">ハマったところ． </h3>
+<p>とりあえず，ハマったところから．dartsの最新版は，0.3(2006/03/10現在)であるが，0.2と比較して，若干の手直しがなされている．</p>
+<pre>
+2005-12-24: darts 0.3
+・Double Array の作成時に不正特殊をアクセスする可能性があるバグを修正
+・メッソド名の一部変更 (setArray を set_array になど)
+・rpm パッケージ配布の停止
+※サイトより抜粋
+</pre>
+<p>ハァ？つーことは・・・・．Chasenのビルドエラーは・・・・．こいつじゃねぇえか！！まさに．<br />
+そう，dartsは最新版を使ってはいけないのだ！<br />
+<br />
+<h3 class="line-header">ビルヂング </h3>
+<p>・[[darts version 0.2>http://chasen.naist.jp/hiki/ChaSen/]]<br />
+・[[chasen version 2.3.3>http://chasen.org/~taku/software/darts/src/darts-0.2.tar.gz]]<br />
+dartsをビルド，インストールする．</p>
+<pre>
+>cd darts-0.2
+>./configure
+>make
+>sudo make install
+</pre>
+<p>終了・・・・．<br />
+chaseをビルド，インストールする．</p>
+<pre>
+>cd chasen-2.3.3
+>./configure
+>make
+>sudo make install
+</pre>
+<p>終了・・・・・・・・・・・・・・・・．<br />
+完成です．</p>

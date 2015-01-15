@@ -1,0 +1,42 @@
+---
+layout: post
+title: "[お勉強] プロセスを生成する"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>C言語で外部のプロセスを起動する方法について調べた．<br />
+並行に処理すると言えば，スレッドがある．スレッドとの違いは，以下のような感じっぽい．<br />
+スレッドはひとつのプロセスの中で完結するもので，メモリを共有したりできる．<br />
+プロセスは，まったく違うメモリ空間なので，メモリを共有したりするのに工夫が必要．<br />
+正直，挙動の詳細が掴みきれないのだが，とりあえずサーベイ結果をのせてみる．<br />
+以下のような方法があるらしい．<br />
+・forkでプロセスを生成し，そこでexec関数を使って，外部のプログラムを起動する方法．<br />
+・system関数を使う方法．内部的には上と同じようなことをやっている模様．<br />
+・popen関数を使う方法．標準入出力みたいに別プロセスを扱えるようだ．<br />
+ひとつ，ひとつ試しながらやっていくしかない．<br />
+用途は，大まかに三つか．<br />
+・外部のアプリケーションに処理を引き渡したい<br />
+・外部のアプリケーションに引数を渡して処理し，その結果を受け取りたい<br />
+・ランチャーとして外部のアプリケーションを起動したい（サーバの起動，停止）<br />
+変わってくるポイントとして，外部のアプリケーションを並列に実行するのか，データを共有する必要性があるのか，プロセスのIDを管理する必要があるのかなどが考えられる．<br />
+それぞれ，考えていってみる．<br />
+以下，エントリー．<br />
+・<a href="http://son-son.sakura.ne.jp/programming/_daemon.html">[お勉強] daemonを作る</a><br />
+・<a href="http://son-son.sakura.ne.jp/programming/_popen.html">[お勉強] プロセスを生成する〜popen</a><br />
+・<a href="http://son-son.sakura.ne.jp/programming/_fork.html">[お勉強] プロセスを生成する〜fork</a><br />
+・<a href="http://son-son.sakura.ne.jp/programming/_system.html">[お勉強] プロセスを生成する〜system</a><br />
+・<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/src/process">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/src/process</a></p>

@@ -1,0 +1,138 @@
+---
+layout: post
+title: "[OpenGL] オフスクリーンレンダリング・AVIファイル出力"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">サンプルプログラム概要 </h3>
+<p>[[小紅（しゃおほん）さん:http://hp.vector.co.jp/authors/VA022180/]]が公開されている「ディスプレイキャプチャーあれ」のソースの一部を使用して，OpenGLの描画結果をAVIに出力するプログラムを作成します．サンプルでは，オフスクリーンレンダリングを行っており，画面にはその内容を転送しないシンプルなモノになっています．<br />
+<br />
+<h3 class="line-header">実装 </h3>
+<p>まず，DIBオブジェクト作ります．サンプルでは，CglDIBクラスで実装しています．まず，CreateGLDIBでオフスクリーンレンダリングの対象となるビットマップオブジェクトを作成します．そして，そのデバイスコンテキストにレンダリングコンテキストを結びつけます．下のソースコードがその一部です．DIB，ビットマップデバイスについては，宍戸さんのホームページを参考にしてください．</p>
+<pre>
+BOOL CglDIB::CreateGLDIB(int inputWidth,    //メモリのサイズ
+int inputHeight,
+int inputColor,    //メモリの色数
+int inputDepth     //メモリのデプスバッファ
+){
+HGLRC hRC;
+width = inputWidth;
+height = inputHeight;
+//ビットマップ情報
+BitmapInfo = new BITMAPINFOHEADER;
+int iSize = sizeof(BITMAPINFOHEADER) ;
+memset(BitmapInfo, 0, iSize);
+//
+BitmapInfo->biSize = iSize;
+BitmapInfo->biWidth = width;
+BitmapInfo->biHeight = height;
+BitmapInfo->biPlanes = 1;
+BitmapInfo->biBitCount = inputColor;
+BitmapInfo->biCompression = BI_RGB;
+//互換デバイスコンテキストの作成
+hDC = CreateCompatibleDC(NULL);
+//ビットマップメモリ作成
+hBitmap = CreateDIBSection(hDC,
+(BITMAPINFO*)BitmapInfo,
+DIB_RGB_COLORS,
+&data,
+NULL,
+0);
+//以前のビットマップメモリ情報を退避させる
+if(hBitmap){
+hBitmapOld = (HBITMAP)SelectObject(hDC,hBitmap);
+}
+//ピクセルフォーマット設定
+int pixelformat;
+static PIXELFORMATDESCRIPTOR pfd = {
+sizeof(PIXELFORMATDESCRIPTOR),   //この構造体のサイズ
+1,                               //OpenGLバージョン
+PFD_DRAW_TO_BITMAP |             //ビットマップ設定
+PFD_SUPPORT_OPENGL |
+PFD_SUPPORT_GDI,
+PFD_TYPE_RGBA,                   //RGBAカラー
+inputColor,                      //色数
+0, 0,                            //RGBAのビットとシフト設定
+0, 0,                            //G
+0, 0,                            //B
+0, 0,                            //A
+0,                               //アキュムレーションバッファ
+0, 0, 0, 0,                      //RGBAアキュムレーションバッファ
+inputDepth,                      //Zバッファ
+0,                               //ステンシルバッファ
+0,                               //使用しない
+PFD_MAIN_PLANE,                  //レイヤータイプ
+0,                               //予約
+0, 0, 0                          //レイヤーマスクの設定・未使用
+};
+//ピクセルフォーマットの選定
+/* いつもと同じ */
+}
+</pre>
+<p>このビットマップデバイスが，OpenGLの書き込み先となります．ピクセルフォーマットで気をつけないといけないのは，PFD_GDI_SUPPORTをちゃんと指定しておくことです．こうしないとオフスクリーンレンダリングできません．<br />
+wglMakeCurrentで，ちゃんとカレントコンテキストを切り替えておきましょう．当然，複数のオフスクリーンを同時に使用するときにはちゃんとコンテキストを切り替えねばなりません．このメソッドでOpenGLに対応したデバイスコンテキストを作成できました．<br />
+まぁ，別にクラスにする必要性もないのですが．<br />
+<br />
+<h3 class="line-header">サンプルプログラム概要 </h3>
+<p>下のコードが実際の出力のコードそのものです．メッセージループも呼び出しません．ただただオフスクリーンを用意して，DIBに吐き出すだけのプログラムです．それでは解説していきたいと思います．</p>
+<pre>
+int WINAPI WinMain(
+HINSTANCE hCurInst,
+HINSTANCE hPrevInst,LPSTR lpsCmdLine,int nCmdShow)
+{
+//各種変数の初期化
+EasyAVI *e = NULL;
+HDC hMemDC = NULL;
+int i = 0;
+//DIB作成
+CglDIB render;
+render.CreateGLDIB(WIDTH,HEIGHT,24,24);
+//DIB上のOpenGLの初期化
+Init_GLWindow(WIDTH,HEIGHT);
+Resize(WIDTH,HEIGHT);
+StartFunction();
+</pre>
+<p>ここまでが，DIBの設定です．まず，render.CreateGLDIBで大きさと高さ，カラーとデプスビット数を指定して初期化します．ちょっとこの辺の引数がなんでこんなものにしたのか私にもわかりません（覚えていません，また作り直すかぁｗ）（＾＾；<br />
+そして，CreateGLDIBの処理でOpenGLのカレントコンテキストはDIBのオフスクリーンに関連づけられているのでまんまInit_GLWindowやResizeなどでOpenGLの初期化をやってしまいます．</p>
+<pre>
+//EasyAVIクラスの作成
+e = new EasyAVI();
+//録画準備
+hMemDC = e->Start(NULL,WIDTH,HEIGHT,"TEST.AVI",1,30);
+//フレームの描画
+for(i=0;i<240;i++){
+Draw();
+render.Draw(hMemDC,WIDTH,HEIGHT);
+//フレームをAVIに追加
+e->Save();
+}
+//EasyAVIの変数の開放
+e->Clear();
+//EasyAVIの削除
+delete e;
+e = NULL;
+MessageBox(NULL,"AVI出力完了","sonson OpenGL",MB_OK);
+return 0;
+}
+</pre>
+<p>EasyAVIが「ディスプレイキャプチャーあれ」の簡単AVIファイル出力クラスです．このクラスのインスタンスを作成し，Startメソッドで初期化します．一つ目の引数がウィンドウハンドルです．今回のサンプルはウィンドウを使用しないので使いません．２，３つ目の引数でサイズ，4つ目の引数で出力するファイル名を入力します．5，6つ目の引数でレートを決めます．この設定だと1秒間に30フレームのAVIが作成されることになります．Startメソッドの戻り値はAVIに書き出すときのフレーム一枚のコンテキストとなります．hMemDCにそのフレームを割り当てます．<br />
+for文で240回ループさせてファイルを書き出します．1秒間に30フレームなので8秒間のアニメーションということになります．render.Drawで，hMemDCを書き込み先にしてオフスクリーンレンダリングのDIBにあるOpenGLの描画内容をコピーします．そして，e->Saveによってその内容をAVIファイルへ保存し，次のフレームに移動します．<br />
+これでひとつひとつフレームをOpenGLで描画していくことができるわけです．<br />
+そして最後にEasyAVIのインスタンスを片づけて出力完了となります．<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/output_avi">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/output_avi</a><br />
+※なんか，このエントリーに迷惑コメントが多いので，コメントシャットアウトします．</p>

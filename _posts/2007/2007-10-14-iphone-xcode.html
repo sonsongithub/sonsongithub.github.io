@@ -1,0 +1,49 @@
+---
+layout: post
+title: "[iPhone] xcodeでプログラミング"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>iPhoneのアプリケーションをxcodeで開発するプロジェクトファイルを作ってみる．<br />
+<strong>※参考リンク（いつも通り）</strong><br />
+ファイル自体は，すでに作られているみたい．さらに解説もある．<br />
+・<a href="http://jrobinsonmedia.wordpress.com/2007/09/26/native-iphone-development-using-xcode-at-last/">http://jrobinsonmedia.wordpress.com/2007/09/26/native-iphone-development-using-xcode-at-last/</a><br />
+・<a href="http://max.iamas.ac.jp/2061/articles/645.html">http://max.iamas.ac.jp/2061/articles/645.html</a><br />
+・<a href="http://www.hackint0sh.org/forum/showpost.php?p=63754&postcount=6">http://www.hackint0sh.org/forum/showpost.php?p=63754&postcount=6</a><br />
+これらを参考に作ってみた．<br />
+中身は，Makefileを叩いているだけなんだが・・・．まぁいいや．<br />
+※作ったサンプル<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/iPhone1.0/xcodeSample">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/iPhone1.0/xcodeSample</a><br />
+※使い方？<br />
+１．Makefile</p>
+<pre>
+INFOPLIST_FILE=Info.plist
+SOURCES=\
+main.m \
+MyApp.m
+</pre>
+<p>ソースコードを増やす場合は，ここのSOURCESを追加する．<br />
+２．プロジェクトファイル<br />
+<img alt="20071014_1.jpg" src="{{ site.url }}/assets//20071014_1.jpg" width="463" height="456" /><br />
+にあるように，プロダクト名のマクロを好きな名前に設定する．<br />
+３．Info.plistファイル<br />
+iPhoneのアプリケーションに必要なInfo.plistにアプリケーション名をセットする．</p>
+<pre>
+&lt;key&gt;CFBundleExecutable&lt;/key&gt;
+&lt;string&gt;ホゲホゲ&lt;/string&gt;
+&lt;key&gt;CFBundleIdentifier&lt;/key&gt;
+&lt;string&gt;ホゲーホゲー&lt;/string&gt;
+</pre>

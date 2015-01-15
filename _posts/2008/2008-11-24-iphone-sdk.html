@@ -1,0 +1,32 @@
+---
+layout: post
+title: "[iPhone SDK] すべてに「ふりがな」がついた絵文字アドレス帳を作る"
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><img alt="kaoMoji.png" src="{{ site.url }}/assets//kaoMoji.png" style="margin: 15px;" align="right" height="96" width="96" />さて．<br />
+アドレス帳に絵文字を入れると，打ち込めることが判明したが，「ふりがな」がないと不便すぎる．しかし，500個近くある絵文字すべてに手作業で「ふりがな」を振るなんて・・・俺にはできねぇ．というわけで，自動的に作業することを考えた．手順は，インターネット上のリソースをたくさん利用させていただきました．<br />
+絵文字のコード，タイトルがセットになったデータはたくさんあるのだが，「ひらがな」のタイトルがセットになったデータがない．しかし，世の中にはすごいものがある．ホームページの漢字を全部自動的にひらがなにしてくれるサービスがあるのだ．<br />
+・絵文字，コード，タイトルの一覧でーた<br />
+　→<a href="http://trialgoods.com/emoji/?career=sb&page=all">http://trialgoods.com/emoji/?career=sb&page=all</a><br />
+・漢字→ひらがな変換サービス<br />
+　→<a href="http://www.learn-japan.org/">http://www.learn-japan.org/</a><br />
+これで絵文字のタイトルが「ひらがな」つまり「ふりがな」になったデータセットが手に入る．このデータセットをRubyでトレースして，前回のエントリと同じ手順でvCardで「ふりがな」をセットして出力する．このアドレス帳を使うと，単語の候補として出力されるのだ．<br />
+・「ひらがな」をタイトルにした絵文字アドレス帳<br />
+　→<a href="http://son-son.sakura.ne.jp/archive/emoji.vcf.20081124.zip">http://son-son.sakura.ne.jp/archive/emoji.vcf.20081124.zip</a><br />
+<center><br />
+<img alt="Screenshot%202008.11.24%2020.17.46.jpg" src="{{ site.url }}/assets//Screenshot%202008.11.24%2020.17.46.jpg" width="320" height="280" /><br />
+</center></p>

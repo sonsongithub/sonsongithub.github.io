@@ -1,0 +1,28 @@
+---
+layout: post
+title: "[iPhone SDK] メソッドをフックしまくる"
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Undocumentedなクラス，メソッドをハックして行くためによく使う手法</p>
+<pre>
+@implementation UIResponder(Test)
+- (BOOL)respondsToSelector:(SEL)aSelector {
+DNSLog( @"%s:%s", class_getName([self class]), sel_getName(aSelector) );
+return [super respondsToSelector:aSelector];
+}
+@end
+</pre>

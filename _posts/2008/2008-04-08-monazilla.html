@@ -1,0 +1,64 @@
+---
+layout: post
+title: "[monazilla] レスを書き込む"
+categories:
+- blog
+tags:
+- "徒然"
+status: publish
+type: post
+published: true
+meta:
+  _oembed_48dd0118fe0fe5499360d5b9e361ec7d: "{{unknown}}"
+  _oembed_657bdb1d0b2dd0777a566b4f8fc79383: "{{unknown}}"
+  _oembed_0054c5ec3a6da7c954f9688534c4f08d: "{{unknown}}"
+  _oembed_fbaac3c39f1f9932c2a04e9d6e11a611: "{{unknown}}"
+  _oembed_994797a229815c187b1bbb158f5f4708: "{{unknown}}"
+  _oembed_2f6c73ba570d33d5d74d54304a4b890a: "{{unknown}}"
+  _oembed_2156d458344e9431408f0d7f85676a43: "{{unknown}}"
+  _oembed_730f29138e75ca3b2812ca034e62d6f3: "{{unknown}}"
+  _oembed_7a3cb97370dd8ebe09e9111fb8985aa1: "{{unknown}}"
+  _oembed_7efb48970f7677108b06ceacd476db07: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>書き込みは2年ほど前に仕様が大幅に変わった模様->http://blog.fuktommy.com/1148791369<br />
+レスの書き込みについて説明する．<br />
+書き込むときのcgiは，/test/bbs.cgiを使う．</p>
+<pre>
+http://***.2ch.net/test/bbs.cgi
+</pre>
+<p>※書き込みのシーケンス<br />
+１．PON等のCookieがない状態で送信．<br />
+２．bbs.cgiが，PON等のSet-CookieとCookie確認メッセージを返す．->この時点では書き込みされていない<br />
+３．再度，PONをCookieにセットし，hana=mogeraを引数に加えて再送信<br />
+４．書き込みがなされる．<br />
+５．次回以降は，Cookieを食わせられるので，hana=mogeraを引数に加えること忘れなければ，確認メッセージは返されずに直で書き込める．<br />
+１．1回目の書き込み<br />
+たとえば，cgiの呼び出しはこんな感じで，それぞれについては以下．</p>
+<pre>
+http://***.2ch.net/test/bbs.cgi?bbs=qa&submit=%8F%91%82%AB%8D%9E%82%DE&key=1206801499&FROM=&time=1&MESSAGE=test&mail=sage
+</pre>
+<p>・bbs・・・板の識別子<br />
+・submit・・・「書き込む」をセット<br />
+・key・・・スレッドの番号<br />
+・TIME・・・時刻情報<br />
+・FROM・・・名前<br />
+・MESSAGE・・・レス本文<br />
+・MAIL・・・メールアドレス<br />
+２．Cookie確認<br />
+上のcgiで書き込みを実行すると，サーバからは，Set-Cookieが返ってくる．<br />
+このSet-CookieからPONを読み出し，保存する．（保存する必要あるかなぁ・・・）<br />
+そして，再度cookieをセットしてbbs.cgiで書き込む．このとき引数にhana=mogeraを忘れずに．<br />
+・hana・・・mogeraをセット．<br />
+３．書き込み完了<br />
+ｳﾏｰｰ．<br />
+＃追記<br />
+SevenFourは，ソースコード見る限り，hana=mogeraに対応していないっぽいです．<br />
+さらに，文字列をURL用にエンコードするところでメモリリークがありますね・・・．<br />
+誰もメンテしてないっぽいし，Google codeとかにリポジトリ作って，修正してしまうか・・・．<br />
+＃作者は，もう放棄するって言ってるし．</p>

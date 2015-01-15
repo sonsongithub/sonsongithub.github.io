@@ -1,0 +1,105 @@
+---
+layout: post
+title: "[Perl] Amazon Plugin 開発(2)"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Amazon Pluginのバージョン２．<br />
+リンクの生成の部分とかを変更．<br />
+ちょっと説明を加えてみる．</p>
+<pre>
+use LWP::UserAgent;
+use HTTP::Request;
+use HTTP::Response;
+# AmazonID
+my $accessKeyID = "XXXXXXXXXXXXXXXXXX";		# AamzonWebServicesのAccessKeyID
+my $associateID = "XXXXXXXXXXXX";			# AmazonアフィリエイトのアソシエイトID
+# エラーメッセージ
+my $errorMsg = "[Amazon Plugin] ";
+my $errorMsgInput = "$errorMsg入力URLが間違っている可能性があります．";
+my $errorMsgNetworkError = "$errorMsgAmazonに接続できませんでした．";
+my $errorMsgXML = "$errorMsgAmazonから商品情報XMLを取得できませんでした．";
+my $AMAZON_HTML =<<'__EOF__';
+<div class="sonson_plugins_amazon">
+test
+</div>
+__EOF__
+</pre>
+<p>ここまでは，定数とか，メッセージとか．<br />
+AmazonのIDはご自分のモノをどうぞ．<br />
+add_global_filterで，文字列を置換する．<br />
+具体的には，[amazon:（アマゾンのURL）]をエントリの文章から検索し，<br />
+マッチした場合，アマゾンのURLを引数にmakeAmazonTagを呼び出し，その戻り値で置換するようにしている．<br />
+つまり，[〜]で囲まれた部分をタグに置き換えるようにしている．<br />
+一応，URLなので，頭にhttp://があるようにしてある．<br />
+もっと厳密にチェックした方がいいかもしれない．</p>
+<pre>
+MT::Template::Context->add_global_filter(
+sonson_plugins_amazon => sub {
+my ($str, $arg, $ctx) = @_;
+$str =~ s/[amazon:(.+)]/makeAmazonTag($1)/ge if $arg && $str =~ /[amazon:http://(.+)]/;
+return $str;
+}
+);
+</pre>
+<p>以下の4つの関数が，それぞれ，処理する．<br />
+バージョン1から変化なし．やってることは，コメントアウトそのまんま．</p>
+<pre>
+sub getASINCode{
+　〜略〜
+}
+# ASINコードでAMAZONにアクセスして，結果をXMLで取得する．
+sub getXML{
+　〜略〜
+}
+# エラーの結果が返っていないかをチェック
+sub checkXML{
+　〜略〜
+}
+# XMLから，詳細ページへのリンク，タイトル，画像のURLを抽出し，
+# タグを生成して，文字列として返す．
+sub makeHtmlTag{
+　〜略〜
+}
+</pre>
+<p>makeAmazonTagがすべての根幹．この関数が，add_global_filterから呼び出される．</p>
+<pre>
+$result .= "	＜a href="http://www.amazon.co.jp/exec/obidos/ASIN/$item_asin/
+$associateID/ref=nosim/" target="_blank"＞
+";
+</pre>
+<p>ってな具合でAmazonのリンクを作成しているが・・・．<br />
+これでちゃんとアフィリエイトが動作しているのか・・・．するようだ．</p>
+<pre>
+# 入力されたURLから，HTMLタグか，エラー結果を返す．
+sub makeAmazonTag{
+my $url = shift;
+my $code = getASINCode($url);
+if( $code eq NULL ){
+return $errorMsgInput;
+}
+my $result_str = getXML($code);
+if( $result_str eq NULL ){
+return $errorMsgNetworkError;
+}
+if( !checkXML($result_str) ){
+return $errorMsgXML;
+}
+return makeHtmlTag($result_str);
+}
+1;
+__END__
+</pre>

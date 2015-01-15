@@ -1,0 +1,59 @@
+---
+layout: post
+title: VMWare Fusion＋Jenkinsでマルチテスト環境を作る
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Jenkinsを導入しようと思い立ち，チャレンジ．<br />
+最近のツールはインストーラも用意されていて，良くできていて，便利過ぎて困る．</p>
+<p>一応，想定していた環境は実現できた．<br />
+MacOSXでVMWareを走らせて，WindowsとUbuntuとMacのJenkinsを走らせられる．</p>
+<p>ハマったところを書く．</p>
+<p>（１）Jenkisが勝手にプロキシ設定しやがる</p>
+<p>これがかなりハマった．<br />
+あるgitの鯖はプロキシ外で，あるsvnの鯖はプロキシ内で・・・みたいな設定をしたいのだが，Jenkinsが勝手にプロキシとネットワークを検索して，設定してくれた結果，どうやっても，svnをプロキシなしでアクセス出来ない．<br />
+仕方がないから，<br />
+　１．ネットワークをオフにして<br />
+　２．Jenkinsのプロセスを起動<br />
+　３．ネットワークをオン<br />
+っていうアホみたいなやり方で回避．<br />
+プロキシを刺す方法は色々あるんだけど，回避する方法がなくて・・・・．わけわからん．</p>
+<p>（２）VMWareのリダイレクト？</p>
+<p>仮想マシンのネットワークをNATにすると，IPもひとつで済むので便利だが，VMWareを走らせている仮想マシンのホストからしかアクセスできない．<br />
+そこで，VMWareを設定すると，外部からの特定のポートへのアクセスをVMWareの仮想マシンへリダイレクトできる仕組みを使う．<br />
+この設定ファイルがくせ者でどうやらバージョンによってパスがあっちこっち変わっているっぽい．<br />
+VMWare Fusion 5.0だと，<br />
+<code><br />
+/Library/Preferences/VMware Fusion<br />
+</code><br />
+に色々設定ファイルがある．vmnet8がNATのインタフェースらしいので，そのフォルダにあるnat.confにリダイレクトを追記する．<br />
+nat.confの最後の方にサンプルがある．<br />
+<code><br />
+[incomingtcp]<br />
+# Use these with care - anyone can enter into your VM through these...<br />
+# The format and example are as follows:<br />
+#<external port number> = <VM's IP address>:<VM's port number><br />
+#8080 = 172.16.3.128:80<br />
+8001=172.16.3.129:8080<br />
+</external></code><br />
+とかやると，hostのIPの8001ポートに来たアクセスは，仮想マシンの172.16.3.129:8080にリダイレクトされる．<br />
+元ファイルのバックアップをとることを忘れずに．<br />
+編集後，以下のパスにあるスクリプトをsudoで実行すれば，サーバが再起動して，設定が有効になる．はず．<br />
+これで仮想マシン上で動作するJenkinsに他のホストからアクセスできるようになる．はず．<br />
+<code><br />
+/Applications/VMware\ Fusion.app/Contents/Library/services.sh --stop<br />
+/Applications/VMware\ Fusion.app/Contents/Library/services.sh --start<br />
+</code></p>

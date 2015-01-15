@@ -1,0 +1,93 @@
+---
+layout: post
+title: "[iPhone] LeopardでXCode3.0で開発環境を修復する"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta:
+  _oembed_d6446491da7e4d0eccdf8632af0c5af7: "{{unknown}}"
+  _oembed_24d43fd1b1cd374fd118744565fe405c: "{{unknown}}"
+  _oembed_16147398eb99386752723c50831a5b1f: "{{unknown}}"
+  _oembed_0bf0963745da4d7b60e375fc47935a45: "{{unknown}}"
+  _oembed_2021a14abb21abfe6656024cb13fb25f: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>色々，情報のまとめ？<br />
+大筋は，<a href="http://novi.10.dtiblog.com/blog-entry-165.html">http://novi.10.dtiblog.com/blog-entry-165.html</a>エントリに従えば，おｋ．<br />
+というわけで僕もやってみたことを再度まとめてみる．<br />
+Tigerでインストールした後に，Leopardにアップグレードした状況．をお考えください．<br />
+<strong>※手順</strong><br />
+<strong>１．一旦，toolchainをアンインストール．</strong></p>
+<pre>
+rm -rf /usr/local/arm-apple-darwin
+</pre>
+<p><strong>２．toolchainをインストール</strong><br />
+パッケージでインストール．これは，<a href="http://jrobinsonmedia.wordpress.com/2007/09/26/native-iphone-development-using-xcode-at-last/">この辺</a>で．<br />
+<strong>３．Macportsがない場合は，インスコ</strong><br />
+<strong>４．heavenlyをセットアップ．</strong><br />
+heavenlyを/usr/local/arm-apple-darwin/heavenlyにインスコする．</p>
+<pre>
+mkdir /usr/local/arm-apple-darwin/heavenly
+cp -nR /Volume/discname/* /usr/local/arm-apple-darwin/heavenly/
+</pre>
+<p>さらに，/usr/local/arm-apple-darwin/heavenlyのシンボリックリンクを/opt/local/arm-apple-darwin/heavenlyに張る．</p>
+<pre>
+ln -s /usr/local/arm-apple-darwin/heavenly /opt/local/arm-apple-darwin/heavenly
+</pre>
+<p><strong>５．Macportsでarm-apple-darwin-*をインスコする．</strong></p>
+<pre>
+sudo port install arm-apple-darwin-binutils arm-apple-darwin-cc arm-apple-darwin-runtime
+</pre>
+<p><strong>６．Developer Tools</strong></p>
+<pre>
+mkdir /Developer/usr/libexec/gcc/darwin/arm
+ln -s /opt/local/arm-apple-darwin/bin/as /Developer/usr/libexec/gcc/darwin/arm/as
+</pre>
+<p><strong>７．コンパイラスペックのセット</strong><br />
+<a href="http://celso.arrifana.org/categories/15-iPhone">ここ</a>からarm-cc-specsをダウンロード．</p>
+<pre>
+cd /opt/local/arm-apple-darwin/etc/
+mv arm-cc-specs arm-cc-specs.old
+cp arm-cc-specs ./
+</pre>
+<p><strong>８．google-devのsvnからヘッダファイルをチェックアウトして，インスコ</strong></p>
+<pre>
+svn checkout http://iphone-dev.googlecode.com/svn/trunk/include iphone-dev/include
+cd iphone-dev/include
+./configure --with-macosx-sdk=/Developer/SDKs/MacOSX10.4u.sdk
+sh install-headers.sh
+</pre>
+<p>これは，/usr/local/arm-apple-darwin/includeにインスコされる．<br />
+さらに，/usr/local/arm-apple-darwinのincludeをこのインストールしたヘッダファイルにセットする．</p>
+<pre>
+cd /usr/local/arm-apple-darwin/arm-apple-darwin
+mv include include.toolchain
+ln -s /usr/local/arm-apple-darwin/include /usr/local/arm-apple-darwin/arm-apple-darwin/include
+</pre>
+<p>また，opt，MacPortsの方にもこのincludeをセットする．</p>
+<pre>
+ln -s /usr/local/arm-apple-darwin/include /opt/local/arm-apple-darwin/include
+</pre>
+<p><strong>９．さらにGraphicsServices.hをセット</strong><br />
+http://svn.berlios.de/svnroot/repos/iphone-binutils/trunk/include<br />
+このアタリから，GraphicsServices.hをダウンロードし，/usr/local/arm-apple-darwin/include/にインストールする．</p>
+<pre>
+cd /usr/local/arm-apple-darwin/include/GraphicsServices.h
+mv GraphicsServices.h GraphicsServices.h.old
+cp ~/Desktop/GraphicsServices.h ./GraphicsServices.h
+</pre>
+<p>10．OpenGLES<br />
+OpenGLESのヘッダファイルは，ちょっとしょぼいっぽいので，Andrew J. Willmottさんからもらう．<br />
+<a href="http://www.cs.cmu.edu/~ajw/public/iphone-gl/">http://www.cs.cmu.edu/~ajw/public/iphone-gl/</a><br />
+/opt/local/arm-apple-darwin/include以下にそのOpenGLESをインストールする．</p>

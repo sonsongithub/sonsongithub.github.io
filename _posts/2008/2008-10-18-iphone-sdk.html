@@ -1,0 +1,41 @@
+---
+layout: post
+title: "[iPhone SDK] スクリーンショットのステータスバーを消す"
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>ImageMagickのconvertコマンドを使って自動的にやりたいよね．どう考えても．</p>
+<pre>
+convert -crop 320x460+0+20 ./input.png ./output.jpg
+</pre>
+<p>横長なら，こうか？</p>
+<pre>
+convert -crop 480x300+0+20 ./input.png ./output.jpg
+</pre>
+<p>iTunes connectで自動的にトリミングしてくくればいいのに・・・・・・．<br />
+んで，シェルスクリプトでフォルダの中のpngをトリミングするヤツを作ってみた．<br />
+初めてのＳ(hell script)なので，ここで勉強してこい！などのＵＲＬコメントよろしく．</p>
+<pre>
+#!/bin/sh
+cd "$1"
+for file in *.png
+do
+echo $file
+output=${file%png}jpg
+echo $output
+convert -crop 320x460+0+20 "$file" "$output"
+done
+</pre>

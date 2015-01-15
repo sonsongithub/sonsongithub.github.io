@@ -1,0 +1,33 @@
+---
+layout: post
+title: 2tch v4.1.2開発中
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>メール等でいただいたいくつかの要望とか，議論して実験的なUIを実装してみた．<br />
+・サーバー移転にちょっと対応<br />
+Javascriptを使ったサーバの移転に対応してみました．テストが不十分すぎる（いいチャンスが・・）ので，次回でのコミットは難しいかなぁ．<br />
+・左右矢印の履歴<br />
+スレッドの履歴をファイルに書き出して，保存するように．<br />
+・オフライン警告<br />
+スレッドのキャッシュがあるときにオフライン時にキャッシュを読み込むときに「インターネット接続がない」という警告が出ないように修正<br />
+・引用<br />
+スレッドの書き込み時に指定したスレッドが引用する機能を付加（デフォルトオフ）">"を付けるかも選べる（わかりにくいければ，この機能は削除するかも知れない）．<br />
+<center><img alt="2tch_v412_04.png" src="{{ site.url }}/assets//2tch_v412_04.png" width="160" height="240" /></center><br />
+・スレッドスクロール用HUD<br />
+スレッドをひとつずつ，100ずつスクロールするHUDを実装してみた．TLの人の話を参考に考えると，間違って操作したときに元のスクロール位置戻れない短所を考慮すると，確かにスクローラがあれば，右側のインデックスは必要ないという考え方もある．というわけで，実験的にインデックスオフを付けて，スレッドスクロールHUDを付けてみた．<br />
+<center><img alt="2tch_v412_01.png" src="{{ site.url }}/assets//2tch_v412_01.png" width="160" height="240" /></center><br />
+本来ならば，実験的な機能や実装はベータテストでやりたいんだが，AdHoc事情のためにできない・・・・．いつになるかわからない次回のiTunes connectとか，Developer Centerのアップデートでなんとか改善して欲しいモノだ・・・．</p>

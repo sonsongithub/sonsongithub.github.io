@@ -1,0 +1,361 @@
+---
+layout: post
+title: WWDC2008メモ
+categories:
+- blog
+tags:
+- "徒然"
+status: draft
+type: post
+published: false
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>session 313<br />
+size scaling<br />
+setting view port size for iPhone<br />
+<meta name="viewport" content="width=device-width" /><br />
+text scaling<br />
+-webkit-text-scale<br />
+media query<br />
+Safari uses "screen"<br />
+automatically identify device<br />
+feature detection<br />
+search - user agent<br />
+Resource limits<br />
+iPhone and Safari try to protect themselves. automatically shutdown it.<br />
+Be mindfule of memory usage<br />
+10MB per text resource<br />
+8MB image file tiff, png, gif<br />
+32MB Jpeg<br />
+while inactive, scripts may be stopped<br />
+not paused, media playback<br />
+Webkit<br />
+office, iwork, pdf<br />
+console.error<br />
+console.warn<br />
+console.log<br />
+Event javascript<br />
+one finger tap and release<br />
+click, mousedown, up, move<br />
+scroll<br />
+two fingers pan<br />
+rotate device<br />
+Google Map<br />
+open map with native app.<br />
+what's new 2.0<br />
+faster, faster<br />
+bytes per resource is important because of high latency<br />
+Touch and gesture events<br />
+352 iPhone tricks<br />
+Visual CSS<br />
+CSS Properties<br />
+CSS vissual effects<br />
+css transforms<br />
+css transitions<br />
+css animations<br />
+combine with touch events for interactive DHTML<br />
+379, 344, 391, 341?<br />
+Tools<br />
+set latency and bandwidth for evaluation page<br />
+921 using dashcode<br />
+session 900<br />
+#ifdef TARGET_IPHONE_SIMULATER<br />
+#else<br />
+#endif<br />
+NSZombies<br />
+Guardmalloc<br />
+Tech Note 2124<br />
+Interfacebuilder<br />
+Related to 910, 923<br />
+Analyzing your application<br />
+Instruments - analyze iPhone application<br />
+Sign?<br />
+UDID unique id for every device<br />
+Public and private key for certification<br />
+send public key to apple<br />
+apple makes certification with public key<br />
+Shark<br />
+select profile network/iPhone<br />
+911, 932 abount shark tuning app's perfomance<br />
+session 337<br />
+Patterns for Organizing Content<br />
+Nav, Tab Bar<br />
+Nav. bar<br />
+Hierarchy of content<br />
+Tab bar<br />
+Self-contained modes<br />
+Parts of screenful<br />
+MVC model<br />
+building an iPhone Application<br />
+recipes<br />
+list controller, detail controller, photo controller<br />
+self contains controller<br />
+UIViewController - design rules?<br />
+InterfaceBuilder<br />
+view controller contains views, data and logic<br />
+view controller is file's owner<br />
+Hook up view outlet<br />
+use initiWithNibName:bundle:<br />
+XCode<br />
+override - loadView<br />
+Hool events<br />
+appear -> load data<br />
+disappear -> save data<br />
+releated session - 362, 410<br />
+UINavigationController<br />
+Stack of view controllers<br />
+push and pop - controllers and titles<br />
+Navigating<br />
+Rarely call pop directly<br />
+Demo... make, push and pop views<br />
+Tab bar<br />
+tab bar also set self.view to window<br />
+Rotating views<br />
+autoresizingmask<br />
+session 706<br />
+System sound - first step<br />
+playing small sound<br />
+audiotoolbox/audioservies.h<br />
+Audio File API<br />
+audio file formats, mpeg4, mp3, aac, core audio format, aiff, aifc, wav<br />
+audio file, arbitary seeking ,data<br />
+AudioFileOpenURL<br />
+AudioFileStream<br />
+Audio Queue API<br />
+Audio Recording<br />
+supported format<br />
+PCM, Apple Lossless, a-law, IMA4, iLBC<br />
+Demo - aqTouch<br />
+Recording and Play<br />
+Listed recorded sound file<br />
+Where does the audio go?<br />
+built in mic and speaker<br />
+send sound to ex, car via USB<br />
+~~~~<br />
+Game with OpenAL<br />
+OpenGL like library for 3D audio same coordinate system<br />
+OpenAL<br />
+without recording feature<br />
+alcDeviceOpen<br />
+OpenAL extentsions : iPhone<br />
+static buffer extention<br />
+Demo OpenAL<br />
+Greate!!!!!!!!!!!!!!!<br />
+sound session is controlled os with category?<br />
+oalDemo is running while iTunes music is running background<br />
+Ociroscope demo<br />
+running smoothly<br />
+session 105<br />
+Abount itunes music store<br />
+AppStore<br />
+Hosting<br />
+Global distribute<br />
+Worldwide payment processing<br />
+reach iPhone, iPod touch, iTunes users.<br />
+Starting early July<br />
+Focus on creating great apps<br />
+Touch Fighter...loanch title? game?<br />
+Introducing iTunes Connect<br />
+iTunes Connect<br />
+Set Up Account<br />
+Distribution - sign up<br />
+Add new application<br />
+primary language and company name<br />
+only prompted the first time you add an app<br />
+later can't change these<br />
+Export Compliance<br />
+encyption statement? - U.S. departement of comerce<br />
+Enter App Details<br />
+SKU number?<br />
+Support Devices<br />
+iPhone<br />
+iPhone and iPod touch<br />
+Game Advisiories, Ratings<br />
+Upload content<br />
+Icon is required<br />
+Rounded corners and shine automatically<br />
+App ID<br />
+Compress .app as .zip archive<br />
+Handling Large Binaries<br />
+Hard limit 2GB<br />
+Use the Application Loader tool for large binaries<br />
+Icon, Screen shot.<br />
+Specify availability<br />
+For commercial app<br />
+Set payment Info<br />
+Set price<br />
+Non-US print, sign return W-8BEN form by post<br />
+For worldwide app<br />
+Add languages<br />
+Supported languages<br />
+Demo - app store<br />
+building xcode<br />
+fill out web form, upload icon and screenshot<br />
+upload binary file<br />
+Use iTunes to Your advantage<br />
+ease of purchase on devices or computer<br />
+Discoverablity<br />
+Application name<br />
+category<br />
+Titling<br />
+touch fighter v2 -> touch fighter<br />
+iPhone touch fighter -> touch fighter<br />
+touch fighter extreme action -><br />
+Touch Fighter -> OK<br />
+Icon<br />
+take care cultural problem<br />
+dont't be afraid to consult a professional graphic designer<br />
+Icon<br />
+Normal<br />
+Rounded<br />
+Shine<br />
+Screen shots<br />
+Show your product in the best light<br />
+Other info<br />
+version number<br />
+....description<br />
+After Submitting Your App<br />
+Update binary<br />
+provide addtional content, version, release notes in each language new app binary<br />
+session 362<br />
+Controls, views, animiations<br />
+What is view<br />
+UIResponder <- UIView <- UIControl<br />
+quadrilateral region<br />
+UIControl?<br />
+UIControlEvent******* -> UIControlEventTouchDownRepeat<br />
+UIControlEvent is a bit mask<br />
+UIView<br />
+frame <- superview coordinates<br />
+bounds <- self coordinates<br />
+UIView UIViewAnimation category<br />
+handled by CoreAnimation<br />
+Why is fast? -> HW acceleration<br />
+UIView animations<br />
+Asynchronous, delegate and callback<br />
++setAnimationDuration:<br />
++setAnimationCurve<br />
++setAnimationDelegate<br />
++setAnimationDidStopSelector<br />
+beginAnimations:context:<br />
+what is context?<br />
+[UIView beginAnimations:@"name" context:nil]<br />
+[myView setAlpha:0.0f];<br />
+[UIView commitAnimations];<br />
+Demo - animation<br />
+UIApplication - beginIgnoringInteractionEvents<br />
+UIApplication - endIgnoringInteractionEvents<br />
+setAnimationDelegate:<br />
+UIViewController, UIViewRotation category<br />
+Header view, content view, footer view<br />
+2 stages of rotation<br />
+CoreAnimation - lower level animation api<br />
+CAKeyframeAnimation<br />
+addAnimation:forKey:<br />
+Demo<br />
+half way...defines position during the animation<br />
+ballistics....弾道<br />
+session 519<br />
+Push Notification Service<br />
+User Experience<br />
+unknown servers, unknown data, unknown, connections<br />
+Badges, Alerts, Custom Sounds, Centralized Settings, every application, can set timing.<br />
+Easy<br />
+push and anyone<br />
+3 Cocoa, 2 http<br />
+HTTP<br />
+Property<br />
+Practice<br />
+data via the other connection, only notification<br />
+Client - side<br />
+Decide when to listen or ignore server by user with centerlized setting<br />
+session 724<br />
+OpenCL<br />
+Quartz composer - patch<br />
+Kernel patch<br />
+iteration patch<br />
+As a renderer QCView or QCCompositionLayer<br />
+session 727<br />
+OpenCL ANSI-C99<br />
+for heterogeneous parrele data<br />
+device group<br />
+Example - bais and scale<br />
+__kernel void sace<br />
+clCreateArray -> memory on GPU and CPU<br />
+perlin noise, generate natural - OpenGL and OpenCL<br />
+SPH demo - water splash<br />
+maximize computation<br />
+maximize memory locality<br />
+minimize bandwidth usage<br />
+minimize divergence<br />
+nVidia engeneer<br />
+Outline<br />
+Filling up the GPU<br />
+Use the local memory<br />
+Optimize for memory performance<br />
+Example - fluids algrorithmn<br />
+brute force is best<br />
+Ph.D<br />
+for expensive computation O( n log(n) )<br />
+Accelerate.framework<br />
+many hand-tuned general purpose routines<br />
+N-body physics simulation<br />
+gravitational interaction between a system of N particles<br />
+O( n*n )<br />
+Real scientists use real algorithmns<br />
+Make sure you have the right algorithmn first<br />
+Data struction is important<br />
+(x,y,z,w)[n] -> x[n], y[n], z[n]<br />
+Optimizing for GPU<br />
+use more thread, less loop.<br />
+copy to local memory<br />
+k-d tree<br />
+session 417<br />
+Application launch<br />
+Make launch and quit quickly<br />
+iPhone's youtube<br />
+defers networking operations<br />
+static memory<br />
+-mthumb complier flag<br />
+enabled by default<br />
+not suitable for floating-point intensive code<br />
+dead code stripping<br />
+PNG is optimised<br />
+plist is optimised<br />
+avoid atomic properties<br />
+recommend, property is nonatomic<br />
+Allocate memory wisely<br />
+autorelease can be expensive<br />
+use release whenever possible<br />
+eliminate memory leaks<br />
+Low-memory warnings<br />
+app is delegate for warning<br />
+purge offscreen view<br />
+delete cache objects<br />
+respond to low-memory notifications<br />
+File performance<br />
+use memory mapping for large file<br />
+avoids loading entire file into memory<br />
+mmap munmap<br />
+NSData initWithContentsOfMappedFile<br />
+For large datasets, use SQLite<br />
+more efficient for randam access data<br />
+Battery<br />
+transmitting is the most expensive operation<br />
+use compact formats<br />
+avoid chatty protocols<br />
+transmit/receice in bursts<br />
+Core Location<br />
+session 546<br />
+ImagePicker<br />
+Save photos -> save with ImagePicker<br />
+presentModalViewController->UIImagePickerController<br />
+getting image by delegate methods<br />
+Image data from NSDictionary<br />
+savephotos are copied to iPhoto library</p>

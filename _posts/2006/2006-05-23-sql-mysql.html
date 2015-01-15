@@ -1,0 +1,44 @@
+---
+layout: post
+title: "[SQL] MySQLコマンドメモ"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>MySQLを使ったときのコマンドのメモ</p>
+<h3 class="line-header">ユーザの追加</h3>
+<pre>
+mysql> GRANT ALL PRIVILEGES ON *.* TO hoge@localhost IDENTIFIED BY 'hoge_pass';
+</pre>
+<h3 class="line-header">テーブルの作成</h3>
+<pre>
+mysql>create table [tablename](key1 char(255), key2 int);
+</pre>
+<h3 class="line-header">データ削除・インクリメントカウンタクリア</h3>
+<pre>
+mysql>TRUNCATE TABLE
+</pre>
+<p>参照リンク<br />
+<a target="_blank" href="http://dev.mysql.com/doc/refman/4.1/ja/truncate.html">http://dev.mysql.com/doc/refman/4.1/ja/truncate.html</a></p>
+<h3 class="line-header">インクリメンタル自動インデックス</h3>
+<pre>
+alter table table_name add index ind1(id);                    # インデックスを付加
+alter table table_name modify id int auto_increment;      # インデックスに自動属性追加
+</pre>
+<h3 class="line-header">結果の表示数に制限を付ける</h3>
+<pre>
+select * from table_name limit 0,1;         # この場合オフセット０で1個だけを表示
+</pre>

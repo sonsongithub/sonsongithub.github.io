@@ -1,0 +1,61 @@
+---
+layout: post
+title: "[MacOSX] mingをインストールしてみる"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Macにming，Flash生成ライブラリをインストールしてみる．<br />
+このライブラリで，C/C++やPerlなどでswfファイルを自動生成することができる．</p>
+<h3 class="line-header">ming</h3>
+<p>sourceforge - <a target="_blank" href="http://www.libming.net/moin.cgi/Mac_OS_X_Installation">http://www.libming.net/moin.cgi/Mac_OS_X_Installation</a><br />
+sourceforge - Files - <a target="_blank" href="http://www.libming.net/moin.cgi/Mac_OS_X_Installation">http://www.libming.net/moin.cgi/Mac_OS_X_Installation</a></p>
+<h3 class="line-header">依存パッケージ</h3>
+<p>flex - <a target="_blank" href="http://www.libming.net/moin.cgi/Mac_OS_X_Installation">http://www.libming.net/moin.cgi/Mac_OS_X_Installation</a><br />
+bison - <a target="_blank" href="http://www.libming.net/moin.cgi/Mac_OS_X_Installation">http://www.libming.net/moin.cgi/Mac_OS_X_Installation</a><br />
+zlib libpng - <a target="_blank" href="http://www.libming.net/moin.cgi/Mac_OS_X_Installation">http://www.libming.net/moin.cgi/Mac_OS_X_Installation</a><br />
+libgif unlibgif - <a target="_blank" href="http://www.libming.net/moin.cgi/Mac_OS_X_Installation">http://www.libming.net/moin.cgi/Mac_OS_X_Installation</a></p>
+<h3 class="line-header">インストール参考URL</h3>
+<p><a target="_blank" href="http://www.libming.net/moin.cgi/Mac_OS_X_Installation">http://www.libming.net/moin.cgi/Mac_OS_X_Installation</a><br />
+<a target="_blank" href="http://www.h7.dion.ne.jp/~matsu/feature/uzumi/ming/intro.html">http://www.h7.dion.ne.jp/~matsu/feature/uzumi/ming/intro.html</a><br />
+<a target="_blank" href="http://www.lr.pi.titech.ac.jp/~abekawa/perl/perl_ming.html">http://www.lr.pi.titech.ac.jp/~abekawa/perl/perl_ming.html</a><br />
+とりあえず，bisonとflexというヤツはインストールしておいた．<br />
+結構簡単にいくと思われ．</p>
+<h3 class="line-header">本体インストールしてみる</h3>
+<p>ming-0.3.0を解凍する．</p>
+<pre>
+> tar zxf ming-0.3.0.tar
+> cd ming-0.3.0
+> ./configure
+> make
+> sudo make install
+</pre>
+<p>これでインストールされる．<br />
+インストールパスは，おそらく/usr/local/libのはず．<br />
+ちゃんとインストールされているかを確認するために，サンプルを実行してみる．<br />
+matsuさんのサンプルを参考にテストプログラムを実行してみる．<br />
+ファイヤープロジェクト<br />
+<a target="_blank" href="http://www.h7.dion.ne.jp/~matsu/feature/uzumi/ming/intro.html">http://www.h7.dion.ne.jp/~matsu/feature/uzumi/ming/intro.html</a></p>
+<h3 class="line-header">Perlモジュールをインストールしてみる</h3>
+<pre>
+> tar zxf ming-perl-0.3.0.tar.gz・・・mingの中に展開される
+> cd ming-0.3.0
+> cd perl_ext
+> perl Makefile.PL
+> make
+> sudo make install
+</pre>
+<p>これで，Perlからも利用できる．</p>

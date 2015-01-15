@@ -1,0 +1,44 @@
+---
+layout: post
+title: "[Tips] Linuxでデフォルトゲートウェイを設定する"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>以下の設定ファイルを編集して設定する．<br />
+いろんなサイトで，一つ目のファイルを編集しろと書いてあるが，そうではないっぽい．<br />
+デバイスが複数あると一つ目に書いても意味がないのか・・？<br />
+よーわからん．<br />
+私は，どうやら，一つ下の二つ目のファイルを書き直して設定した．</p>
+<pre>
+/etc/sysconfig/network
+/etc/sysconfig/network-scripts/ifcfg-eth0
+</pre>
+<p>設定ファイルに以下を追加する．</p>
+<pre>
+GATEWAY=***.***.***.***
+</pre>
+<p>最後に，ネットワークを再起動する．</p>
+<pre>
+/etc/rc.d/init.d/network restart
+</pre>
+<p>デフォルトゲートウェイの確認はrouteコマンドでやる</p>
+<pre>
+$ sudo /sbin/route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+以下情報
+</pre>

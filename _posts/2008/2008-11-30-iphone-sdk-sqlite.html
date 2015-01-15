@@ -1,0 +1,43 @@
+---
+layout: post
+title: "[iPhone SDK] SQLiteへの誤解"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>私は激しくSQLiteを誤解していました．その誤解を並べてみました．<br />
+１．INSERTは遅くない<br />
+INSERTクエリは，トランザクションでまとめる．トランザクションとは，一旦，他からの処理をロックして，まとめて登録するような感じの処理らしい．<br />
+多くのデータをINSERTするときは，</p>
+<pre>
+sqlite3_exec( database, "BEGIN", NULL, NULL, NULL );
+for(){
+insert----
+}
+sqlite3_exec( database, "COMMIT", NULL, NULL, NULL );
+</pre>
+<p>とする．<br />
+２．VACUUMして，メモリを効率よく使う<br />
+SQLiteは，削除した項目が残る．定期的にVACUUMをして，残ったゴミを掃除する．<br />
+iPhoneでは，使えるメモリが少ないので，これはかなりクリティカルな問題となる．<br />
+ただし，経験的にVACUUMはゴミが多くなると，処理に時間が掛かる．VACUUMは，自動的に実行することも出来るが，これは，完全にゴミを掃除するわけではないらしい．</p>
+<pre>
+sqlite3_exec( database, "PRAGMA auto_vacuum=1", NULL, NULL, NULL );
+</pre>
+<p>３．UPDATEを速くする（経験的に）<br />
+これ，やり方が間違っているかも知れません．また，SQLでは一般的に間違っているか，常識かも知れない．excuseはこんなところにして．UPDATEするくらいなら，まとめて新しいデータを全部INSERTして，古いデータをDELETEした方が速かった．<br />
+流れとしては，SELECTでデータをフェッチ→データを更新→更新したデータをINSERT→フェッチしてきたデータをフラグかなんかで一括DELETE．<br />
+まぁ，使えない状態の方が多そうですが．</p>

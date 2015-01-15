@@ -1,0 +1,30 @@
+---
+layout: post
+title: "「はてブ」にAtomで投稿できなかった問題解決"
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>以前，<a href="http://son-son.sakura.ne.jp/cat41/atomapi.html">はてなブックマークにAtomAPI経由で新しいブックマークを投稿できないこと</a>を書きましたが，うまくいきました．<br />
+うまくいかなかった理由は，ユーザエージェントの問題でした．以下のようにいくつかのサイトがその問題を紹介していましたが，最後のサイトがちゃんと報告してくれていた問題点を読み逃していました．<br />
+・<a href="http://d.hatena.ne.jp/emergent/20081129/1227926637">http://d.hatena.ne.jp/emergent/20081129/1227926637</a><br />
+・<a href="http://d.hatena.ne.jp/u1_fukui/20081216/1229400288">http://d.hatena.ne.jp/u1_fukui/20081216/1229400288</a><br />
+・<a href="http://d.hatena.ne.jp/u1_fukui/20081111/1226404238">http://d.hatena.ne.jp/u1_fukui/20081111/1226404238</a><br />
+・<a href="http://d.hatena.ne.jp/higebu325/20090129">http://d.hatena.ne.jp/higebu325/20090129</a><br />
+＃4つめのサイトからの抜粋</p>
+<pre>
+追記：User-Agentが空のときもアクセス拒否されます。
+</pre>
+<p>だそうで・・・・．User-Agentを明示したら，ちゃんと投稿できるようになりました．どんなUser-Agentだといいのか，不明ですが，私は，Apple-PubSub/XX.Xにしました．なんでもいいのかなぁ？</p>

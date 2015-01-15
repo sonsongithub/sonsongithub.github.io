@@ -1,0 +1,64 @@
+---
+layout: post
+title: "[お勉強] liboctave++の基礎を知る"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "その他"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h3>C++でoctaveを使う</h3>
+<p>やっぱりoctaveのスクリプトだけだと不便なので，<br />
+少し前にちょっとエントリを書いたけど，本格的にC++用のliboctave使ってみる．<br />
+まぁ，簡単な関数の備忘録として書き残す．</p>
+<h3>逆行列</h3>
+<pre>
+cout << "inverse・・・逆行列" << endl;
+Matrix m_inverse(3, 3);
+m_inverse(0,0) = 3;m_inverse(0,1) = 1;m_inverse(0,2) = 4;
+m_inverse(1,0) = 2;m_inverse(1,1) = 0;m_inverse(1,2) = 2;
+m_inverse(2,0) = 3;m_inverse(2,1) = 3;m_inverse(2,2) = 2;
+cout << "Original Matrix" << endl <<  m_inverse << endl;
+cout << "Inverse Matrix" << endl << m_inverse.inverse() << endl;
+cout << "Recomposed Matrix" << endl <<  m_inverse.inverse()*m_inverse << endl;
+</pre>
+<h3>固有値</h3>
+<pre>
+cout << "eigen・・・固有値" << endl;
+Matrix m_eigen(3, 3);
+m_eigen(0,0) = 3;m_eigen(0,1) = 2;m_eigen(0,2) = 2;
+m_eigen(1,0) = 2;m_eigen(1,1) = 0;m_eigen(0,2) = 1;
+m_eigen(2,0) = 2;m_eigen(2,1) = 0;m_eigen(2,2) = 2;
+cout << "Original Matrix" << endl <<  m_eigen << endl;
+EIG eig(m_eigen);
+cout << "Eigen Vectors" << endl <<  eig.eigenvectors() << endl;
+cout << "Eigen Values" << endl <<  eig.eigenvalues() << endl;
+cout << "Recomposed Matrix" << endl << eig.eigenvectors()*ComplexMatrix(ComplexDiagMatrix(eig.eigenvalues()))*eig.eigenvectors().inverse() << endl;
+</pre>
+<h3>特異値</h3>
+<pre>
+cout << "singular・・・特異値" << endl;
+Matrix m_singular(2, 3);
+m_singular(0,0) = 3;m_singular(0,1) = 1;m_singular(0,2) = 4;
+m_singular(1,0) = 2;m_singular(1,1) = 0;m_singular(1,2) = 2;
+cout << "Original Matrix" << endl <<  m_singular << endl;
+SVD svd(m_singular);
+cout << "Left Singular Matrix" << endl <<  svd.left_singular_matrix() << endl;
+cout << "Singular Values" << endl <<  svd.singular_values() << endl;
+cout << "Right Singular Matrix" << endl <<  svd.right_singular_matrix() << endl;
+cout << "Recomposed Matrix" << endl << svd.left_singular_matrix() * Matrix(DiagMatrix(svd.singular_values())) * svd.right_singular_matrix() << endl;
+</pre>
+<h3>参考リンク</h3>
+<p><a href="http://vision.kuee.kyoto-u.ac.jp/~hiroaki/numerical/">川嶋宏彰先生のサイト</a><br />
+<a href="http://son-son.sakura.ne.jp/archive/sample02.tar.gz">サンプルソースコード</a></p>

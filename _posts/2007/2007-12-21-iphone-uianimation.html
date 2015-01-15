@@ -1,0 +1,42 @@
+---
+layout: post
+title: "[iPhone] UIAnimationの実力をかいま見た．"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>※参考リンク<br />
+・<a href="http://e.kevb.net/files/iphone/">http://e.kevb.net/files/iphone/</a><br />
+・<a href="http://pumpkinzzz.tumblr.com/">http://pumpkinzzz.tumblr.com/</a><br />
+これらのサイトによると色々アニメーションが用意されているらしい．<br />
+しかし，こういう先駆者には頭が下がる．これを使って，アニメーション体験アプリを作ってみた．</p>
+<pre>
+NSString *animationName = @"oglFlip";
+id myAnim = [LKTransition animation];
+[myAnim setType:animationName];
+[myAnim setSubtype:@"fromTop"];
+[myAnim setDelegate:self];
+[myAnim setTimingFunction:[LKTimingFunction functionWithName:@"easeOut"]];
+[myAnim setFillMode:@"backward"];
+[myAnim setTransitionFlags:3];
+[myAnim setDuration:2.0];
+[myAnim setSpeed:1.5];
+[[self _layer] addAnimation: myAnim forKey: 0];
+</pre>
+<p>こんな感じでViewをアニメーションさせることができる．<br />
+アニメーションの開始や完了時はデリゲートメソッドで捕まえられる．<br />
+しかし，スムーズだなぁ・・・．日本の携帯電話は何なんだ？<br />
+<center><img alt="genie.png" src="{{ site.url }}/assets//genie.png" width="160" height="240" /> <img alt="zoomyOut.png" src="{{ site.url }}/assets//zoomyOut.png" width="160" height="240" /></center></p>

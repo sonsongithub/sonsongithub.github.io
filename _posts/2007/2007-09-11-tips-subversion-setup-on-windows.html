@@ -1,0 +1,31 @@
+---
+layout: post
+title: "[Tips] Subversion Setup on Windows"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>WindowsでSubversionをインストールする流れ．<br />
+１．subversionのサイトからインストーラ付をダウンロード<br />
+２．svnserveをサービスとして登録<br />
+このサービスの登録がやっかい．sc.exeを使う．</p>
+<pre>
+C:\>sc create svnserve
+binpath= "C:/Program Files/Subversion/bin/svnserve.exe --service -r C:/rep/"
+DisplayName= "Subversion"
+depend= Tcpip
+</pre>
+<p>実際には，改行しないで入力．<br />
+sc.exeは，Windows2000には，入っていない模様．</p>

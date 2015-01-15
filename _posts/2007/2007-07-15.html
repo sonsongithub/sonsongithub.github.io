@@ -1,0 +1,142 @@
+---
+layout: post
+title: "[お勉強] クリックに反応させたい〜Javascriptでオブジェクト指向"
+categories:
+- blog
+tags:
+- Blog
+- Javascript
+- Programming
+- "お勉強"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>前回作った領域をクリックするとそのIDを出力するプログラムを作るとすると，<br />
+クラスにclickedメソッドを追加し，それをonmousedownに登録するのが上策と考えられる．</p>
+<p>※そもそも，onmousedownに登録する関数の実態がないのに登録できるとは・・・・C/C++で考えると若干意味がわからん．</p>
+<p>そこで，そのように実装してみる．<br />
+イベントの登録は例によって，prototype.jsを使う．</p>
+<pre>
+&lt;div id="canvas20070715" style="width:400px;height:250px;border:thin red dotted; "&gt;
+&lt;/div&gt;
+&lt;script src="./prototype.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+objs = new Array();
+obj = new Area( 10, 10, 1 );
+obj.init();
+objs.push( obj );
+obj = new Area( 200, 10, 2 );
+obj.init();
+objs.push( obj );
+function Area( inputx, inputy, inputnumber ) {
+this.target = 'canvas20070715';
+var x = inputx;
+var y = inputy;
+var number = inputnumber;
+this.init = function() {
+div_area = "area" + number;
+$('canvas20070715').innerHTML += "&lt;div id='" + div_area + "'&gt;test&lt;/div&gt;\n"
+$(div_area).style.position = "relative";
+$(div_area).style.left = x + "px";
+$(div_area).style.top  = y + "px";
+$(div_area).style.width  = 50 + "px";
+$(div_area).style.height  = 50 + "px";
+$(div_area).style.backgroundColor  = "#AAAAAA";
+Event.observe( div_area, 'click', clicked, false);
+}
+function clicked(event) {
+alert(number);
+}
+}
+&lt;/script&gt;
+</pre>
+<p>上記のコードは，やってみるとわかるが，うまく動かない．<br />
+最後に登録したメソッドだけが反応する様子．<br />
+これは，どうやら，divのidを追加して，それに逐次メソッドを追加すると，うまく割り当てられないようである．<br />
+そこで，一括でdivを追加し，さらにその後でメソッドを追加するようにしてみる．<br />
+それが以下のコードとなる．</p>
+<pre>
+&lt;div id="canvas20070715_1" style="width:400px;height:250px;border:thin blue dotted;"&gt;&lt;/div&gt;
+&lt;script src="./prototype.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+function Area2( inputx, inputy, inputnumber ) {
+var x = inputx;
+var y = inputy;
+var number = inputnumber;
+makeDiv();
+this.setMethod = setMethod;
+function makeDiv() {
+div_area = "area" + number;
+$('canvas20070715_1').innerHTML += "&lt;div id='" + div_area + "'&gt;test&lt;/div&gt;\n"
+$(div_area).style.position = "relative";
+$(div_area).style.left = x + "px";
+$(div_area).style.top  = y + "px";
+$(div_area).style.width  = 50 + "px";
+$(div_area).style.height  = 50 + "px";
+$(div_area).style.backgroundColor  = "#AAAAAA";
+}
+function setMethod() {
+div_area = "area" + number;
+Event.observe( div_area, 'click', clicked, false);
+}
+function clicked(event) {
+alert(number);
+}
+}
+objs = new Array();
+obj = new Area2( 50, 50, 1 );
+objs.push( obj );
+obj = new Area2( 300, 10, 2 );
+objs.push( obj );
+objs[0].setMethod();
+objs[1].setMethod();
+&lt;/script&gt;
+</pre>
+<div id="canvas20070715_1" style="width:400px;height:250px;border:thin blue dotted;"></div>
+<p><script src="./prototype.js"></script><br />
+<script><br />
+function Area2( inputx, inputy, inputnumber ) {<br />
+var x = inputx;<br />
+var y = inputy;<br />
+var number = inputnumber;<br />
+makeDiv();<br />
+this.setMethod = setMethod;<br />
+function makeDiv() {<br />
+div_area = "area" + number;<br />
+$('canvas20070715_1').innerHTML += "
+<div id='" + div_area + "'>test</div>
+<p>\n"<br />
+$(div_area).style.position = "relative";<br />
+$(div_area).style.left = x + "px";<br />
+$(div_area).style.top  = y + "px";<br />
+$(div_area).style.width  = 50 + "px";<br />
+$(div_area).style.height  = 50 + "px";<br />
+$(div_area).style.backgroundColor  = "#AAAAAA";<br />
+}<br />
+function setMethod() {<br />
+div_area = "area" + number;<br />
+Event.observe( div_area, 'click', clicked, false);<br />
+}<br />
+function clicked(event) {<br />
+alert(number);<br />
+}<br />
+}<br />
+objs = new Array();<br />
+obj = new Area2( 50, 50, 1 );<br />
+objs.push( obj );<br />
+obj = new Area2( 300, 10, 2 );<br />
+objs.push( obj );<br />
+objs[0].setMethod();<br />
+objs[1].setMethod();<br />
+</script></p>
+<p>こうすると，うまく，それぞれのオブジェクトのメソッドが呼ばれるようだ．<br />
+うーむ・・・・・．<br />
+しかし，自由度の高い言語だなぁ・・・・．</p>

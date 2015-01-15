@@ -1,0 +1,30 @@
+---
+layout: post
+title: "[iPhone SDK] SecRandomCopyBytesはiPhoneOSのみ"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>乱数をセキュアに発生させられるらしい，SecRandomCopyBytesは，iPhoneOSでしか，実装されていない．<br />
+Simulatorでのデバッグ用に，プリプロセッサで分岐させて，ビルドするとよい．</p>
+<pre>
+uint16_t randomized_code = 0;
+#if TARGET_IPHONE_SIMULATOR
+randomized_code = 0;
+#else
+SecRandomCopyBytes(kSecRandomDefault, sizeof(randomized_code), (uint8_t*)&amp;randomized_code);
+#endif
+</pre>

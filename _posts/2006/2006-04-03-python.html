@@ -1,0 +1,82 @@
+---
+layout: post
+title: "[Python] まず基礎から"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">Pythonを使ってみる． </h3>
+<p>どうやら，MacOSXでは，デフォルトでDeveloperToolsに含まれているらしい．<br />
+さらに，このレンタルサーバのsakuraは，CGIでPythonをサポートしている．<br />
+色々遊べそうなので，やってみることにする．<br />
+<br />
+<h3 class="line-header">Pythonを実行． </h3>
+<p>まず，配列から数字を出力．</p>
+<pre>
+#! /usr/local/bin/python
+numbers=[1, 2, 3, 4, 5, 6]
+for i in numbers:
+print i
+print numbers
+</pre>
+<p>うーむ，これで以下の実行結果が得られるとは不思議だ・・・．</p>
+<pre>
+>python 001.py
+1
+2
+3
+4
+5
+6
+[1,2,3,4,5,6]
+</pre>
+<p>となる．<br />
+<br />
+<h3 class="line-header">日本語を表示してみる </h3>
+<p>今は，MacOSXのターミナルをUTF-8で出力しているので，EUC等で出力すると文字化けしてしまう．<br />
+このため，今回は，UTF-8で出力してみる．</p>
+<pre>
+#! /usr/local/bin/python
+# coding=utf-8
+print "これはUTF-8の出力テストです．"
+</pre>
+<p>実行結果は，</p>
+<pre>
+これはUTF-8の出力テストです．
+</pre>
+<p>うーむ．ナイス．<br />
+<br />
+<h3 class="line-header">引数を利用する </h3>
+<p>引数は，sysを利用するらしい．</p>
+<pre>
+#! /usr/local/bin/python
+# coding=utf-8
+import sys
+num_arguments = len(sys.argv)
+print "引数のリスト・・・",sys.argv[0:num_arguments]
+result_str = sys.argv[1]+sys.argv[2]
+result_num = int(sys.argv[1])+int(sys.argv[2])
+print result_str
+print result_num
+</pre>
+<p>ついでに，文字列を数値にするのも覚えた．</p>
+<pre>
+% python 003.py 2 3
+引数のリスト・・・ ['003.py', '2', '3']
+23
+5
+</pre>

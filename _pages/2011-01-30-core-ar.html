@@ -1,0 +1,65 @@
+---
+layout: page
+title: Core AR
+categories: []
+tags: []
+status: publish
+type: page
+published: true
+meta:
+  _wp_page_template: sidebar-page.php
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<div class="description" style="margin-bottom:15px;">
+<b>CoreAR.framework</b><br />
+CoreAR.frameworkは，オープンソースのARフレームワークです．ARToolKitライクな2次元コードを使ったARを簡単に実装できます．CoreAR.frameworkは，OpenCVなどの画像処理ライブラリに一切依存しません．また，移植性を考慮し，CoreAR.frameworkはすべてC言語で実装しました．CoreAR.frameworkに画像データを渡すと，2次元コードの識別番号，ARに必要なカメラに対する4x4の姿勢行列を得ることが出来ます（ただしカメラの焦点距離や2次元コードの実際の大きさを予め指定する必要があります．これは2次元コードを使う場合は必然的にそうなります）．iPhone4であれば，15fps前後でAR処理を行うことが出来ます．
+</div>
+<div class="description" style="margin-bottom:15px;">
+<b>CoreAR</b><br />
+<a href="http://click.linksynergy.com/fs-bin/click?id=he6amglY4cw&subid=&offerid=94348.1&type=10&tmpid=3910&RD_PARM1=http%3A%2F%2Fitunes.apple.com%2Fus%2Fapp%2Fcorear%2Fid428844303%3Fmt%3D8%2526ls%3D1"><img class="appIcon" align="right" src="assets/availableOnAppStore.png" alt="null" /></a><a href="http://sonson.jp/?page_id=1910">CoreAR</a>は，CoreAR.frameworkを使用して作ったARアプリケーションです．AppStoreで現在販売中です．CoreAR.frameworkでできる，基本的なことを大体実装しているので，是非お試しください．もちろん，CoreAR.frameworkに付随のサンプルコードをビルドして，フレームワークを試すことも出来ます．寄付の意も込めて買ってくださるとうれしいなぁ・・・・・．
+</div>
+<p><center><iframe title="YouTube video player" width="640" height="390" src="http://www.youtube.com/embed/nfRLd56ev0M" frameborder="0" allowfullscreen></iframe></center></p>
+<div class="description" style="margin-bottom:15px;">
+<b>ソースコードサンプル</b></p>
+<p>[cpp]<br />
+// 例えば，このpixelにカメラ画像をコピーする<br />
+int width;<br />
+int height;<br />
+unsigned char *pixel = (unsigned char*)malloc(sizeof(unsigned char) * width * height);</p>
+<p>// 読み取り結果がここに保存される<br />
+CRCodeInfoStorage *codeInfoStorage = CRCreateCodeInfoStorage();</p>
+<p>// テンプレートを保存するストレージ<br />
+CRCodeImageTemplate *codeImageTemplateStorage = CRCreateCodeImageTemplateStorage();</p>
+<p>// ここで読み取る2次元コードの模様を画像データとして取得し，テンプレートを作成する<br />
+int c_width;<br />
+int c_height;<br />
+unsigned char *c_p = (unsigned char*)malloc(sizeof(unsigned char) * c_width * c_height);</p>
+<p>/* ここで2次元コードの画像を読み込む */</p>
+<p>CRCodeImageTemplate *template = CRCreateCodeImageTemplate(c_p, c_width, c_height);<br />
+template-&gt;code = codeNumber;<br />
+template-&gt;size = codeSize;<br />
+CRCodeImageTemplateStorageAddNewTemplate(codeImageTemplateStorage, template);<br />
+free(c_p);</p>
+<p>// 読み取り開始<br />
+CRChainCodeStorage *storage = CRCreateChainCodeStorageByParsingPixel(pixel, width, height);<br />
+CRChainCodeStorageDetectCornerWithLSM(storage);<br />
+CRCodeInfoStorageAddCodeInfoByExtractingFromChainCode(codeInfoStorage, storage, valueBuffer, width, height, codeImageTemplateStorage);</p>
+<p>// 後片づけ<br />
+CRReleaseChainCodeStorage(&amp;storage);<br />
+CRReleaseCodeInfoStorage(&amp;codeInfoStorage);<br />
+free(pixel);<br />
+[/cpp]<br />
+このようにこれくらいのコードで2次元コードを読み取ることが出来ます．
+</p></div>
+<div class="description" style="margin-bottom:15px;">
+<b>CoreAR</b><br />
+CoreAR.frameworkは，BSDライセンスに従って<a href="https://github.com/sonsongithub/CoreAR">公開</a>します．作者の手に負えない部分の改善や追加，修正があれば，是非開発に参加してください．改善点の例として，CoreAR.frameworkは移植性を考慮し，Cで書かれていますが，肝心のHomogrpahy行列を求めるための逆行列の計算部分をAccelerate.frameworkに依存しており，Windowsやその他の環境でコンパイルするには，LAPACKを使う必要がある点などが挙げられます．<br />
+CoreAR.frameworkは，githubで公開しています．開発者の方は是非ダウンロードして遊んでみてください．作者からのささやかなお願いですが，もし，このフレームワークを使ってソフトウェアを販売したり，公開したら，報告してくださるとうれしいです．
+</div>

@@ -1,0 +1,120 @@
+---
+layout: post
+title: "[OpenGL] WindowsMFC"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">MFC </h3>
+<p>かなり生産的になります．SDKと比較してかなり楽にコーディングできます．ただし，アイドリングアニメーションなどの細かい制御はできませんが，ビューアなどのアプリケーション作成にとってはこのオブジェクト指向は捨てがたい選択肢です．<br />
+サンプルはドキュメント／ビュー形式にのっとって作成します．まず，SDI形式のアプリケーションをMFC AppWizardで作成します．<br />
+<br />
+<h3 class="line-header">初期化 </h3>
+<p>まずデバイスコンテキストとレンダリングコンテキスト変数をViewクラスへ追加します．</p>
+<pre>
+HGLRC hRC;
+CDC *cDC;
+</pre>
+<p>次にClassWizardでViewクラスへWM_CREATEをイベントとして追加します．<br />
+WM_CREATEにはOpenGLの初期化コードを記述します．</p>
+<pre>
+// TODO: この位置に固有の作成用コードを追加してください
+cDC = new CClientDC(this) ;        // DCの生成
+hRC = Init_Pixel(cDC->m_hDC) ;     // OpenGL用にPixel Formatを指定
+wglMakeCurrent (cDC->m_hDC, hRC);  // 現在のcontext設定
+StartFunction();
+</pre>
+<p>Init_Pixel(HDC)はInitGL.hに含まれるピクセルフォーマット初期化関数です．詳細はSDKのセクションを参考にしてください．ここでViewクラスのメンバ変数hRCへレンダリングコンテキストが代入されます．そして，wglMakeCurrentでそのコンテキストをカレントコンテキストへ移行します．StartFunctionではOpenGLの光源などの初期化コマンドを実行しています．<br />
+<br />
+<h3 class="line-header">リサイズ時のイベントハンドラ </h3>
+<p>ClassWizardでViewクラスへWM_SIZEをイベントして追加します．<br />
+行うことは，Viewportの設定と投視変換の設定です．投視変換については最初に決定したものから変更加えたくない場合はしなくてもいいのですが，Viewportだけは行わないとちゃんとウィンドウにあった描画結果が得られません．投視変換とViewportについては"Viewing"を参考にしてください．</p>
+<pre>
+CView::OnSize(nType, cx, cy);
+// TODO: この位置にメッセージ ハンドラ用のコードを追加してください
+Resize(cx,cy);
+</pre>
+<p>ここにリサイズ時の処理関数を記述しています．cx，cyはウィンドウのサイズを保存しています．</p>
+<pre>
+//ウィンドウのリサイズ時の処理
+void Resize(int x, int y){
+//それによってビューポートを設定する
+glViewport(0, 0, x, y);
+GLdouble aspect = (GLdouble)x/(GLdouble)y;
+//プロジェクションモードで射影
+glMatrixMode( GL_PROJECTION );
+glLoadIdentity();
+gluPerspective( 30.0, aspect, 1.0, 5000.0 );
+//ノーマルのモデルビューモードへ移行
+glMatrixMode( GL_MODELVIEW );
+}
+</pre>
+<p>まず引数のcx，cyもとにglViewportによってViewportを設定します．<br />
+視体積のアスペクト比をウィンドウサイズから算出し，投視変換を再設定します．<br />
+<br />
+<h3 class="line-header">描画コード </h3>
+<p>描画コードは，ViewクラスのOnDraw関数で行います．</p>
+<pre>
+// TODO: この場所にネイティブ データ用の描画コードを追加します。
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) ;
+glLoadIdentity();
+gluLookAt(
+0,0,5,
+0,0,0,
+0,1,0);
+glPushMatrix();
+glPopMatrix();
+glFinish();
+SwapBuffers(cDC->m_hDC) ;
+</pre>
+<p>これで描画です．ここで他で作成したDrawなどの関数を実行してもかまいません．<br />
+<br />
+<h3 class="line-header">OpenGLの解放 </h3>
+<p>最後にOpenGLを開放します．開放はViewクラスのデストラクタに行わせます．</p>
+<pre>
+// OpenGLの開放
+wglMakeCurrent(NULL,NULL);
+wglDeleteContext(hRC);
+delete cDC;
+</pre>
+<p>このコードをViewクラスのデストラクタに書き足すことになります．<br />
+確実なコーディングを行うならば，確保できているか確認するために，hRCとcDCがNULLでないかをチェックしてから開放した方がいいでしょう．<br />
+<br />
+<h3 class="line-header">MFC MDI </h3>
+<p>MDIの場合でも同じです．ただし気をつけなければいけない点があります．<br />
+それはコンテキストの扱いです．OpenGLではコンテキストは最後にカレントコンテキストへ設定したものに対して一連のAPIを実行します．MDIでウィンドウをいくつか表示したときカレントコンテキストの設定を忘れると二つ目のウィンドウに向けて実行したつもりの命令が一つ目のウィンドウに実行されたりします．そのため，逐一OnDrawやIsSelectedなどのタイミングでアクティブになったウィンドウに対してカレントコンテキストの設定をする必要があります．</p>
+<pre>
+// TODO: この場所にネイティブ データ用の描画コードを追加します。
+//明示的にコンテキストを設定する
+wglMakeCurrent (cDC->m_hDC, hRC);    // 現在のcontext設定
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) ;
+glLoadIdentity();
+gluLookAt(
+0,0,5,
+0,0,0,
+0,1,0);
+glPushMatrix();
+glPopMatrix();
+glFinish();
+SwapBuffers(cDC->m_hDC) ;
+</pre>
+<p>こういう感じにコーディングします．カレントコンテキストの設定はバグとしてありがちなです．<br />
+<br />
+<h3 class="line-header">ソースコード </h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/mfc_gl_sdi">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/mfc_gl_sdi</a><br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/mfc_gl_mdi">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/mfc_gl_mdi</a><br />
+本ソースコードを使用したことによる如何なる損害も製作者は責任を負いません．</p>

@@ -1,0 +1,39 @@
+---
+layout: post
+title: "[MacOSX] Sparkleを使ってみる〜概要"
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><a href="http://sparkle.andymatuschak.org/">Sparkle.framework</a>は，MacOSX向けの開発されているオープンソースのアプリケーション自動アップデートフレームワークである．<br />
+TextMateなど有名なアプリケーションでも採用されている．<br />
+この辺の<a href="http://sparkle.andymatuschak.org/documentation/pmwiki.php/Documentation/BasicSetup?from=Main.HomePage">公式wiki</a>を読みながら，StoreSales for MacOSX2.0に組み込んでみた．<br />
+ざっくとりした作業内容を備忘録がてら書きたいと思う．<br />
+<center><br />
+<img src="{{ site.url }}/assets//Screenshot.jpg" /><br />
+</center><br />
+<strong>アプリケーションに必要なもの</strong><br />
+１，アプリケーションにSparkle.frameworkを組み込む<br />
+２．MainMenu.xibを使っている場合は，そこにSpakleのインスタンスを追加<br />
+３．秘密鍵と公開鍵をつくる<br />
+４．公開鍵をアプリケーションにバンドルで組み込む<br />
+５．秘密鍵でアプリケーションのバイナリのSHA-1ハッシュをDSAで署名<br />
+６．アプリケーションにSparkle.frameworkに関連するInfo.plistの情報を追加する<br />
+７．バージョン情報とアップデート内容を配信するappcast.xmlを用意する<br />
+８．バイナリとappcast.xmlをアップロードする<br />
+<strong>この中でリリースビルド時に毎回やらないといけないこと</strong><br />
+１．秘密鍵でアプリケーションのバイナリのSHA-1ハッシュをDSAで署名<br />
+２．バージョン情報を配信するappcast.xmlを用意する<br />
+この辺を自動化してみたりした．</p>

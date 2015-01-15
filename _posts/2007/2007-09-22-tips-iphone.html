@@ -1,0 +1,47 @@
+---
+layout: post
+title: "[Tips] iPhoneの開発環境を整える夢〜一日目"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>そんな夢を見た．その夢を忘れないようにしないと．<br />
+正直，諸外国にその手の情報は死ぬほどあるのだが．<br />
+SDKもちゃんとあるらしいｗ<br />
+・<a href="http://max.iamas.ac.jp/2061/">ノイマンピアノの中の人のはず</a><br />
+・<a href="http://www.tuaw.com/">The Unofficial Apple Weblog</a><br />
+などなど．<br />
+まぁ，夢を少しずつ語っていこうか．<br />
+でも，少し前までは，相当ﾏﾝﾄﾞｸｻｲことをしないと，うまくいかなかったらしいが，今はかなり簡単にｾｯﾄｳﾌﾟできるモノが配布されているらしい．<br />
+<strong>１．Appleから復元用のファイルをゲットする</strong><br />
+これは，Appleの正式なもの．拡張子が謎の拡張子ipsjになっているが，これはzipに直して，適当に解凍する．<br />
+執筆現在は，<a href="http://appldnld.apple.com.edgesuite.net/content.info.apple.com/iPhone/061-3538.20070629.B7vXa/iPhone1,1_1.0_1A543a_Restore.ipsw">iPhone1,1_1.0_1A543a_Restore</a>.zipだ．<br />
+<strong>２．ツール類を取り出す</strong><br />
+中身のdmgに開発に必要なファイルが入っているのだが，これが実は，暗号化されており，素直にはマウントできない．<br />
+それを復号するのが<a href="http://www.google.co.jp/search?q=vfdecrypt">，vfdecrypt</a>である．<br />
+リンク先からダウンロードしる．<br />
+そんで，<a href="7d5962d0b582ec2557c2cade50de90f4353a1c1de07b74212513fef9cc71fb890574bfe5">この辺</a>にあるごにょごにょでごにょすると，decryptされたイメージファイル694-5262-39.dmgを作ることができる．<br />
+<strong>３．694-5262-39.dmgからファイルを取り出す</strong><br />
+694-5262-39.dmgの中身をすべて，/usr/local/arm-apple-darwin/heavenly/以下にコピーする．<br />
+<strong>４．開発ツールをインストールする</strong><br />
+<a href="http://www.google.co.jp/search?q=iPhoneToolchainv05">この辺</a>からiPhoneToolchainv05.dmgを入手する．<br />
+中身は，<br />
+・iPhoneToolchain<br />
+・Ooo Shiny!!<br />
+この中のiPhoneToolchainをインストールする．<br />
+さらに仕上げで，Ooo Shiny!!をインストールする．<br />
+<strong>５．まとめ</strong><br />
+これで，/usr/local/arm-apple-darwin/以下に開発ツールがインスコされますた．<br />
+まぁ，ノイマンピアノの中の人のサイトと，英語サイトを合体しただけな訳だが．</p>

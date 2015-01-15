@@ -1,0 +1,29 @@
+---
+layout: post
+title: UISearchDisplayController - 2tchのバグの原因判明（たぶん）
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>2tchで，使っていると検索バーとnavigation barが消えうせるというバグレポートが寄せられていたのだが，ようやく原因が判明した．<br />
+・原因<br />
+原因は，残りメモリ量の警告が飛んでくると，UITableViewのheaderViewに自動的にnilがセットされることだった．<br />
+バグレポートを12月にバグレポートを多くユーザから頂き，Webブラウザを使うとよく起こるという報告が多かったことから，メモリ周りを疑い判明した．<br />
+・誤動作？<br />
+どうして長い間発覚しなかったかというと，2tchは一切InterfaceBuilderを使っていない．このため，スレッドやスレタイビューでは，UISearchDisplayControllerを自前でallocして使っている．iOSがheaderViewにnilをセットすると，UISearchDisplayControllerに含まれるUISearchBarのインスタンスにautoreleaseを投げておけば，メモリ警告時に自動的にインスタンスが開放されることになるが，2tchではインスタンスが開放されずに残ることになる．（ちなみにこれらのインスタンスはビューコントローラの破棄時に開放される）<br />
+このため，UISearchDisplayControllerのUISearchBarのインスタンスはずっと残ることになり，非表示になった後でも，メソッドを読んだり，参照してもエラーが発生せずに動作していたのだ・・・・・．<br />
+・対処<br />
+メモリ警告時に適切に動作するようにすればよい．<br />
+なかなかにこの仕様には気付かなかった・・・・．</p>

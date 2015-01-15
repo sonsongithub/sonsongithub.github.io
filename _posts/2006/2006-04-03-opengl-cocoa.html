@@ -1,0 +1,143 @@
+---
+layout: post
+title: "[OpenGL] Cocoa"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">Objective-C </h3>
+<p>MacOSX上でのデフォルトの使用言語となっているObjective-CによるCocoa環境でのOpenGLプログラミングについてです．<br />
+ProjectBuilderなどの開発環境はADC(Apple Developer Connection)から無料でダウンロードできます．まぁ，バグは色々あるIDEではありますが，このようなすばらしい統合環境開発環境を無償で提供するあたりAppleの今後も暗くはないと思えます．<br />
+ProjectBuilderはbeta版(6/29現在)のversion2.0を使用しています．Objective-Cに関する情報は書籍，他のサイトなどを参考にしてください．結構色々とあります．<br />
+<br />
+<h3 class="line-header">下準備〜InterfaceBuilder </h3>
+<p>余談はさておいて，はじめましょう．<br />
+まず，新規プロジェクトを作成し，"Cocoa Application"を作成します．<br />
+そして，プロジェクト内のMainMenu.nibをダブルクリックし，InterfaceBuilderを立ち上げ，リソースの編集を行います．<br />
+まず，メインウィンドウの中にCustumViewを配置します．次にMainMenu.nibウィンドウの中のタブをClassesに切り替え，NSOpenGLViewにSubClassを作成します．(コントロールキーを押しながらクリックするとフローティングメニューが表示されるのでそこからSubClass NSOpenGLViewを選択してください．)　<br />
+名前はどんなものでも結構です（MyOpenGLViewとしています．）．これでNSOpenGLViewを継承したクラスを作成します．<br />
+<center><img src="{{ site.url }}/assets//cocoaGL01.jpg" /></center><br />
+次に先ほどウィンドウに配置したNSOpenGLViewのクラスをMyOpenGLView(先ほど作成したクラス)に変更します．メニューの"Tools"から"Show Info"を選択するとMyOpenGLView Class Infoウィンドウが表示されます．そこでウィンドウの上部にあるタブを"Custum Class"に切り替え，NSOpenGLViewをMyOpenGLWindowクラスに切り替えます．<br />
+<center><img src="{{ site.url }}/assets//cocoaGL02.jpg" /></center><br />
+次にMainMenu.nibウィンドウの"Classes"からMyOpenGLViewでフローティングメニューを表示し，"Create Files for MyOpenGLWindow"を選択します．これで自動的に現在のプロジェクトにMyOpenGLViewのソースファイルが挿入されます．<br />
+<br />
+<h3 class="line-header">初期化関数のオーバーライド </h3>
+<p>次にNSOpenGLViewクラス継承したMyOpenGLViewのコーディングをはじめていきます．以前の説明でCustumViewではなく，NSOpenGLViewをウィンドウに配置するとありましたが，これをしてしまうと，MyOpenGLViewがちゃんと呼び出されません．どうやら，NSOpenGLViewをドラッグアンドドロップで作成すると，InterfaceBuilder側でのOpenGLの設定が自動的にされてしまうようです．<br />
+NSOpenGLViewを使うならデフォルトで，適当にピクセルフォーマットを選択し，レンダリングコンテキストを作成して，自動的にOpenGL用のViewを作ってくれるからです．しかもその設定をInterfaceBuilderで行えます．まさによくできた環境です．<br />
+が．ここではプログラミングについての説明なのでちゃんと自前のコードを使ってプログラミングを行います．<br />
+まず，initWithFrameをオーバーライドします．</p>
+<pre>
+-(id)initWithFrame:(NSRect)frameRect{
+// ピクセルフォーマットを配列に代入する
+NSOpenGLPixelFormatAttribute attrs[] =
+{
+NSOpenGLPFADoubleBuffer,        // ダブルバッファ
+NSOpenGLPFAColorSize, 24,       // カラーバッファ・24bit
+NSOpenGLPFAAlphaSize, 8,        // アルファバッファ・8bit
+NSOpenGLPFADepthSize, 16,       // デプスバッファ・16bit
+NSOpenGLPFAAccelerated,         // ハードウェアアクセラレーション
+0};
+// attrs配列を元にピクセルフォーマットを確保する
+NSOpenGLPixelFormat* pixFmt = [[[NSOpenGLPixelFormat alloc] initWithAttributes:attrs] autorelease];
+// viewを初期化する
+self = [super initWithFrame:frameRect pixelFormat:pixFmt];
+// カレントコンテキストを設定
+[ [ self openGLContext ] makeCurrentContext ];
+return( self );
+}
+</pre>
+<p>MacOSではWindowsとは違い，ピクセルフォーマット構造体がありません．<br />
+NSOpenGLPixelFormatAttribute配列を作成し，そこに値を代入することになります．<br />
+設定値を代入した配列を元にピクセルフォーマットのポインタへ入れます．この辺はObjective-Cならではお作法といったところですね．"autorelease"によってpixFmtのインスタンスは使用後自動的に開放されます．<br />
+次にsuperクラス(NSOpenGLViewクラス)へinitWithFrameメッセージを送信し，初期化します．<br />
+自分自身にopenGLContextメッセージを送信し，レンダリングコンテキストを取得，カレントコンテキストへ変更します．<br />
+最後に自身を戻り値にし，終了です．<br />
+<br />
+<h3 class="line-header">リサイズ </h3>
+<p>これも初期化処理と同じでオーバライドによって解決します．<br />
+NSOpenGLViewのメソッドのreshapeをオーバーライドします．</p>
+<pre>
+- (void)reshape{
+// viewサイズを取得する．
+NSRect bounds = [self bounds];
+// viewサイズからViewportを設定する．
+glViewport(
+(int)bounds.origin.x, (int)bounds.origin.y,
+(int)bounds.size.width, (int)bounds.size.height);
+// 射影変換の設定
+glMatrixMode( GL_PROJECTION );
+glLoadIdentity();
+gluPerspective(
+45,
+(float)bounds.size.width / (float)bounds.size.height,
+1.0, 500.0 );
+glMatrixMode(GL_MODELVIEW);
+glLoadIdentity();
+glClearColor(1,1,1,1);
+}
+</pre>
+<p>という風にしています．まずselfへboundsメッセージを送信し，viewサイズを取得します．<br />
+それをもとにViewportを設定し，次に射影変換の設定を行っています．<br />
+描画処理も同様です．そのままオーバーライドしてしまいます．</p>
+<pre>
+- (void)drawRect:(NSRect)aRect
+{
+glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+// ここに描画コード
+glFinish();
+//バッファ入れ替え
+[ [ self openGLContext ] flushBuffer ];
+[super drawRect:aRect];
+}
+</pre>
+<p>開放処理に関しては，なにもいりません．superクラスであるNSOpenGLViewクラスのデストラクタが自動的にOpenGLの開放処理を行うからです．<br />
+<br />
+<h3 class="line-header">OpenGLの解放 </h3>
+<p>最後にOpenGLを開放します．開放はViewクラスのデストラクタに行わせます．</p>
+<pre>
+// OpenGLの開放
+wglMakeCurrent(NULL,NULL);
+wglDeleteContext(hRC);
+delete cDC;
+</pre>
+<p>このコードをViewクラスのデストラクタに書き足すことになります．<br />
+確実なコーディングを行うならば，確保できているか確認するために，hRCとcDCがNULLでないかをチェックしてから開放した方がいいでしょう．<br />
+<br />
+<h3 class="line-header">MDI？ </h3>
+<p>"Cocoa Document-Based Application"を使用してMDIアプリケーションにする場合は留意すべき点があります．カレントコンテキストの扱いです．<br />
+カレントコンテキストを切り替えながらうまく描画しなければ，一番後に開いたウィンドウに対してのみOpenGLコマンドが実行されつづけることになってしまいます．これを防ぐために描画前に常にカレントコンテキストを設定するようにします．これで常に描画するときにはそのコンテキストがカレントとなります．</p>
+<pre>
+- (void)drawRect:(NSRect)aRect
+{
+// コンテキストの切り替え
+[ [ self openGLContext ] makeCurrentContext ];
+// 描画セット
+[[self openGLContext] setView:self];
+glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+// ここに描画コード
+glFinish();
+//バッファ入れ替え
+[ [ self openGLContext ] flushBuffer ];
+[super drawRect:aRect];
+}
+</pre>
+<p>サンプルではクリックしている間はviewが黒色になるようにしてあります．<br />
+このコーディングよりもいい方法があるかもしれません．<br />
+さらに，この形式は無論，"Cocoa Document-Based Application"においての話です．別のオブジェクト構造を使用する場合にはそれに応じた適切なプログラミング方法があります．<br />
+以前，ビューがカレントになったときに切り替えるように説明していましたが，それでは切り替えのタイミングが甘いと言うことがわかったので，変更しました．謹んで訂正いたします<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/mac_gl_sdi">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/mac_gl_sdi</a><br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/mac_gl_mdi">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/mac_gl_mdi</a></p>

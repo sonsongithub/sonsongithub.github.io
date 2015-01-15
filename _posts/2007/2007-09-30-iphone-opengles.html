@@ -1,0 +1,33 @@
+---
+layout: post
+title: "[iPhone] OpenGLES"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- Objective-C
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><img align="right" alt="iphone_opengles.png" src="{{ site.url }}/assets//iphone_opengles.png" width="165" height="273" />iPhoneに実装されているOpenGLESを使ってこんなこともできる．<br />
+実装コードは，<br />
+・<a href="http://www.thebends.org/~allen/iphone/">http://www.thebends.org/~allen/iphone/</a><br />
+・<a href="http://www.cs.cmu.edu/~ajw/">http://www.cs.cmu.edu/~ajw/</a><br />
+・<a href="http://www.cs.cmu.edu/~ajw/public/iphone-gl/">http://www.cs.cmu.edu/~ajw/public/iphone-gl/</a><br />
+この辺コードを参考にしますた．<br />
+Andrewさんのソースコードがほとんど完璧っぽい．<br />
+自分なりにちょっと改造したり，読みやすくしたりして，書き直してみた．後，suspend移行時の実装だけ補強してみた．後，GLU系が使えないので，射影変換の行列とかをちゃんと実装しないといけない．<br />
+その辺が激しく面倒くさい．<br />
+※問題点<br />
+・上部のメニューバーにも再描画メッセージがいってしまう．<br />
+・たまにメインメニューにも再描画メッセージが出て続けてしまう．</p>

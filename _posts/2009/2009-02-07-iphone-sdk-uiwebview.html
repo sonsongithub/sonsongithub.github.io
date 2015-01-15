@@ -1,0 +1,57 @@
+---
+layout: post
+title: "[iPhone SDK] UIWebViewでクリックしたノードを取得する"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>ご存じの通り，UIWebViewはほとんどの機能が隠蔽されている．<br />
+今回のハックは，UIWebViewでクリックしたときに反応する要素（エレメント）を取得する方法である．（これでtarget="_blank"問題に対応しようと思ったのだが，もっと簡単な方法がある．これは後日また別エントリで．）たとえば，Aタグのhref，target，alignment，id，classなどを取得できる．<br />
+UIWebViewに対して，UIWebView？（不明）から以下のundocumentedなデリゲートメッセージがUIWebViewのリンクがクリックされたときに飛んでくる．</p>
+<pre>
+- (void)webView:(UIWebView *)sender willClickElement:(id)element;
+</pre>
+<p>この第2引数は，undocumentedの<a href="http://ericasadun.com/iPhoneDocs220/_u_i_thread_safe_node_8h-source.html">UIThreadSafeNode</a>というクラスになっている．<br />
+UIThreadSafeNodeは，<a href="http://ericasadun.com/iPhoneDocs220/_d_o_m_node_8h-source.html">DOMNode</a>というこれまたundocumentedのクラスをカプセル化したものである．どうやら，UIThreadSafeNodeのデリゲート先が，内部で持っているDOMNodeのなっているらしい．UIThreadSafeNodeは，スレッドセーフでクリックした対象のDOMの情報を取得できるようにするものと考える．（詳しい各クラスの説明？データ？はErica女史のヘッダファイルを参考にされたい）<br />
+DOMNodeから，<a href="http://ericasadun.com/iPhoneDocs220/_d_o_m_named_node_map_8h-source.html">DOMNamedNodeMap</a>を取得する．</p>
+<pre>
+DOMNode
+- (id)attributes;
+- (BOOL)hasAttributes;
+</pre>
+<p>さらに，DOMNamedNodeMapの要素として<a href="http://ericasadun.com/iPhoneDocs220/_d_o_m_attr_8h-source.html">DOMAttr</a>がある．これは，以下のAPIを使って取得できる．当然，これらもundocumentedである．</p>
+<pre>
+DOMNamedNodeMap
+- (id)item:(int)fp4;
+</pre>
+<p>これをまとめると，以下のようにクリックした対象をhookできる．</p>
+<pre>
+- (void)webView:(UIWebView *)sender willClickElement:(id)element {
+NSString* nodeName = [element nodeName];
+NSString* hrefURL = [element hrefURL];
+NSString* textContent = [element textContent];
+id attributes = [element attributes];
+int length = [attributes length];
+int i;
+for( i = 0; i &lt; length; i++ ) {
+id item = [attributes item:i];
+NSString* name = [item name];
+NSString* value = [item value];
+NSLog( @"%@=\"%@\"", name, value );
+}
+}
+</pre>
+<p>審査通るのかな？コレ．</p>

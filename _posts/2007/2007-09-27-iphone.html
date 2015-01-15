@@ -1,0 +1,59 @@
+---
+layout: post
+title: "[iPhone] マルチタッチを実装したい．"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>iPhoneの醍醐味は，マルチタッチにある．<br />
+それ以外は，正直，MacOSXのモバイル版といえる．<br />
+（まぁ，それも対外よくできているわけだが）<br />
+このマルチタッチに関する情報・・・・・・．<br />
+散乱している．<br />
+class-dumpの結果から見るに重要となりそうなキーワードは，以下，この辺だろう．<br />
+１．gestureStarted<br />
+２．gestureChanged<br />
+３．gestureEnded<br />
+４．canHandleGestures<br />
+５．cancelMouseTracking<br />
+６．setEnabledGestures<br />
+また，片っ端から，iPhoneのアプリケーションのソースコードを読みまくり，さらに，色々調べてみると，二つのメソッドが浮かび上がる．<br />
+１．GSEventGetInnerMostPathPosition<br />
+２．GSEventGetOuterMostPathPosition<br />
+これを使っているソースコードをビルドしたところ，この二つのAPIの戻り値がおかしいというエラーでビルドできない．<br />
+※二つのAPIの戻り値が違うといわれた・・・．謎．もしかすると，1.0.1のファームウェアのときは動いたのかもしれない．<br />
+怪しい・・・・．<br />
+これで実装したが，まったくうまくいかない．<br />
+そこで，Google CodeのDoomプロジェクトで怪しい呪文を見つける．<br />
+<a href="http://code.google.com/p/iphonedoom/wiki/GestureEvents">http://code.google.com/p/iphonedoom/wiki/GestureEvents</a>より引用</p>
+<pre>
+Invoking setGestureDelegate on your UIView, will send the delegate the following
+events:
+- (void)gestureStarted:(GSEvent *)event;
+- (void)gestureChanged:(GSEvent *)event;
+- (void)gestureEnded:(GSEvent *)event;
+Additionally, if you invoke the following on your UIView:
+[myView setEnabledGestures: 2];
+[myView setValue: [NSNumber numberWithBool: NO] forGestureAttribute: 7];
+[myView setValue: [NSNumber numberWithBool: NO] forGestureAttribute: 4];
+[myView setValue: [NSNumber numberWithBool: YES] forGestureAttribute: 5];
+Your view will be stretched around using the pinch/expand gestures, and your
+delegate should then also receive the following events:
+- (void)willStartGesturesInView:(UIView *)view forEvent:(GSEvent *)event;
+- (void)didFinishGesturesInView:(UIView *)view forEvent:(GSEvent *)event;
+- (void)willStartGesture:(int)gesture inView:(UIView *)view forEvent:(GSEvent *)event;
+- (void)gestureDidChange:(int)gesture inView:(UIView *)view forEvent:(GSEvent *)event;
+</pre>
+<p>ぬううう．ここで一旦挫折．</p>

@@ -1,0 +1,80 @@
+---
+layout: post
+title: "[iPhone] setFrame setZPosition setTransform"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><img align="center" alt="coordinate.png" src="{{ site.url }}/assets//coordinate.png" width="361" height="480" /><br />
+座標系の備忘録．<br />
+間違ってたらごめんなさい．そして，指摘していただけるとうれしいです．<br />
+※メインのビュー<br />
+ほかのビューは，すべてのこのビューのサブビュー．まぁそんなに悩むこともないでしょう．<br />
+viewのFrameは，どうやらすべて親ビューの左上を原点とした位置にセットされる模様．</p>
+<pre>
+id view1 = [[UIView alloc] initWithFrame:CGRectMake( x1, y1, w1, h1 )];
+[window setContentView:view1];
+</pre>
+<p>※Zバッファのお話<br />
+view2，view3は，view1のサブビュー．<br />
+そして，それぞれにsetZPositionで，10と-10をセットしている．<br />
+Z軸は奥から手前にのびているようで，大きいほど手前に来る模様．</p>
+<pre>
+z2 = 10;
+id view2 = [[UIView alloc] initWithFrame:CGRectMake( x2, y2, w2, h2 )];
+[view1 addSubview:view2];
+[[view2 _layer] setZPosition:z2];
+z3 = -10;
+id view3 = [[UIView alloc] initWithFrame:CGRectMake( x3, y3, w3, h3 )];
+[view1 addSubview:view3];
+[[view3 _layer] setZPosition:z3];
+</pre>
+<p>※setTransform<br />
+view4は，以下のコードで初期化している．下のview4は，setTransformでアニメーションさせた結果である．</p>
+<pre>
+id view4 = [[flipView alloc] initWithFrame:CGRectMake( x4, y4, w4, h4 )];
+[view1 addSubview:view4];
+</pre>
+<p>そして，view4のマウスダウンイベントで以下のコードを実装．<br />
+これでアニメーションがマウスダウン時にアニメーションが始まります．<br />
+どうやら，setTransformの座標系は，そのビューの中心を原点として行われる模様．<br />
+単純に回転させると，ビューの中心を中心として回転します．<br />
+そして，回転はいわゆる「左手系」の様相．そうですよね・・・？<br />
+sublayerTransformは，遠近感を出すための座標変換の値ですね．<br />
+これを親ビューで，setSublayerTransformで設定してあげると，遠近感が出ると．<br />
+また，setTransformのZ位置とsetZPositionのZ値は，どうやら同じ評価軸の模様．</p>
+<pre>
+LKTransform sublayerTransform = LKTransformIdentity;
+sublayerTransform.m34 = 1.0 / -420.0;
+[[[self superview] _layer] setSublayerTransform:sublayerTransform];
+LKTransform m = LKTransformIdentity;
+m = LKTransformMakeRotation( deg 0, 0, 1);    // make rotation matrix
+m.m41 = tx
+m.m42 = ty;
+m.m43 = z5 - z4;
+[[self _layer] setTransform:m];
+</pre>
+<p>LKTransformは，列ベクトルを右側からかける座標変換の行列と考えると以下のように展開すると考えやすいと思います．（筆者は，列ベクトル愛好者なので）</p>
+<pre>
+/*  transform matrix for column vector
+m.m11 = 1.0f;    m.m21 = 0.0f;    m.m31 = 0.0f;    m.m41 = 0.0f;
+m.m12 = 0.0f;    m.m22 = 1.0f;    m.m32 = 0.0f;    m.m42 = 0.0f;
+m.m13 = 0.0f;    m.m23 = 0.0f;    m.m33 = 1.0f;    m.m43 = 0.0f;
+m.m14 = 0.0f;    m.m24 = 0.0f;    m.m34 = 0.0f;    m.m44 = 1.0f;
+*/
+</pre>
+<p>今のところは，こんなもんかな．</p>

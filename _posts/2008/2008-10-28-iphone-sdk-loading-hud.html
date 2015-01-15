@@ -1,0 +1,51 @@
+---
+layout: post
+title: "[iPhone SDK] Loading HUDの実装サンプル"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><strong>・下記ムービーのHUDを実現するサンプル</strong><br />
+<a href="http://son-son.sakura.ne.jp/archive/SNHUDActivityView.zip">とりあえず動くレベル版</a><br />
+<a href="http://son-son.sakura.ne.jp/archive/hudSample.zip">ちゃんとリソースも追加した版</a><br />
+<strong>・リリースノート</strong><br />
+・表示するためのスレッドをクラスに内包したいがうまくいかない．スレッドがらみは難しい．<br />
+・画像とか入れ忘れてた．ｺﾞﾒｿ．<br />
+<strong>・ムービー</strong><br />
+<center><object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/YNc_ncf5FLg&hl=ja&fs=1" /><param name="allowFullScreen" value="true" /><embed src="http://www.youtube.com/v/YNc_ncf5FLg&hl=ja&fs=1" type="application/x-shockwave-flash" allowfullscreen="true" width="425" height="344"></embed></object></center><br />
+<strong>・実装例</strong><br />
+以下のようなソースコードで実装します．</p>
+<pre>
+- (IBAction)openHUD:(id)sender {
+[NSThread detachNewThreadSelector:@selector(openActivityHUDOfString) toTarget:self withObject:nil];
+int i;
+for( i = 0; i < 10; i++ ) {
+NSLog( @"%d", i );
+[NSThread sleepForTimeInterval:0.1];
+}
+[hud_ dismiss];
+}
+- (void) openActivityHUDOfString {
+NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+hud_ = [[SNHUDActivityView alloc] initWithString:@"Loading..."];
+@synchronized( self ) {
+[hud_ showInView:self.view];
+[hud_ release];
+}
+[pool release];
+[NSThread exit];
+}
+</pre>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/iPhone2.0/hudSample">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/iPhone2.0/hudSample</a></p>

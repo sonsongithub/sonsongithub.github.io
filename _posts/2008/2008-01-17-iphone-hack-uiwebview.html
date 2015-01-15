@@ -1,0 +1,122 @@
+---
+layout: post
+title: "[iPhone] Hack UIWebView〜コンパイル"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>SafariのレンダリングエンジンでHTMLを表示できるUIWebViewを試してみた．<br />
+Web上にあんまり情報がまとまっておらず，ちょっと苦労した．<br />
+<strong>・ソースコード</strong><br />
+MyWebView.m</p>
+<pre>
+#import "MyWebView.h"
+@interface UIWebView (HackWebView)	// for peeking msg to UIWebView
+- (BOOL) respondsToSelector:(SEL) selector;
+@end
+@implementation UIWebView (HackWebView)
+- (BOOL) respondsToSelector:(SEL) selector {
+NSLog(@"[UIWebView] respondsToSelector: %s", selector);
+return [super respondsToSelector:selector];
+}
+@end
+@implementation MyWebView
+- (id) initWithFrame:(CGRect) frame {
+self = [super initWithFrame:frame];
+// create WebView
+webView_ = [[[UIWebView alloc] initWithFrame:frame] autorelease];
+[webView_ setDelegate:self];
+[webView_ setTilingEnabled: YES];
+[webView_ setTileSize: CGSizeMake(320,500)];
+[webView_ setAutoresizes: YES];
+[self addSubview:webView_];
+// load html
+NSString *html = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"source" ofType:@"html"] encoding:NSUTF8StringEncoding error:nil];
+[webView_ loadHTMLString:html baseURL:nil];
+return self;
+}
+- (void) view:(id)view didDrawInRect:(CGRect)rect duration:(float)duration {
+}
+- (void) view:(id)view didSetFrame:(CGRect)currentRect oldFrame:(CGRect)oldRect {
+[self setContentSize:currentRect.size];
+}
+- (BOOL) respondsToSelector:(SEL) selector {
+NSLog(@"[MyWebView] respondsToSelector: %s", selector);
+return [super respondsToSelector:selector];
+}
+@end
+</pre>
+<p>MyWebView.h</p>
+<pre>
+#import &lt;Foundation/Foundation.h&gt;
+#import &lt;UIKit/UIKit.h&gt;
+#import &lt;UIKit/UIApplication.h&gt;
+#import &lt;UIKit/UIView-Geometry.h&gt;
+#import &lt;UIKit/UIView-Hierarchy.h&gt;
+#import &lt;UIKit/UIView-Internal.h&gt;
+#import &lt;UIKit/UIScroller.h&gt;
+#import &lt;UIKit/UIWebView.h&gt;
+//#import &lt;WebKit/WebView.h&gt;
+//#import &lt;WebKit/WebFrame.h&gt;
+// if activate these lines, can't compile this..... I disgust a warning msg.
+#import &lt;WebCore/DOMHTMLDocument.h&gt;
+#import &lt;WebCore/DOMHTMLElement-DOMHTMLElementExtensions.h&gt;
+#import "global.h"
+@interface MyWebView : UIScroller {
+UIWebView *webView_;
+}
+@end
+</pre>
+<p><strong>・コンパイルとヘッダファイル修正</strong><br />
+実は，Erica氏のヘッダファイル等ではコンパイルできない．<br />
+そこで，修正をかける．修正は４つのファイルで，以下です．</p>
+<pre>
+&gt;
+diff ./include/UIKit/UIWebView.h ./include.original/UIKit/UIWebView.h
+9c9
+&lt; //#import "UIKeyboardInputProtocol.h"
+---
+&gt; #import "UIKeyboardInputProtocol.h"
+11c11
+&lt; @class DOMHTMLElement, DOMNode, DOMNode/*&lt;UIFormControl&gt;*/, NSTimer, UIAutoscrollTimer, UIInformalDelegate, UITextLoupe, UITextTraits, UITextView, UIView, WebPDFView, WebView;
+---
+&gt; @class DOMHTMLElement, DOMNode, DOMNode&lt;UIFormControl&gt;, NSTimer, UIAutoscrollTimer, UIInformalDelegate, UITextLoupe, UITextTraits, UITextView, UIView, WebPDFView, WebView;
+13c13
+&lt; @interface UIWebView : UITiledView/* &lt;UIKeyboardInput&gt;*/
+---
+&gt; @interface UIWebView : UITiledView &lt;UIKeyboardInput&gt;
+43c43
+&lt;       DOMNode/*&lt;UIFormControl&gt;*/ *element;
+---
+&gt;         DOMNode&lt;UIFormControl&gt; *element;
+diff ./include/WebCore/DOMHTMLDocument.h ./include.original/WebCore/DOMHTMLDocument.h
+13c13
+&lt; //-     // Error parsing type: 以下略
+---
+&gt; -     // Error parsing type: 以下略
+diff ./include/WebCore/DOMObject.h ./include.original/WebCore/DOMObject.h
+9c9
+&lt; //#import "NSCopyingProtocol.h"
+---
+&gt; #import "NSCopyingProtocol.h"
+diff ./include/WebCore/WebScriptObject.h ./include.original/WebCore/WebScriptObject.h
+7c7
+&lt; //#import "NSObject.h"
+---
+&gt; #import "NSObject.h"
+&lt;/pre&gt;
+</pre>
+<p>これで，自前でUIWebViewを作ることができますた．</p>

@@ -1,0 +1,59 @@
+---
+layout: post
+title: "[お勉強] Javascriptでオブジェクト指向～thisとvarの結論・・・？"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>sonsonです．<br />
+いろいろやってきましたが，「さ」さんのthis.self = thisが現状，いちばんわかりやすい気がしますね．<br />
+こりゃ．</p>
+<pre>
+&lt;script src="./prototype.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+function hoge(){
+self = this;
+self.val1 = "val1";
+self.func = function () {
+alert( 'varで宣言した変数-&gt;' + self.val1 );
+}
+}
+$('canvas20070807-1').onmousedown = function() {
+var obj = new hoge();
+obj.func();
+obj.val1 = "val1 modified";
+obj.func();
+}
+&lt;/script&gt;
+</pre>
+<div id="canvas20070807-1" style="width:100px;height:100px;border-style:solid;border-width:thin;">
+ここをクリックすると動作します．
+</div>
+<p><script src="./prototype.js"></script><br />
+<script><br />
+function hoge(){<br />
+self = this;<br />
+self.val1 = "val1";<br />
+self.func = function () {<br />
+alert( 'varで宣言した変数->' + self.val1 );<br />
+}<br />
+}<br />
+$('canvas20070807-1').onmousedown = function() {<br />
+var obj = new hoge();<br />
+obj.func();<br />
+obj.val1 = "val1 modified";<br />
+obj.func();<br />
+}<br />
+</script></p>

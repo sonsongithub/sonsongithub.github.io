@@ -1,0 +1,38 @@
+---
+layout: post
+title: "[iPhone SDK] Tips of UIImage and CGImage"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Some greate UIImage, CGImage APIs are provided to manage and use image.<br />
+<b>How to Expand UIImage for variable width buttons</b><br />
+It looks too bad, that an image is expanded directly when it is set to UIBotton, UIImageView and so on.<br />
+If you make it look so good, you don't have to directly expand image. If you use following API,  when you scale or resize image, 4 corner area that you specify are are not scaled or resized. 2 arguments are corner areas' width and height.</p>
+<pre>
+UIImage *stretched = [original stretchableImageWithLeftCapWidth:5 topCapHeight:5];
+</pre>
+<p><b>Resize UIImage</b><br />
+Use this API, very simply. But this method is private and undocumented, you can't use this method for application to submit AppStore.</p>
+<pre>
+UIImage *resized = [image _imageScaledToSize:CGSizeMake( new_width, new_height ) interpolationQuality:quality];
+</pre>
+<p><b>Crop CGImage</b><br />
+You can crop the image with following API.</p>
+<pre>
+CGImageRef clipped = CGImageCreateWithImageInRect ( image, rectROI );
+</pre>
+<p>This API makes subimage from original CGImage. This API retains original image, doesn't alloc new CGImage.</p>

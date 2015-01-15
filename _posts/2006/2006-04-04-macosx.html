@@ -1,0 +1,99 @@
+---
+layout: post
+title: "[MacOSX] 低レベルAPIでマウス，キーボードを制御"
+categories:
+- blog
+tags:
+- Blog
+- DirectShow
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>MacOSXでは，Quartzに含まれる低レベルAPIで，マウスやキーボードのイベントをシステム側にPostすることができる．<br />
+調べるとPanther当たりまでは，色々とバグがあったようだが，大分使えるようになってきているらしい．<br />
+ここでは，マウスイベント，キーボードイベントのPostについて，調べたことをまとめてみる．<br />
+<br />
+<h3 class="line-header">マウスイベント</h3>
+<p>
+<h3 class="line-header">マウスのクリックイベントをPostする </h3>
+<p>CGPostMouseEvent<br />
+Synthesizes a low-level mouse-button event on the local machine.</p>
+<pre>
+CGEventErr CGPostMouseEvent (
+CGPoint mouseCursorPosition,
+boolean_t updateMouseCursorPosition,
+CGButtonCount buttonCount,
+boolean_t mouseButtonDown,
+);
+</pre>
+<p>一つめの引数はマウスの目的位置，二つめの引数はマウスをそこにちゃんと動かすかのフラグ，三つ目の引数はマウスボタンの番号，四つ目の引数はマウスをクリックするかのフラグである．<br />
+buttonCountは，1が左，2が右，3が真ん中ボタンになるらしい．<br />
+例えば，一番左上隅をクリックするようにマウスを制御する場合は，以下のようにコーディングする．</p>
+<pre>
+CGPoint point;
+point.x=0;
+point.y=0;
+CGPostMouseEvent(point, TRUE, 1, TRUE);   //mouse down
+CGPostMouseEvent(point, TRUE, 1, FALSE);  //mouse up
+</pre>
+<p>ちゃんと，マウスアップのイベントをPostしないと，クリックしたことにならないことがあるので要注意．<br />
+また，デスクトップの表示領域は以下のAPIで取得できる．</p>
+<pre>
+int width = CGDisplayPixelsWide(kCGDirectMainDisplay);
+int height = CGDisplayPixelsHigh(kCGDirectMainDisplay);
+</pre>
+<p>
+<h3 class="line-header">マウスの表示を制御する </h3>
+<p>マウスのポインタの表示/非表示を設定するには，以下のAPIを利用する．</p>
+<pre>
+CGDisplayErr CGDisplayHideCursor(CGDirectDisplayID display);  // カーソルを隠す
+CGDisplayErr CGDisplayShowCursor(CGDirectDisplayID display);  // カーソルを表示する
+</pre>
+<p>マウスのポインタの表示位置を設定するには，以下のAPIを利用する．ただし，このAPIの場合，マウスが移動したことによるイベントは発生しない．マウスのイベントをちゃんと発生させたい場合は，上記のCGPostMouseEventを利用する．</p>
+<pre>
+CGDisplayErr CGDisplayMoveCursorToPoint(CGDirectDisplayID display, CGPoint point);
+</pre>
+<p>CGDirectDisplayID displayには，ディスプレイの識別子を入力するのだが，複数のディスプレイを利用したりしていない場合は，kCGDirectMainDisplayを引数にすれば，大丈夫．<br />
+詳しくは，Appleのこの辺の資料を参考にされたい．<br />
+<a href="http://developer.apple.com/ja/technotes/tn2007.html">Technical Note TN2007</a><br />
+<br />
+<h3 class="line-header">キーボードイベント </h3>
+<p>
+<h3 class="line-header">キーボードイベントをシステムにPostする </h3>
+<p>キーボードイベントは，以下のAPIでPostできる．</p>
+<pre>
+CGEventErr CGPostKeyboardEvent (
+CGCharCode keyChar,
+CGKeyCode virtualKey,
+boolean_t keyDown
+);
+</pre>
+<p>三つ目の引数は，キーの押しと，上げるのフラグである．<br />
+しかし，一つめと二つめの引数が何を意味するかが，よくわからない．そこで，ヘッダファイルCGRemoteOperation.hと，ネットの情報を調べてみた．<br />
+それらをまとめると，</p>
+<h3 class="numeric-list">
+<li>普通のキー　CGPostKeyboardEvent((CGCharCode)'v', (CGKeyCode)9, true);</li>
+<li>コントロールキー　CGPostKeyboardEvent((CGCharCode)0, (CGKeyCode)59, true);</li>
+<li>シフトキー　CGPostKeyboardEvent((CGCharCode)0, (CGKeyCode)56, true);</li>
+<li>オプションキー　CGPostKeyboardEvent((CGCharCode)0, (CGKeyCode)58, true);</li>
+<li>コマンドキー　CGPostKeyboardEvent((CGCharCode)0, (CGKeyCode)55, true);</li>
+</h3>
+<p>となるらしい．<br />
+なぜ，こんなバラバラになっているのかが，よくわからないのだが，Appleのドキュメントにないので致し方ない．直感すると，CGKeyCodeで，複数の修飾キーを設定できると思うのだが・・・．<br />
+これらを利用して，コマンドキー+'C'，いわゆるコピーショートカットを実現する場合は，以下のようなコードになる．</p>
+<pre>
+CGPostKeyboardEvent((CGCharCode)NULL, (CGKeyCode)55, true);
+CGPostKeyboardEvent((CGCharCode)'c', (CGKeyCode)9, true);
+CGPostKeyboardEvent((CGCharCode)'c', (CGKeyCode)9, false);
+CGPostKeyboardEvent((CGCharCode)NULL, (CGKeyCode)55, false);
+</pre>
+<p>コマンドキーを押す，Cキーを押す，Cキーを放す，コマンドキーを放すの順番で入力したことになる．</p>

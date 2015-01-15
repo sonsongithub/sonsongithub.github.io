@@ -1,0 +1,96 @@
+---
+layout: post
+title: "[OpenGL] マウスによる頂点編集"
+categories:
+- blog
+tags:
+- Blog
+- DirectShow
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">マウスピッキングで頂点を編集する </h3>
+<p>処理の流れは，こうなります．（マウスでピックしたものは手前のものであると仮定する）</p>
+<h3 class="numeric-list">
+<li>マウスでピッキングする．</li>
+<li>ピックしたオブジェクトの識別番号を取得する．</li>
+<li>ピックしたウィンドウ座標と，ピクセルのデプスバッファからCGの３次元座標を求める．</li>
+<li>得られた３次元座標データをオブジェクト識別番号を元にフィードバックする．</li>
+</h3>
+<p>ピックしたオブジェクトの識別番号の取得は"マウスピッキング"セクションを参考にしてください．<br />
+<br />
+<h3 class="line-header">glReadPixelsでデプスバッファを読み取る </h3>
+<p>描画されたオブジェクトをクリックします．通常の描画方法であれば，そのオブジェクトは当然最も手前にあるものになります．このときデプスバッファを使用しているならばすべてのピクセルに対して深さ情報が付加されています．そして，OpenGLではその深さ情報を元に世界座標での３次元座標を算出することが可能です．ここでの世界座標とはOpenGL内で描画するときのあらゆる行列計算がなされた後の頂点の座標のことを指します．<br />
+これがクリックした点からデプスバッファを取得する関数です．</p>
+<pre>
+//クリックしたところの描画したもののデプス値を取得する．
+float returnDepth(int x, int y){
+float z;
+GLint viewport[4];                      //ビューポート
+//デバイス座標系とウィンドウ座標系の変換
+glGetIntegerv(GL_VIEWPORT,viewport);    //現在のビューポートを代入
+glReadPixels(x,viewport[3]-y,1,1,
+GL_DEPTH_COMPONENT,
+GL_FLOAT,
+&z);
+// デプスバッファの値を返す．
+return z;
+}
+</pre>
+<p>glReadPixelsを用いてデプスバッファを取得します．<br />
+3つ目の引数にGL_DEPTH_COMPONENTを指定することで指定したピクセル内のデプスバッファを取得することが出来ます．glReadPixelsに関しては"描画結果をBitmapに保存する．"セクションも参考にしてみてください．<br />
+<br />
+<h3 class="line-header">gluUnproject </h3>
+<p>gluUnProjectによってウィンドウ座標をデプスバッファを元に，描画するときのオブジェクトの３次元座標を復元することが出来ます．<br />
+glUnProjectは，いくつかの引数を持ちます．最初の3つはウィンドウ座標X, Yとデプスバッファです．次の3つはModelView行列，Projection行列，Viewportを入れたポインタとなります．これらの値はglGetIntegerv，glGetDoublevなどで取得することが出来ます．<br />
+最後の3つは算出された世界座標が戻される3つの変数のポインタとなります．</p>
+<pre>
+////////////////////////////////////////////////////////////////////
+//クリックした点にあるピクセルのデプス値を用いて，世界座標を割り出す．
+void  CalculateWorldCo(
+int x, int y, float depth,
+double &wx, double &wy,double &wz){
+// 4*4行列を二つ用意する
+GLdouble mvMatrix[16],pjMatrix[16];
+// ビューポート用配列
+GLint viewport[4];
+// パラメータを取得する．
+glGetIntegerv(GL_VIEWPORT, viewport);
+glGetDoublev(GL_MODELVIEW_MATRIX, mvMatrix);
+glGetDoublev(GL_PROJECTION_MATRIX, pjMatrix);
+//世界座標を取得する
+gluUnProject((double)x,(double)viewport[3]-y,depth,
+mvMatrix,
+pjMatrix,
+viewport,
+&wx,
+&wy,
+&wz);
+}
+</pre>
+<p>これで世界座標を取得することが出来ました．<br />
+<br />
+<h3 class="line-header">コーディング </h3>
+<p>後はこれらの処理をどうつないでいくかが問題になります．今回のサンプルではこういう流れになっています．<br />
+<center><img src="{{ site.url }}/assets//chart_pick.jpg" /></center><br />
+データベースと呼ぶほどのものを作ってはいませんｗこういった処理は工夫のしどころがたくさんあると思います．</p>
+<h3 class="numeric-list">
+<li>オブジェクトがヒットするとそのオブジェクトの識別番号を取得します．</li>
+<li>その番号からオブジェクトの座標データを取得．</li>
+<li>gluUnProjectで処理しながらデータベースの座標を修正していく・・．</li>
+</h3>
+<p>という流れになっています．<br />
+<br />
+<h3 class="line-header">ソースコード </h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/feedback_pick">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/feedback_pick</a><br />
+本ソースコードを使用したことによる如何なる損害も製作者は責任を負いません．</p>

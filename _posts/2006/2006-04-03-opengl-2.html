@@ -1,0 +1,115 @@
+---
+layout: post
+title: "[OpenGL] リアルタイム・影生成 - 平面投影行列"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">Planar Projected Matrix </h3>
+<p>Planar Projected Matrixとは光源の位置と射影したい平面が算出されているとき，任意の点と光源を結ぶ直線がその平面との交点を算出するための行列です．この行列は同次線形代数学のみにで成り立ちます．<br />
+具体的なイメージは以下のようになります．<br />
+ここで以下とします．すべての座標は同次座標です．</p>
+<pre>
+L = [ Lx, Ly, Lz, Lw ]
+X = [ x ,y, z, w ]
+Xs = [ xs, ys, zs, ws ]
+P = [ a, b, c, d ]
+</pre>
+<p>このとき，</p>
+<pre>
+X = M*Xs
+</pre>
+<p>となるような4×4行列Mを求めることが問題ということになります．　<br />
+まず，Xsは平面P上に存在することから以下の式が成り立ちます．</p>
+<pre>
+P*Xs = 0
+</pre>
+<p>ゆえに以下の式も成り立ちます．</p>
+<pre>
+P*M*X = 0
+</pre>
+<p>XsはXとLを結ぶ直線状にあるために媒介変数を用いて以下のように表すことが出来ます．</p>
+<pre>
+Xs = t*X + u*L・・・・※
+</pre>
+<p>ここで行列Mを用い，さらに平面上にあることを考えます．</p>
+<pre>
+</pre>
+<p>Xs = M*X = t*X + u*L</p>
+<pre>
+P*M*X = t*P*X + u*P*L = 0
+</pre>
+<p>0はスカラーなので t と u の解はt, u=0と下の解となります．</p>
+<pre>
+t = P*L，u = -P*X
+</pre>
+<p>このとき，t, u=0はXs = [ 0, 0, 0, 0 ]となるので明らかに不適です．<br />
+この値を式に代入すると行列Mを得ることが出来ます．</p>
+<pre>
+t*X + u*L = P*L*X - P*X*L
+</pre>
+<p>ここで行列の乗算の交換則を用いてXをまとめます．</p>
+<pre>
+= (P*L - L*P) * X
+</pre>
+<p>Xs = M*X = t*X + u*Lより，以下の式を得ることが出来ます．</p>
+<pre>
+M = P*L - L*P
+</pre>
+<p>
+<h3 class="line-header">式の証明 </h3>
+<p>同次系ベクトルAとBがあるとき，C = t*A + u*Bならば，ベクトルCは直線AB上に存在する．<br />
+X座標系について考える．このときCxは以下のようになります．</p>
+<pre>
+Cx = Cx / Cw
+</pre>
+<p>このときCを同次ベクトルCの非同次系座標とします．<br />
+ここで命題の式からCxを表します．</p>
+<pre>
+Cx = t*Ax + u*Bx
+Cw = t*Aw + u*Bw
+</pre>
+<p>ゆえに</p>
+<pre>
+Cx = ( t*Ax + u*Bx ) / ( t*Aw + u*Bw )
+Ax = Ax * Aw，Bx = Bx * Bwより
+Cx = ( t*Ax * Aw + u*Bx * Bw ) / ( t*Aw + u*Bw )
+</pre>
+<p>s = t*Aw / ( t*Aw + u*Bw )とおくと，媒介変数 s として以下の式で表すことができます．．</p>
+<pre>
+Cx = s*Ax + ( 1-s )*Bx
+</pre>
+<p>同様にY,Z座標系にも適用し，ベクトルをまとめると以下のようになります．</p>
+<pre>
+C = s*A + ( 1-s )*B
+</pre>
+<p>ゆえに点Cは直線AB上であると言えます．<br />
+＃この証明は，狩野智英さんのサイトを引用させていただきました．<br />
+<br />
+<h3 class="line-header">もっと簡単だけど・・・テキトーな・・・ </h3>
+<p>上記のものは行列を用いるのでglMultMatrixなどを用いて簡単に複雑なオブジェクトも射影させることが出来ます．<br />
+もうひとつ方法があります．各点に対して，すべて自前で（OpenGLに頼らず）計算する必要がありますし，さらに任意の平面に投影させることも出来ません．ただ理論は簡単です．<br />
+前節のイメージを見ると直感的にわかると思いますが，影はつねに光源と点の延長線上に存在します．そこで，影が生まれるはずの点を無限遠まで飛ばすことで影もイメージを作成することが出来ます．この方法はShadow Volumeの作成などに良く使われます．<br />
+t を無限遠への倍率として，簡単な式は以下になります．</p>
+<pre>
+Xs = L + ( X - L )*t
+</pre>
+<p>
+<h3 class="line-header">参考文献 </h3>
+<p>最後に参考文献を幾つか挙げます．　特にNVIDIAのものは鏡面像などにも言及しているので非常におもしろいです．<br />
+１．"Improving Shadows and Reflections via the Stencil Buffer" Mark J. Kilgard NIVIDA Corpration, NVIDIA White Paper<br />
+２．"3D Game Engine Design" David H. Eberly, Morgan Kaufmann, ISBN 1-55860-593-2</p>

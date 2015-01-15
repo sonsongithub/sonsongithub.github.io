@@ -1,0 +1,64 @@
+---
+layout: post
+title: "[iPhone SDK] UITextFieldを持つUIAlertView"
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>色々なサイトで議論されているが，UIAlertViewにUITextFieldを簡単に追加する術がない．<br />
+実は，Private methodで，</p>
+<pre>
+- (UITextField*)addTextFieldWithValue:(NSString*)value label:(NSString*)label;
+- (UITextField*)textFieldAtIndex:(NSUInteger)index;
+- (NSUInteger)textFieldCount;
+- (UITextField*)textField;
+</pre>
+<p>以上のようなメソッドが用意されているのだが，Undocumentedなため，うかつに使えない．<br />
+Jailbreak時代は使っていたのに・・・・（多分画面を回転させたときの挙動を考えて，APIを公開することを躊躇しているんじゃないかと推測．横向きの時は，そのまま表示すると，テキストフィールドが見えなくなって，めちゃくちゃになる．他にはマルチスレッドが絡むHUDの表示まわりのAPIも公開されていない．整理するのが難しいのかなあ）<br />
+そして，ここでは，自前でUITextFieldを追加するコードが議論されている．<br />
+・<a href=" http://discussions.apple.com/thread.jspa?messageID=8707554">http://discussions.apple.com/thread.jspa?messageID=8707554</a><br />
+これを拡張し，自由に数をUITextFieldの数を増やせるクラスを作ってみた．UITextFieldには，インデックスとラベルでアクセスできるようにしてみた．</p>
+<pre>
+- (NSArray*)textFieldTags;
+- (NSInteger)textFieldCount;
+- (UITextField*)textFieldWithTag:(NSString*)tag ;
+- (UITextField*)textFieldAtIndex:(NSInteger)index;
+- (BOOL)addTextFieldDefaultValue:(NSString*)value
+placeholder:(NSString*)placeholder
+tag:(NSString*)tag;
+</pre>
+<p>使い方は，普通のUIAlertViewと同じ．</p>
+<pre>
+SNAlertView* view = [[SNAlertView alloc] initWithTitle:@"Fill in the following forms"
+message:nil
+delegate:self
+cancelButtonTitle:@"cancel"
+otherButtonTitles:@"ok", nil];
+[view addTextFieldDefaultValue:@"" placeholder:@"Element1" tag:@"tag1"];
+[view addTextFieldDefaultValue:@"" placeholder:@"Element2" tag:@"tag2"];
+[view addTextFieldDefaultValue:@"" placeholder:@"Element3" tag:@"tag3"];
+[view show];
+[view release];
+</pre>
+<p>下は，UITextFieldを2行付けたバージョン．<br />
+レイアウトは自動でされます．<br />
+<center><br />
+<img alt="snalert01.png" src="{{ site.url }}/assets//snalert01.png" width="240" height="225" /> <img alt="snalert02.png" src="{{ site.url }}/assets//snalert02.png" width="240" height="225" /><br />
+</center><br />
+3行はさすがにちょっと厳しい．messageを削って表示．<br />
+<center><br />
+<img alt="snalert03.png" src="{{ site.url }}/assets//snalert03.png" width="240" height="225" /><br />
+</center><br />
+と便利な感じです．</p>

@@ -1,0 +1,33 @@
+---
+layout: post
+title: BB2Cを使い込んだり，やねうらお氏の本を読む
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<div class="amazon"><a align="right" href="http://www.amazon.co.jp/%E3%81%B2%E3%81%AA%E3%81%9F%E5%85%88%E7%94%9F%E3%81%8C%E6%95%99%E3%81%88%E3%82%8B%E3%83%87%E3%83%90%E3%83%83%E3%82%B0%E3%81%8C256%E5%80%8D%E9%80%9F%E3%81%8F%E3%81%AA%E3%82%8B%E3%83%86%E3%82%AF%E3%83%8B%E3%83%83%E3%82%AF-Software-Design-Books/dp/4774136689%3FSubscriptionId%3D12SZ91ZTV3DY7D85FAR2%26tag%3Dsonsonpicture-22%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D4774136689" target="_blank"><img src="{{ site.url }}/assets//51rhvohnLPL._SL160_.jpg" align="right" /></a></div>
+<p>BB2C速い．やっぱり速い．<br />
+後，ビューの移り変わりもスムーズ．スレッドのビューも速いけど，それ以外のところも速い．<br />
+この辺，どうやってデータを持ってるんだろう・・・・．<br />
+NSMutableArrayじゃ遅いのかな・・・思い切って，固定長の配列を確保してしまうとか？<br />
+・テキストの改行コードを数えてから→固定長の配列の確保<br />
+・リストで，アタマから処理<br />
+後後のランダムアクセスとかは圧倒的に配列の方が速いよなぁ・・・．<br />
+やねうらお氏の本を買って読んでいる．<br />
+ひなた先生の命名規則のところで，Cとかの変数の命名規則の変遷があった．<br />
+命名規則で悩むのは，Javascriptとか，Rubyとかそもそも，型がない言語．<br />
+最近は，型を変数名に含めずにC/C++とか，Obj-Cのコーディングをするようになってきたので，そのままのスタイルでJavascriptでコーディングすると，変数の訳がわからなくなってしまうことが多い．<br />
+Rubyとか，Javasriptのハカーたちは，どうやってるんだろう．<br />
+そもそも，この考え方がコンパイル言語脳なんだろうか．</p>

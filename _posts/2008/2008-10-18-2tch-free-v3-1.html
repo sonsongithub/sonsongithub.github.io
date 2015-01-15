@@ -1,0 +1,30 @@
+---
+layout: post
+title: 2tch free v3.1のバグがiTunesのレビューにあった．
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><a href="http://click.linksynergy.com/fs-bin/click?id=he6amglY4cw&amp;offerid=94348.687920444&amp;type=10&amp;subid="><img align="right" src="{{ site.url }}/assets//index_steps_3.png" width="105" height="149" /></a>レビューに書かれていた（報告？）のを偶然見たのですが，レス番がずれるとのこと．<br />
+・・・・・・．テスト・・・・・・・・・・．わかりました．<br />
+これは，実は原因不明で，対処療法的にv3.2では対策済みのバグです．<br />
+v3.0と，v3.1は（ダウンロードのところは）同じコードを使っているので，このバグは起こりえないのですが・・・・．疑っているのはiPhone2.0とiPhone2.1のファームウェアでNSURLConnection関連の挙動が変わったのでは・・・・．というところです．<br />
+今回のバグが発現した疑いと原因をまとめると，<br />
+（１）FW2.0→FW2.1で挙動が変わった<br />
+（２）sonsonのFW2.1でのテストが不十分（FW2.0とFW2.1を明確に決めずにデバッグしてた気がする）<br />
+（３）テスターにもちゃんとファームウェアを指定すべきだった（FWのバージョンが移行期の場合）<br />
+というわけで，今後はちゃんとこの辺引き締めてやります．ごめんなさい．<br />
+バグ，テストつながりで言及すると，一番恐れているのはバージョンアップのときの初回起動です．<br />
+事実上テストを再現しようがないので，実はぶっつけ本番なんですよね・・・・．AppStoreのインストール時の挙動って，前回のDocumentsフォルダとか，Libraryフォルダを残したままインストールするのだろうか・・・・・・．</p>

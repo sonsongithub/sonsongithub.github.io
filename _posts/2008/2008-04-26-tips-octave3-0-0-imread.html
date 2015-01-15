@@ -1,0 +1,28 @@
+---
+layout: post
+title: "[Tips] octave3.0.0 imreadバグフィックス"
+categories:
+- blog
+tags:
+- MacOSX
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>imread.mは，以下のようにエラーが出る．</p>
+<pre>
+error: `IMAGEPATH' undefined near line 41 column 23
+</pre>
+<p>45行目を以下のように修正する．</p>
+<pre>
+fn = file_in_path(IMAGE_PATH, filename);
+</pre>

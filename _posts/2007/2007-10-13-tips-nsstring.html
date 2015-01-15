@@ -1,0 +1,27 @@
+---
+layout: post
+title: "[Tips] NSStringの特殊エンコーディング"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>SHIFT_JISの特殊なヤツとか，色々エンコーディングできる．定数は，<a href="http://developer.apple.com/documentation/LegacyTechnologies/WebObjects/WebObjects_3.5/Reference/Frameworks/ObjC/Foundation/TypesAndConstants/FoundationTypesConstants/Description.html">ここ</a>か，xcodeのマニュアルで確認できる．<br />
+CFStringConvertEncodingToNSStringEncodingでその定数を，Cocoa用の定数にする．</p>
+<pre>
+NSStringEncoding CFStringConvertEncodingToNSStringEncoding (
+CFStringEncoding encoding
+);
+</pre>
+<p>こうしないと動かないお．</p>

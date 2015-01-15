@@ -1,0 +1,34 @@
+---
+layout: post
+title: "[Ruby] MySQL/Rubyが遅い→Ruby-DBIで対抗"
+categories:
+- blog
+tags:
+- Review
+- "本"
+status: draft
+type: post
+published: false
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>MySQL/Ruby，Ruby/MySQLを使ってDBから大きいサイズのファイルをselectしてくると遅い．<br />
+めちゃくちゃ遅い．<br />
+RDBでバイナリを扱うなという話もあるけど，遅すぎてムカつくので，対策を探していたところ，Ruby-DBIで解決．<br />
+参考サイトは以下．<br />
+・<a href="http://rubyforge.org/projects/ruby-dbi/">配布元</a><br />
+・<a href="http://www.jiubao.org/ruby-dbi/ruby-dbi.html">http://www.jiubao.org/ruby-dbi/ruby-dbi.html</a><br />
+・<a href="http://d.hatena.ne.jp/peregrination/20070925/1190711719">http://d.hatena.ne.jp/peregrination/20070925/1190711719</a><br />
+dbi-0.2.0.tar.gzを落としてきて，さっくり，インスコ．</p>
+<pre>
+ruby ./setup config --with=dbi,mysql
+ruby ./setup setup
+ruby ./setup install
+</pre>
+<p>これで終了．<br />
+これでバイナリ（BLOB）のフェッチ？セレクト？も速くなった．ワーーーイ．</p>

@@ -1,0 +1,73 @@
+---
+layout: post
+title: "[Tips] gonzui - インストール for MacOSX"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h3 class="line-header">BerkeleyDBをインストール</h3>
+<p><a target="_blank" href="http://dev.sleepycat.com/downloads/releasehistorybdb.html">http://dev.sleepycat.com/downloads/releasehistorybdb.html</a><br />
+これは素直に./configureして，makeでビルド，インストールできる．</p>
+<h3 class="line-header">Ruby/BDBをインストール</h3>
+<p><a target="_blank" href="http://raa.ruby-lang.org/project/bdb/">http://raa.ruby-lang.org/project/bdb/</a><br />
+実は，悩むところがかなり多かった．<br />
+悩んだところは，<br />
+（１）webrickのパスはどこにあるか？<br />
+（２）インストールバスがわからん<br />
+（３）Rubyのdev用のヘッダファイルはどこだ？<br />
+の3点だった．<br />
+ググってみるとわかるんだが，デフォルトのDeveloperToolsのインストーラは，Rubyのヘッダファイルを</p>
+<pre>
+/usr/lib/ruby/1.8/universal-darwin8.0
+</pre>
+<p>ここにインストールする様子．<br />
+しかし，Rubyのextconfは，ここのパスを全く探さない．<br />
+つまり，ここにヘッダファイルがあることを知らないのだ．<br />
+パスが通ってるらしいのは，以下の二つのフォルダ．</p>
+<pre>
+/usr/lib/ruby/1.8/powerpc-darwin8.0
+/usr/lib/ruby/1.8/powerpc-darwin8.5.0
+</pre>
+<p>ここにヘッダファイルのシンボリックリンクを張るも，extconfはヘッダファイルを見つけられない・・・．<br />
+というわけで，あきらめて，Rubyのバージョンをあげる意味でも改めてソースから再インストールしてみた．<br />
+結果，Rubyのインストールパスは，/usr/local/以下にインストールされた．<br />
+現状のRubyとかぶってしまうので，これを整理する．</p>
+<pre>
+mv /usr/bin/ruby /usr/bin/ruby1.8.2
+ln -s /usr/local/bin/ruby /usr/bin/ruby
+mv /usr/lib/ruby /usr/lib/ruby1.8.2
+ln -s /usr/local/lib/ruby /usr/lib/ruby
+</pre>
+<p>こうすると・・・．extconfは，ヘッダファイルを見つけられた・・・．よかった，よかった・・・・・・・・．<br />
+ああああ？<br />
+こんどはBerkeleyDBが見つからない・・・・．<br />
+はい，パスを渡しましょう．このパスは，BerkeleyDBのデフォルトパスです．</p>
+<pre>
+>ruby extconf.rb --with-db-dir=/usr/local/BerkeleyDB.4.4
+</pre>
+<p>えがった．えがった．</p>
+<h3 class="line-header">gonzuiのインストール</h3>
+<p>まずは，configureする．<br />
+実は，できたMakefileでは，make install途中でエラーが出てしまう．<br />
+この問題は，rootのグループが実はMacOSXではwheelで，一般のUNIXではrootであり，これをちゃんと設定し切れていないところに起因する．<br />
+このため，この点を修正する．</p>
+<pre>
+106:GONZUI_URI = http://gonzui.sourceforge.net/
+107:GROUP = wheel <---ここ修正点
+108:HTTP_PORT = 46984
+</pre>
+<p>これでmake installが正しく最後まで実行される．ｳﾏｰｰｰ．<br />
+もしかすると・・・．./configureにオプションがあったりするのか？<br />
+まぁ，インストールできたからよしとしよう．</p>

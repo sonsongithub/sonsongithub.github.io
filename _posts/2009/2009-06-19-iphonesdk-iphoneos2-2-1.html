@@ -1,0 +1,36 @@
+---
+layout: post
+title: "[iPhoneSDK] iPhoneOS2.2.1→3.0で注意したい5つのポイント"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><center><br />
+<img src="{{ site.url }}/assets//promo_iphone_os3_image20090609.png" /><br />
+</center><br />
+１．アクセサの仕様変更<br />
+クラスのアクセサがより厳格になった．派生元のクラス上でアクセサを定義している状態で，子クラス上でsynthesizeでアクセサを定義するとコンパイラ側でエラーとなるようになった．まぁ，これは，コーディングの仕方が悪いのだが，2.2.1ではコンパイラが通ってしまい，さらに子クラスのアクセサが呼ばれるような仕様になっていたっぽい．<br />
+問題はここからで，2.2.1で作ったバイナリ(2.2.1バイナリとする)は，上のエラーをすり抜けた状態となっている．2.2.1ではコンパイラでエラーとならないためだ．この2.2.1バイナリをOS3.0上で実行すると，3.0では仕様上不適当なアクセサがコールされたことにより，アクセサが返す値がnilになってしまうのだ．ハマった．<br />
+２．カメラ周り，UIScrollerView周り<br />
+カメラビューの仕様がかなり変わった．UIImagePickerViewのsubviewをいじる系統のアプリは絶滅の模様．また，画像でよく使われるUIScrollerViewのイベントも多少変わっていた．3.0でもちゃんと動いているアプリは，アップルが配っているサンプルコードのようにちゃんとUIScrollViewを使いこなしているということだろう．<br />
+３．回転イベントの通知先が変わった<br />
+今までは，メインのUIViewControllerにしか- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientationが飛んでこなかったのに，飛んでくるビューコントローラが変わった模様．<br />
+※ここから先はハッピーな内容ｗ<br />
+４．UINavigationControllerがより賢くなった<br />
+UINavigationControllerがUIToolbarを内包してくれるようになった．Pushとpopで自動的にUIToolbarを現在表示されているUIViewControllerに応じて変更してくれるようになった．非常に便利．<br />
+５．UITableView周りの仕様<br />
+UITableViewのセルが便利になった．1行表示，2行表示（曲名＋アーティスト名みたいなやつ），左寄せ＋右寄せ（設定アプリなどで見られるアレ）の表示スタイルを選べるようになった．今まで，全部オリジナルで書いていたところを簡単に実装できるようになった．<br />
+ただし，UITableViewCellを独自実装している場合，再レイアウトタイミングあるいはキャッシュの仕様あるいは再描画タイミングが変わったために，セルが選択されているときの描画おかしくなることがある．<br />
+また，何か見つけたら，書いていくか．</p>

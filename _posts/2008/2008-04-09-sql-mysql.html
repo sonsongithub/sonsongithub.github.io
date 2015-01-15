@@ -1,0 +1,33 @@
+---
+layout: post
+title: "[SQL] MySQLにバイナリをつっこむ"
+categories:
+- blog
+tags:
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>MySQLにバイナリデータを保存したいときは，BLOB型をレコードに使う．<br />
+テキスト型？として扱われるため，保存したいバイナリデータは，文字列としてそのままinsert文に入れてしまう．<br />
+ただし，バイナリは，文字列としてクエリにそのまま投げてしまう．（これっていいのかなぁ・・．）<br />
+このため，バイト文字としてエスケープしないといけないものがある．<br />
+<a href="http://dev.mysql.com/doc/refman/5.1/ja/string-syntax.html">MySQL ::   MySQL 5.1 リファレンスマニュアル :: 8.1.1 文字列</a><br />
+私はRubyで作ったので，サクっとエスケープするスクリプトを作った．<a href="http://www.tmtm.org/mysql/ruby/">Ruby/MySQL</a>とか，色々言語によってやりかたはあるでしょう．</p>
+<pre>
+f = File::open( "hoge.jpg", "rb" )
+bin = f.read
+escapeStr( bin )
+queryStr = "insert into table vales( \"bin\" )"
+dbh.query( queryStr )
+</pre>
+<p>こんな感じでしょうか．</p>

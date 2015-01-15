@@ -1,0 +1,86 @@
+---
+layout: post
+title: iOS7についてそろそろまとめる
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><a href="http://mobiletou.ch/2013/12/ios開発者から見るios-7の要注目ポイントとは！？">初出</a></p>
+<h2>6(updates) = 1(update/year) X 6(year)</h2>
+<p>1年に1回と驚異的なスピードでメジャーアップデートされつづけるiOSは，フラットデザイン？なUIに一新され，ついにバージョン7になりました．<br />
+iOS2.0用のiOS SDKが公開されたのが2008年の初旬ですが，私はJailbreak環境での開発を2007年の9月頃から始めていましたので，ついに私のiOS開発歴も6年となりました．<br />
+1年に1回のアップデートは，ver5.0くらいで終わると私は予想していたのですが，その後も続くAppleのiOSアップデートの速さに驚くばかりです．</p>
+<p>iOS7へのアップデートの重要なポイントは，WWDC以降，色々なサイトで取り上げられていますが，開発者向けの情報に関してはどうでしょうか．<br />
+6年目のiOSに関してはベテラン（まぁ開始からですから・・・），信者としては駆け出しの私がちょっと書いてみたいと思います．</p>
+<h2>フラット万歳</h2>
+<p>開発者が受けるiOS7の表面上の恩恵は，なんといってもフラットデザインだと私は思っています．<br />
+好き嫌いの話をすると，私は，iOS6のUINavigationBarのボタン等はわかりやすくて好きでしたが，フラットデザインの楽さには勝てないというのが私の本音です<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>．<br />
+アイコン作成，グラデーションや影を再現する手間は並ではありません．<br />
+また，iOS7の設定アプリの挙動をつぶさに見るとわかりますが，セルを選択中に左の画像の色やテキストが反転しません．<br />
+こういった細かい動作を再現するためには画像リソースをたくさん用意したり，そのためだけにメソッドを実装しないといけないことが多いため，挙動面でもtoo muchだったUIの表現が簡素化されたことは，開発者にとって作業量を減らしてくれるありがたいデザインになったといえます．<br />
+UIKitを使わないで０からコードでUIを表現する人は別ですが，UIKItでUIを組み上げる人は，その中身に集中できることになったと私は考えます．<br />
+この辺のことはラジオで@fladdictさんもおしゃっていたように<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>, よりコンテンツやUX(つまり中身ですね)に集中しろというAppleからのメッセージなのかもしれません．</p>
+<h2>真面目にAPIについて</h2>
+<p>iOS7では，また新しいAPIが追加されました．どちらかというと，これらは機能を強化する目的のものが多いと私は考えます．<br />
+私がiOS7で注目しているトップ3+1の機能は，以下のものです．</p>
+<ol>
+<li>TextKit</li>
+<li>NSURLSession</li>
+<li>Custom transition</li>
+<li>One more thing, Core Bluetooth!</li>
+</ol>
+<h3>TextKit</h3>
+<p>iOS7では，CoreTextを使わずにより高度なテキスト処理が行えるようになりました．<br />
+キーとなるクラスは，NSTextStorage, NSLayoutManager, NSTextContainerの3つです．<br />
+UITextViewクラスからもこれらのクラスのインスタンスにアクセスでき、UITextView上でNSAttributedStringを組み合わせて複雑なレイアウトを組むことができます．<br />
+例えば，CoreTextを使って自前でレンダリングした場合も、NSLayoutManagerを使ってユーザがタップしたテキストを検出したりするコードを簡単に書けたり，NSAAttributedStringを使ってHTMLのaタグのようなテキストも実現できます．<br />
+これらの実装はOSXでは，少し前から提供されており、やっとiOSがそれに追いついてきたとも言えます．</p>
+<p>しかし、OSXのすべての機能が利用できるわけでもなく、クリカッブルテキストも機能は限定的です．<br />
+具体的には，クリカッブルテキストのイベントは自由に受け取ることはできず、リンクが貼られたテキストの色を自由に設定することもできません．<br />
+未だ完璧ではないTextKitですが、従来システムでは面倒なCoreTextで実装しなければならなかった機能を簡単に実現できる点から、iOS7の重要なアドバンテージの一つであると私は考えています．<br />
+TextKit周りは，拙作<a href="https://github.com/sonsongithub/UZTextView">UZTextView</a>のエントリを書くときにもう少し詳しく書きたいと思っています．</p>
+<h3>NSURLSession</h3>
+<p>ダウンロードタスクを別プロセスのデーモンに任せてしまい，バックグラウンドでもダウンロードできるようにする優れもの．<br />
+説明は他のサイトにお任せしますｗ</p>
+<h3>Custom transition</h3>
+<p>iOS7では，プログラマがUIViewControllerの画面遷移のアニメーションをUIViewControllerと切り離して定義できるようになりました（今更感が否めませんが・・・）．<br />
+私もこれを実現するためにUIStoryBoardSegueをオーバーライドしてとか，涙ぐましいことをやりましたが，iOS7からその必要はありません．<br />
+UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioningプロトコルをしゃべるクラスを実装し，UIViewControllerのsetTransitioningDelegateに遷移を定義するUIViewControllerTransitioningDelegateプロトコルを実装したクラスのオブジェクトを渡すだけで大筋の足場が完成します．<br />
+おおざっぱに言うと，UIViewControllerAnimatedTransitioningプロトコルは，画面遷移のアニメーションを実装するもので，UIViewControllerTransitioningDelegateプロトコルは，画面遷移時に使うアニメーションを定義するものです（UIViewControllerTransitioningDelegateで，UIViewControllerAnimatedTransitioningを返すみたいな感じ）．<br />
+この機能も，UIViewControllerとアニメーションのコードを切り離したいというプログラマの念願をかなえてくれるiOS7の目玉機能だと私は思います（更感が否めませんが・・・しつこい）．</p>
+<h3>+1, iBeaconとBTLEへの思い</h3>
+<p>最後に！One more thing, やっと，本来の力を見せ始めたCoreBluetooth！<br />
+私は，2年くらい前のどっかのイベントでもこれからくるのはBluetooth LEだ！！って言まして，全然BTLEの人気が来ないので，泣きそうだったんですが，ようやく立ち上がり始めてきてうれしい限りです．<br />
+iBeaconは，BTLEの電波にロケーション情報を載せてブロードキャストし，CoreLocationフレームワークでそれらを簡単に受け取ることができる仕組みです．<br />
+こういう考え方の典型例として，<a href="http://blog.masuidrive.jp/2013/04/18/tomodachi/">@masuidriveのブログのアイデアや</a>，拙作<a href="https://itunes.apple.com/jp/app/anonyfollow-bluetoothdesurechigaiforo/id566947449?mt=8">AnonyFollow</a>があります．<br />
+これは共にコンセプトが同じもので，Bluetooth LEで誰とでもすれ違いフォローができる電波Pokenを作ろうというコンセプトです．<br />
+個人事業者にとっては，CoreBluetoothのおもしろみは，iOSとOSX同士のライトな連携にあると私は思っています．<br />
+結局，デバイスを個人や小資本で大量生産するのは不可能なので，最終的に趣味プログラマーはそっちへ収束すると私は考えますが・・・そんな閉塞感をiBeaconが打破してくれて，かっこいい，かつユニークなデバイスや環境が満を持して登場！！！・・・・というのが今の私のBTLEへの思いです．</p>
+<h2>まとめ</h2>
+<p>以上，ざらっと，iOS7について半年経ってからまとめてみました．<br />
+他にも，CIをサポートするBot，doxygenスタイルでコメントを書くと自動的にヘルプにしてくれる機能などがXcodeに追加されていたりします．<br />
+これからは，ブログであまり人が取り上げそうにないことを中心に書いていきたいと思っています．<br />
+次回は，TestFlightへの自動アップロードを中心にBotのパスについて解説したいと思います．</p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn:1">
+<p>行き過ぎたskeuomorphismは，本来のデザインの意味や目的を失わせると私は考えます．MacOSX10.8やiOS6のメモ帳アプリのデザインは，私にとって意味不明でした．これらコンピュータ上で動くメモ帳は，いわゆるメモ帳とはまったく機能も役割も異なるものです．これらのアプリケーションは，本来のメモ帳が持つ自由に記入できる能力はまったくない，単純な正規化されたテキストいれるだけの箱です．そういったアプリケーションに物理的な本来のメモ帳のデザインを取り入れることは，ユーザに誤解を与えるだけだと私は考えています．&#160;<a href="#fnref:1" rev="footnote">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://twitter.com/fladdict/status/387715016650403840">参考リンク</a> - Twitter&#160;<a href="#fnref:2" rev="footnote">&#8617;</a></p>
+</li>
+</ol>
+</div>

@@ -1,0 +1,48 @@
+---
+layout: post
+title: "[Tips] JavascriptからFlashの関数をコールする．"
+categories:
+- blog
+tags:
+- Blog
+- Flash
+- Javascript
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>実は，こういうものが用意されていた！！<br />
+<a href="http://weblogs.macromedia.com/flashjavascript/">Flash / JavaScript Integration Kit (Beta)</a><br />
+これを使うと，JavascriptからFlashの関数をコールすることができる．<br />
+サンプルは，以下．<br />
+<script type="text/javascript" src="http://son-son.sakura.ne.jp/archive/JavaScriptFlashGateway.js"></script><br />
+<script type="text/javascript"><br />
+<!--<br />
+var uid = new Date().getTime();<br />
+var flashProxy = new FlashProxy(uid, 'http://son-son.sakura.ne.jp/archive/JavaScriptFlashGateway.swf');<br />
+//--><br />
+</script><br />
+<script type="text/javascript"><br />
+<!--<br />
+var tag = new FlashTag('http://son-son.sakura.ne.jp/archive/jflash.swf', 300, 200);<br />
+tag.setFlashvars('lcId='+uid);<br />
+tag.write(document);<br />
+//--><br />
+</script><br />
+<a href="javascript:flashProxy.call('hoge', 'hoge is called.');">flashのhoge()を実行</a><br />
+でも，このままでは，日本語が文字化けします．<br />
+Flashの中身は，UTF-8か，SJISなので，JavascriptからEUCを送っても，うまくいきません．<br />
+と，思ったら，どうやらバグがある様子．<br />
+・ここの記事・・・より抜粋．<br />
+<a href="http://www.ark-web.jp/blog/archives/2006/02/javascriptflash_1.html">http://www.ark-web.jp/blog/archives/2006/02/javascriptflash_1.html</a><br />
+これに従って，JavaScriptFlashGateway.jsを修正．これで日本語もちゃんと送れる．<br />
+まぁ，次回，コードの解説でも，備忘録代わりにしますわん．</p>

@@ -1,0 +1,87 @@
+---
+layout: post
+title: "[お勉強] varの価値を考察〜Javascriptでオブジェクト指向"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>varでクラス内の変数を実装してみたときの利点について考えてみた．<br />
+コールバックのときだ．<br />
+たとえば，オブジェクトひとつにdivの要素を一つ割り当て，さらにdivをクリックしたときのアクションにオブジェクトのメソッドを割り当てるとする．<br />
+このとき，実はthisの変数では，ちょっと・・・・なことがおこってしまうのだ．</p>
+<p>
+以下のコードでは，divをクリックしたときにclickedというメソッドが呼ばれる．<br />
+このときにthis.val2をalertで表示しようとしている．<br />
+このときのthisは，実はhogeではない．このメソッドを呼んでいる要素，div要素となるのである．</p>
+<pre>
+&lt;div id="canvas20070718-3" style="width:100px;height:100px;border-style:solid;border-width:thin;"&gt;
+&lt;/div&gt;
+&lt;script src="./prototype.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+function hoge(x,y,id){
+var val1 = id;
+this.val2 = id;
+$('canvas20070718-3').innerHTML +=
+"&lt;div id='area_hoge"+id+"' style='position:relative;width:15px;height:15px;left:"
++ x + "px;top:"
++ y + "px;border-style:solid;border-width:thin;'&gt;&lt;/div&gt;";
+this.regist = function () {
+console.log( val1 );
+var area = 'area_hoge' + val1;    // or 'area_hoge' + this.val2
+Event.observe( area, 'click', clicked, false);
+}
+function clicked() {
+alert( 'varで宣言した変数-&gt;' + val1 );
+alert( 'thisで宣言した変数-&gt;' + this.val2 );
+}
+this.clicked = clicked;
+this.setVal1 = function (input) { val1 = input; }
+}
+var obj1 = new hoge( 20,20, 1);
+var obj2 = new hoge( 40,40, 2);
+obj1.regist();
+obj2.regist();
+&lt;/script&gt;
+</pre>
+<p>varの場合は，そのオブジェクトのローカル変数が呼ばれるので・・・・・thisとは違う・・・から・・・・？大丈夫みたいだ．<br />
+これがvarを使う価値なのだ．たぶん．間違ってたらごめんなさい．<br />
+もしかすると，これはJavascriptの仕様外の動作・・・・だったらごめんなさい．<br />
+実行例は下の小さな四角をクリックで動作します．</p>
+<div id="canvas20070718-3" style="width:100px;height:100px;border-style:solid;border-width:thin;">
+</div>
+<p><script src="./prototype.js"></script><br />
+<script><br />
+function hoge(x,y,id){<br />
+var val1 = id;<br />
+this.val2 = id;<br />
+$('canvas20070718-3').innerHTML += "
+<div id='area_hoge"+id+"' style='position:relative;width:15px;height:15px;left:" + x + "px;top:" + y + "px;border-style:solid;border-width:thin;'></div>
+<p>";<br />
+this.regist = function () {<br />
+var area = 'area_hoge' + val1;    // or 'area_hoge' + this.val2<br />
+Event.observe( area, 'click', clicked, false);<br />
+}<br />
+function clicked() {<br />
+alert( 'varで宣言した変数->' + val1 );<br />
+alert( 'thisで宣言した変数->' + this.val2 );<br />
+}<br />
+this.clicked = clicked;<br />
+this.setVal1 = function (input) { val1 = input; }<br />
+}<br />
+var obj1 = new hoge( 20,20, 1);<br />
+var obj2 = new hoge( 40,40, 2);<br />
+obj1.regist();<br />
+obj2.regist();<br />
+</script></p>

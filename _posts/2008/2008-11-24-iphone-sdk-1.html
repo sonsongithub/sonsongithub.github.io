@@ -1,0 +1,31 @@
+---
+layout: post
+title: "[iPhone SDK] 絵文字のアドレス帳を作るRubyスクリプト"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><img align="right" alt="kaoMoji.png" src="{{ site.url }}/assets//kaoMoji.png" style="margin: 15px;" width="96" height="96" />昨晩から，この<a href="http://www.bcphotoshare.com/photos/15562/351735">サイト</a>が火だねで，盛り上がりを見せているiPhoneで自由に絵文字を入力するための方法．<br />
+簡単に言うと，文字入力の変換候補に「アドレス帳」に登録した「人の名前」が出てくることを利用したライトハックなのだ．このアイデアはすばらしい．NANAさん@PhotoShareに感謝である．<br />
+・元ネタ - <a href="http://www.bcphotoshare.com/photos/15562/351735">http://www.bcphotoshare.com/photos/15562/351735</a><br />
+・2次情報ソース - <a href="http://ipodtouchlab.com/2008/11/ipod-touch-15.html">http://ipodtouchlab.com/2008/11/ipod-touch-15.html</a><br />
+NANAさん@PhotoShareが配布しているアドレス帳は文字がまとまって入力されている．<br />
+この場合，一度複数の絵文字が入力されるため，入力したい絵文字以外はいちいち消さないといけないので面倒くさい．これを自由に扱いたいと思い，vCardのアドレス帳を生成するRubyスクリプトを作ってみた．<br />
+・<a href="http://code.google.com/p/sonson-code/source/browse/trunk/iPhone2.0/ruby/emoji_make.rb">顔文字入力用アドレス帳生成スクリプト</a><br />
+・<a href="http://son-son.sakura.ne.jp/archive/emoji.vcf.zip">生成結果ファイル</a><br />
+だが・・・・．NANAさん@PhotoShareのやり方が賢いことがわかった．「アドレス帳」に名前として，短い単語を登録しても候補として入力時に出てこないのだ．<br />
+それぞれの絵文字に「単語」を割り当てるのも面倒くさいし・・・・（464個もある）<br />
+しばらく，もうちょっと賢いvCardの「名前」設定方法を考えることにする．</p>

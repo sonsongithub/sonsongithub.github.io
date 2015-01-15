@@ -1,0 +1,48 @@
+---
+layout: post
+title: "[Ruby] RMagickで画像をつなげる〜基礎"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><strong>RMagickの基礎</strong><br />
+・画像をファイルパスから開く，画像のサイズ</p>
+<pre>
+img = Magick::ImageList.new( "./hoge.jpg" )
+img.columns # width
+img.rows # height
+</pre>
+<p>・画像をバイナリBLOBデータから生成する</p>
+<pre>
+img = Magick::Image.from_blob(bin).first
+</pre>
+<p>・画像を合成する（横にくっつける）</p>
+<pre>
+image1 = Magick::ImageList.new( "./1.jpg" )
+image2 = Magick::ImageList.new( "./2.jpg" )
+new_width = image1.columns + image2.columns
+new_height = image1.rows > image2.rows ? image1.rows : image2.rows
+dst = Magick::Image.new( new_width, new_height )
+result = dst.composite( image1, x_offset, y_offset, Magick::OverCompositeOp )
+</pre>
+<p>・画像に点や線を描画する</p>
+<pre>
+img = Magick::Image.new( width, height )
+gc = Magick::Draw.new
+gc.stroke_width 2
+gc.line( 10, 10, 100, 100)
+gc.point( 10, 10)
+gc.draw img
+</pre>

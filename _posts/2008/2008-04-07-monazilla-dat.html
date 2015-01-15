@@ -1,0 +1,65 @@
+---
+layout: post
+title: "[monazilla] **********.dat〜スレッドデータを読み込む"
+categories:
+- blog
+tags:
+- "徒然"
+status: publish
+type: post
+published: true
+meta:
+  _oembed_dfbfe1a98aff902faa41788552b2f96a: "{{unknown}}"
+  _oembed_93a7e31ab2965653294cea4a4dca8564: "{{unknown}}"
+  _oembed_3f0eac0d1934a7444ee0f6fd27227389: "{{unknown}}"
+  _oembed_eeceeb5f0c06eb484111c90bce36f125: "{{unknown}}"
+  _oembed_4865bdf72675e00fbe3f9bb5079337e2: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>スレッドのデータは，**********.datの名前のファイルとなっている．</p>
+<pre>
+http://***.2ch.net/***/dat/**********.dat
+</pre>
+<p>上記のURLでアクセスできる．このアクセス時もユーザエージェントは，"Monazilla/1.00 (hoge/0.00)"にする．でないと人大杉が返ってくる．<br />
+datファイルの中身は，以下のような感じになる．</p>
+<pre>
+名無し<>sage<>2008/04/06(日) 01:27:58 ID:OQIMzjRu0<> iPod touchから書き込みテスト <>
+名無し<>sage<>2008/04/06(日) 01:34:51 ID:OQIMzjRu0<> iPod touchから書き込みテスト <>
+名無し<>sage<>2008/04/06(日) 01:35:15 ID:OQIMzjRu0<> iPod touchから書き込みテスト <>
+名称未設定<>sage<>2008/04/06(日) 01:35:40 ID:OQIMzjRu0<> すいません，スレ汚しでした． <br /> もう終了です． <>
+</pre>
+<p>つまり，ユーザ名<>メールアドレス<>日時＋ID<>本文<>＋改行の連続となる．<br />
+1行1行がひとつひとつのレスに当たる．<br />
+次に重要なのがダウンロードの仕方である．2chはアクセスが多いので，なるべく転送量を減らそうと，差分取得が奨励されている．初回のダウンロードは，gzip形式で圧縮してデータを転送する．たとえば，以下のようなHTTPヘッダでダウンロードする．</p>
+<pre>
+Cache-Control: no-cache
+Host: pc11.2ch.net
+Pragma: no-cache
+Accept-Language: ja
+Accept-Encoding: gzip
+Connection: keep-alive
+Accept: text/plain
+</pre>
+<p>次に，初回のダウンロードして得られたデータ自体のバイト数とダウンロード日時を保存しておく．ダウンロード日時は返ってくるHTTPレスポンスのLast-Modifiedを使うと便利．<br />
+（このときHTTPレスポンスで返ってくるバイト数は当たり前だが圧縮したデータ容量になるので，次回の差分データ取得時の既得データ数として使えない．）<br />
+たとえば，以下のようなHTTPヘッダで差分データを取得する．</p>
+<pre>
+If-Modified-Since: Fri, 21 Mar 2008 08:04:16 GMT
+Host: pc11.2ch.net
+Pragma: no-cache
+Accept-Language: ja
+Accept-Encoding: identity
+Range: bytes=71481-
+Connection: keep-alive
+Accept: text/plain
+</pre>
+<p>Accept-Encoding: identityをセットしておく．そうしておかないと，gzip形式でバイト数を指定してしまうので，ちゃんと差分取得できない．<br />
+If-Modified-Since: Fri, 21 Mar 2008 08:04:16 GMTは，前回ダウンロードの日時をセットする．<br />
+こうすると，その日時からの差分を指定したバイト数からデータを取得できるのである．<br />
+（私は，このAccept-Encoding: identityのセットにハマった．）<br />
+こんなもんですか．</p>

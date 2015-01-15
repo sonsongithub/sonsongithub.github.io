@@ -1,0 +1,49 @@
+---
+layout: post
+title: "[お勉強] octaveで色々やってみる．"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- "お勉強"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>インストールしてみたoctaveで行列計算を試してみる．<br />
+参考文献<br />
+・http://www.rbt.his.fukui-u.ac.jp/~naniwa/pub/octave.html</p>
+<h3 class="line-header">行列計算</h3>
+<p>自分でプログラミングすると，勉強になるだろうなぁ・・・．<br />
+と思いながら，実際に使うとなると自分が作ったものを<br />
+その信頼性故に，使いたくないものに分類される逆行列．<br />
+後，大学時代によくわからなかった固有値もできるみたいだ．<br />
+すげぇ簡単です，ハイ．</p>
+<pre>
+#include &lt;iostream&gt;
+#include &lt;octave/config.h&gt;
+#include &lt;octave/Matrix.h&gt;
+using namespace std;
+int main ( int argc, void **argv ) {
+Matrix m(2, 2);
+m(0,0) = 3; m(0,1) = 2;
+m(1,0) = 4; m(1,1) = 5;
+cout &lt;&lt; "Original Matrix" &lt;&lt; endl &lt;&lt;  m &lt;&lt; endl;
+// Eigenvalue vector & value
+EIG eig(m);
+cout &lt;&lt; "Eigen Vectors" &lt;&lt; endl &lt;&lt;  eig.eigenvectors() &lt;&lt; endl;
+cout &lt;&lt; "Eigen Values" &lt;&lt; endl &lt;&lt;  eig.eigenvalues() &lt;&lt; endl;
+// Inverse matrix
+Matrix in = m.inverse();
+cout &lt;&lt; "Inverse Matrix" &lt;&lt; endl &lt;&lt;  in &lt;&lt; endl;
+return 0;
+}
+</pre>

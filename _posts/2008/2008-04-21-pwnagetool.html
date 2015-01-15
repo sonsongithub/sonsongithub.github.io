@@ -1,0 +1,34 @@
+---
+layout: post
+title: PwnageToolが凶悪すぎる件。
+categories:
+- blog
+tags:
+- iPhone
+- MacOSX
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>改変したファームウェアを先にベースシステムとしてインストールし，さらにiTunesでインストールに使用するパッケージ自体を作り替えてしまい，ハックする<a href="http://www.iphone-dev.org/">PwnageTool</a>を試してみた．<br />
+参考サイト・・・<a href="http://max.iamas.ac.jp/2061/">2061：Maxオデッセイ</a><br />
+確かに凶悪．凶悪すぎる．<br />
+<img alt="pwnage01.png" src="{{ site.url }}/assets//pwnage01.png" width="386" height="197" /><br />
+起動すると，ウィンドウが開く．<br />
+PwnageTool1.1は，1.1.4のファームウェアを使い，改変したベースシステムをインストールする．<br />
+まずは，「Browse ipsw」でファイルを選択し，「iPod1,1_1.1.4_4A102_Restore.ipsw」ファイルを開く．<br />
+次にその状態でリカバリーモードにしたiPod touchを接続し，「iPwner」する．<br />
+<img alt="pwnage02.png" src="{{ site.url }}/assets//pwnage02.png" width="388" height="198" /><br />
+すると，普通にインストールが始まり，iPod touchが白い文字だらけになり，システムが起動する．起動時の画面はパイナップルが表示される．リカバリーモード時の表示は，<a href="http://www.iphone-dev.org/">スティーブジョブズのアニメ絵</a>だ．<br />
+次に改変したファームウェアをiTunes経由でインストールする．<br />
+改変ファームウェアは「IPSW Builder」を選択して，作成する．iPhoneが対象だと，unlockするとか，ativateしとくとかの設定が可能．また，iPod touch，iPhoneともに，Installerやsshなどがあらかじめインストールされたファームウェアを作成したりもできる．<br />
+<img alt="pwnage03.png" src="{{ site.url }}/assets//pwnage03.png" width="392" height="241" /><br />
+作成したipswファイルをiPod touchをリカバリーモードにしてiTunesを起動し，そのiPod touchを接続，「復元」をファームウェアファイルを選択できるモード（altキーを押しながらクリック）で開いて，改変したカスタムファームウェアを開き，インストールする．これでおｋ．</p>

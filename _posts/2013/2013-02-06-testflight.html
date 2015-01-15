@@ -1,0 +1,39 @@
+---
+layout: post
+title: TestFlightにcurlでアップロードする．
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>JenkinsのTestFlightプラグインを使ってgitのコメントをTestFlightのリリースノートにしようとしたら，どうやっても文字化けする・・・・・．<br />
+Webのフロントエンドからやっても文字化けするから，そもそも日本語に対応してない？</p>
+<p>スクリプトでgitのログをエスケープして渡してもだめだった・・・・・</p>
+<pre>
+<code>
+curl http://testflightapp.com/api/builds.json -F file=@ipafile -F dsym=@zipfile -F api_token=<token> -F team_token=<token> -F notes="`/usr/bin/git_log.rb`" -F notify=true -F distribution_lists=Test > curl.log
+more curl.log
+</token></token></code>
+</pre>
+<p>git_log.rbは，gitからログとってきて，URI escapeするだけの人．スクリプトでエスケープするやり方がわからなかったので迂遠だけどRubyでスクリプトかいた・・・・．</p>
+<pre>
+<code>
+#!/usr/bin/env ruby
+require "URI"
+git_result = `/usr/bin/git log --pretty=format:\"%s\" -10`
+puts URI.escape(git_result)
+</code>
+</pre>
+<p>仕方がないや</p>

@@ -1,0 +1,33 @@
+---
+layout: post
+title: "[Tips] Bluetoothの便利ツール"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>オープンソースのPythonのBluetoothのフロントエンド．<br />
+・<a href="http://lightblue.sourceforge.net/">http://lightblue.sourceforge.net/</a><br />
+Macには，中身がCocoaとBluetoothのAPIでラップして作ったLightAqueBlueってのがあって，便利だし，オープンソースなので色々使える．<br />
+・<a href="http://lightblue.sourceforge.net/LightAquaBlue/index.html">http://lightblue.sourceforge.net/LightAquaBlue/index.html</a><br />
+Bluetoothのデータのやりとりの実験したいときは，かなり使える．</p>
+<pre>
+&gt;python
+import lightblue
+lightblue.finddevices()
+</pre>
+<p>だけでBluetoothデバイスを探してくれたり，デバイスのアドレスをキーにサービス一覧を取得とかもできる．<br />
+Mac版しかつかってないので，わからないけど，findservices()を実行するとOSのBluetoothのサービス選択のためのGUI機能が起動したりと，使いやすいです．当然，GUIなしで接続したりもできます．<br />
+以上，備忘録．</p>

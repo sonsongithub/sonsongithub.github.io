@@ -1,0 +1,35 @@
+---
+layout: post
+title: "[Tips] デバッグ時のログ出力のON/OFF"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>・デバッグフラグ時だけ出力したい</p>
+<pre>
+#ifdef DEBUG
+#define	dbgfprintf(message) fprintf(stderr, message)
+#else
+#define dbgfprintf(message) // コメントアウトされます
+#endif
+</pre>
+<p>//が効かないときは，使えない．<br />
+・さらに可変個数引数を使う<br />
+上のマクロ定義では，可変個数引数を扱えないので，対応する．</p>
+<pre>
+#define dbgprintf(...)　printf("Head ", __VA_ARGS__)
+</pre>
+<p>これでprintfも自由に使える．はず．</p>

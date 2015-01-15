@@ -1,0 +1,56 @@
+---
+layout: post
+title: "[iPhone] マルチタッチの秘密"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- Objective-C
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>だいたい判明．<br />
+<strong>１．API</strong><br />
+※gestureStarted<br />
+　マルチタッチ開始時のnotification<br />
+※gestureChanged<br />
+　マルチタッチで操作中のnotification<br />
+※gestureEnded<br />
+　マルチタッチ終了時のnotification<br />
+※canHandleGestures<br />
+　return YESでマルチタッチのイベント，gesture***が処理される<br />
+※GSEventGetInnerMostPathPosition<br />
+※GSEventGetOuterMostPathPosition<br />
+　マルチタッチの二つの座標を取得する<br />
+<strong>２．初期化</strong><br />
+以下，詳細不明だが，呼ばないといかんらしい・・・・．</p>
+<pre>
+[myView setEnabledGestures: 2];
+[myView setValue: [NSNumber numberWithBool: NO] forGestureAttribute: 7];
+[myView setValue: [NSNumber numberWithBool: NO] forGestureAttribute: 4];
+[myView setValue: [NSNumber numberWithBool: YES] forGestureAttribute: 5];
+</pre>
+<p>以下，実装しておく．</p>
+<pre>
+- (BOOL)canHandleGestures {
+return YES;					// for Gesture
+}
+</pre>
+<p><strong>３．二つの座標を取得</strong><br />
+gesture***のnotificationの中で，以下の流れで取得できる．<br />
+この戻り値がCGRectであることがわかるのに・・・くぅぅぅ．</p>
+<pre>
+CGRect left = GSEventGetInnerMostPathPosition(event);
+CGRect right = GSEventGetOuterMostPathPosition(event);
+</pre>
+<p>これでマルチタッチの二つの座標を取得できる．</p>

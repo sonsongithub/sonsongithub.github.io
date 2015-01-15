@@ -1,0 +1,44 @@
+---
+layout: post
+title: "[お勉強] C++ STL map"
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>C++でハッシュっぽいことができるSTL．<br />
+ambee氏に「それくらい知っとけ，ボケ」と怒られたわけではないが，教えてもらって非常に便利だったのでモメ．<br />
+mapというテンプレートで実現できるらしい．<br />
+イテレータのfirstでキーにsecondで値にアクセスできる．<br />
+findで値を見つけようとしたときに戻り値がend場合，値が見つからなかったことを示す．</p>
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;map&gt;
+using namespace std;
+int main( int argc, void **argv ) {
+map&lt;int, int&gt; idPointMap;
+idPointMap.insert(pair&lt;int, int&gt;( 10, 64));
+idPointMap.insert(pair&lt;int, int&gt;( 1280, 98 ));
+map&lt;int, int&gt;::iterator itr;
+// id
+itr = idPointMap.find( 10 );
+if( itr == idPointMap.end() ) {
+printf( "not found\n" );
+}
+else {
+printf( "id-&gt;%d, point-&gt;%d\n", itr-&gt;first, itr-&gt;second );
+}
+return 0;
+}
+</pre>

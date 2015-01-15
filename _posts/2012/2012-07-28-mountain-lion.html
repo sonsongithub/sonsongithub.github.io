@@ -1,0 +1,54 @@
+---
+layout: post
+title: Mountain Lion，AppID重複の罠。
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>@norio_nomuraさんのアドバイスにより，以下の考察は正しくないことがわかってきました．<br />
+後日，修正記事を書きたいと思います．<br />
+つつしんで，おわびし，訂正します．</p>
+<p><del datetime="2012-07-29T01:46:20+00:00">いやぁ，まいった，まいった．</del></p>
+<p><del datetime="2012-07-29T01:46:20+00:00">あるユーザさんから，「StoreSales for MacOSXが動きません．Mountain Lionでは動作しないようです．」</del></p>
+<p><del datetime="2012-07-29T01:46:20+00:00">そんなバカな．とソースコードを見直して，起動して見ると・・・・・．<br />
+確かに起動しない．<br />
+でも，クラッシュもしないし，ログもでない．</del></p>
+<p><del datetime="2012-07-29T01:46:20+00:00">「・・・・・・・・・なんじゃこれ・・・・・」</del></p>
+<p><del datetime="2012-07-29T01:47:43+00:00"><strong>容疑１　Xcodeのバージョンアップか．</strong></del></p>
+<p><del datetime="2012-07-29T01:43:32+00:00">あーあ，Xcodeとか新しくなったから，古いプロジェクトとかだと動かないのね！<br />
+プロジェクト作り直しかぁ．<br />
+そして，Xcodeのプロジェクトを作り直しても・・・・・動かない．</del></p>
+<p><del datetime="2012-07-29T01:43:32+00:00"><strong>容疑２　外部フレームワークね，なるほどね</strong></del></p>
+<p><del datetime="2012-07-29T01:46:20+00:00">SparkleとGrowlが悪さしてるんだなぁ・・・コレは．</del></p>
+<p><del datetime="2012-07-29T01:46:20+00:00">そして，二つのフレームワークを削除しても・・・・・・・・・・動かない．</del></p>
+<p><del datetime="2012-07-29T01:43:32+00:00"><strong>容疑３　1個ずつ潰していくしかない．</strong></del></p>
+<p><del datetime="2012-07-29T01:43:32+00:00">テスト用のプロジェクトを作って，MainMenu.xibの読み込みからテストしていく・・・．<br />
+あれ・・・・？動くよ・・・・？<br />
+へ？動くの？</del></p>
+<p><del datetime="2012-07-29T01:43:32+00:00"><strong>容疑４　行き詰まる．</strong></del></p>
+<p><del datetime="2012-07-29T01:43:32+00:00">動くコードと動かないコードの差がアプリケーションの名前しかない．<br />
+意味分からない．</p>
+<p>は！！！ま，まさか！！！！</del></p>
+<p><del datetime="2012-07-29T01:43:32+00:00"><strong>結論　MacとiOSのAppIDは同じ名前空間だった</strong></del></p>
+<p><del datetime="2012-07-29T01:43:32+00:00">StoreSalesは，com.sonson.StoreSalesという名前で，すでにiOS用アプリをiTunes connectに登録してある．<br />
+iOS用のアプリだ．</del></p>
+<p><del datetime="2012-07-29T01:43:32+00:00">今まで，このiOS用のアプリと通信するアプリとして，StoreSales for MacOSXを作っていたのだが，このAppIDもcom.sonson.StoreSalesにしてあったのである．<br />
+まぁ，この識別子は同じでも環境がまったく違うので今までは何の問題も発生しなかったのだが，Mac AppStoreのAppIDの管理によって，<br />
+iOSとかぶってるAppIDは使えなくなっていたのである．</del></p>
+<p><del datetime="2012-07-29T01:43:32+00:00">先に言ってよ・・・・ってか，同じ名前空間にするな！！！！！！！！！！！！！！！！！！！</del></p>
+<p><del datetime="2012-07-29T01:43:32+00:00">iOS版は変更できないので，MacOSX版を変更し，ビルド，テスト成功．Appleさん，ちょっと止めてよｗ</del></p>
+<p>作り直したStoreSales for MacOSXはこちら．<br />
+<a href="http://sonson.jp/?page_id=1707">http://sonson.jp/?page_id=1707</a></p>

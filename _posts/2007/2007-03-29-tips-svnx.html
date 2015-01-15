@@ -1,0 +1,31 @@
+---
+layout: post
+title: "[Tips] svnXをMacPortsで使う"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>svnXは，GUIでリポジトリを管理でき，非常に便利である．<br />
+svnXは，svnのコマンドを利用するため，svnを/usr/local/配下にインストールしておく必要がある．<br />
+しかし，MacPortsでインストールしてしまうと，/opt/local/にインストールしやがるため，<br />
+svnXがsvnの各コマンドを利用できないという事態に陥る．<br />
+だから，</p>
+<pre>
+find /opt/local/bin -name "svn*" -exec ln -s {} /usr/local/bin/ ;
+</pre>
+<p>でおk．<br />
+でも，svn使ってる人でこれを思いつかん人はおらんよな・・・．<br />
+んじゃ，備忘録ということで．</p>

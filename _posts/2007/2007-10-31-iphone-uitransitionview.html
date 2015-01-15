@@ -1,0 +1,54 @@
+---
+layout: post
+title: "[iPhone] UITransitionView"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>UITransitionViewを使えば，簡単にiPhoneのアニメーションを実装できる．</p>
+<pre>
+// Get screen rect
+CGRect  screenRect;
+screenRect = [UIHardware fullScreenApplicationContentRect];
+screenRect.origin.x = screenRect.origin.y = 0.0f;
+// Create window & view
+window_ = [[UIWindow alloc] initWithContentRect:screenRect];
+transitionView_ = [[UITransitionView alloc] initWithFrame:screenRect];
+[transitionView_ transition:trans_mode toView:nextView];
+</pre>
+<p>以下のメソッドが，ビューを簡単にアニメーションさせるものだ．</p>
+<pre>
+- (void)transition:(UITransitionStyle)style toView:(UIView*)view;
+</pre>
+<p>toViewには，アニメーションの結果，表示されるビューをセットする．<br />
+styleには，アニメーションの種類を指定する定数を入力するのだが，イマイチよくわからない．<br />
+<a href="http://www.cocoadev.com/index.pl?UITransitionView">http://www.cocoadev.com/index.pl?UITransitionView</a>にも情報があるにはあるんだが・・・．<br />
+自分で調べてみた結果は，以下です．<br />
+フォーマットは，CocoaDevに準拠してみた．</p>
+<pre>
+typedef enum {
+UITransitionNothing		=0,	// エフェクトなし
+UITransitionBothShiftLeft	=1,	// 次のビューと今のビューが左へ移動
+UITransitionBothShiftRight	=2,	// 次のビューと今のビューが右へ移動
+UITransitionBothShiftUp	=3,	// 次のビューと今のビューが上へ移動
+UITransitionError4		=4,	// エラー
+UITransitionCurrentShiftDown	=5,	// 今のビューが下移動し，次のビューがエフェクトなし
+UITransitionError6		=6,	// エラー
+UITransitionBothShiftDown	=7,	// 次のビューと今のビューが下へ移動
+UITransitionNextShiftUp	=8,	// 今のviewは，そのままで，次のviewが下から上へ移動
+UITransitionNextShiftDown	=9	// 今のviewは，そのままで，次のviewが上から下へ移動
+}UITransitionStyle;
+</pre>
+<p>間違ってたらすまん．</p>

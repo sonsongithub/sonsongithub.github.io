@@ -1,0 +1,44 @@
+---
+layout: post
+title: "[iPhone SDK] begin, endIgnoringInteractionEvents"
+categories:
+- blog
+tags:
+- App Store
+- Blog
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>beginIgnoringInteractionEventsとendIgnoringInteractionEventsメソッドは，アプリケーションへの操作をロックする．<br />
+とにかくユーザに操作をされると困るときはこのメソッドを使う．</p>
+<pre>
+[[UIApplication sharedInstance] beginIgnoringInteractionEvents];
+</pre>
+<p>こうすると，操作はロックされる．解除するには，</p>
+<pre>
+[[UIApplication sharedInstance] endIgnoringInteractionEvents];
+</pre>
+<p>でよい．<br />
+ただし，経験上操作のアンロックがうまくいかない問題が発生したので補足すると，<br />
+ユーザの操作→操作ロック→処理→操作アンロック→通常<br />
+という流れでプログラミングしていたときにendIgnoringInteractionEventsがうまく動かないことがあった．どうやらこれは，処理が短すぎたりすると，beginIgnoringInteractionEventsとendIgnoringInteractionEventsの間隔が短くなり，セマフォ？かなんかの排他処理がうまくいかなくなり，アンロックに失敗するように予想した．<br />
+そこで，ロックとアンロックの間が短い場合は，以下のようなコードを書くと安心．<br />
+これはアンロックされることを前提に書いているので，よりセキュア？なコードにするためにはタイムアウトをつけるとイイと思う．</p>
+<pre>
+#define TIME_TO_WAIT 0.05
+-------
+while( [[UIApplication sharedApplication] isIgnoringInteractionEvents] ) {
+[NSThread sleepForTimeInterval:TIME_TO_WAIT];
+[[UIApplication sharedApplication] endIgnoringInteractionEvents];
+}
+</pre>
+<p><!--more--><br />
+・若干修正しました</p>

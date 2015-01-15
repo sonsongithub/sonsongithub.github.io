@@ -1,0 +1,47 @@
+---
+layout: post
+title: "[Tips] まとめーNo.3"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">[Cocoa] NSStringをCのように形式で作成する </h3>
+<pre>
++ (id) stringWithFormat:(NSString *)format,...
+</pre>
+<p>上のクラスメソッドを利用する．<br />
+例えば，以下のようにする．</p>
+<pre>
+int i =100;
+NSString *str = [NSString stringWithFormat:"file%0d.txt", i ];
+</pre>
+<p>
+<h3 class="line-header">[Cocoa] NSTextFieldのバグ？ </h3>
+<p>何故かたまにInterfaceBuilderで接続したNSTextFieldがうまくインスタンスを保持しない場合がある．<br />
+このときは，それにまつわるoutletを削除し，GUIで配置したFieldを削除し，再度作成すると，動くことがある．<br />
+なんなんだこれ・・・？<br />
+<br />
+<h3 class="line-header">[MFC] BSTRとCHAR*の変換 </h3>
+<p>ConvertBSTRToStringあるいは，ConvertStringToBSTRを利用する．<br />
+comutil.hをインクルードする必要がある．<br />
+<br />
+<h3 class="line-header">[Ruby] CGIのURLのQueryを取得する． </h3>
+<pre>
+str = ENV['QUERY_STRING']
+</pre>
+<p>これでURLの?以下のQueryを取得することができる．<br />
+これ以外にも，REQUEST_METHOD，CONTENT_LENGTHなどがある．</p>

@@ -1,0 +1,32 @@
+---
+layout: post
+title: "[iPhone SDK] @property (nonatomic, retain) の挙動"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>iPhoneがガーベッジコレクションに対応してくれれば，こんなことしなくていいのだが・・・．@property (nonatomic, retain)の挙動を調べてみた．<br />
+@property (nonatomic, retain)は，新しく外部からオブジェクトをセットすると，古いオブジェクトには，releaseが渡される．<br />
+ただし，dealloc時に自動的にreleaseは投げられないので，dealloc時には，プロパティにreleaseを自前で投げる必要がある．</p>
+<pre>
+- (void) setHoge:(id)newValue {
+if( hoge_ != nil )
+[hoge_ release];
+hoge_ = newValue;
+}
+</pre>
+<p>セッターの内部はこんな挙動になってるはずだ．<br />
+<a href="http://limechat.net/psychs/">@Psychs</a>さん，色々教えていただき，ありがとうございました．</p>

@@ -1,0 +1,65 @@
+---
+layout: post
+title: "[Tips] メモリ上にGDIで描画"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- SQL
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>ウィンドウを作らないでGDIを使って描画する．</p>
+<h3 class="line-header">メモリを確保→描画先としてセット</h3>
+<pre>
+hBitmap = CreateDIBSection(::GetDC(NULL), &bmi, DIB_RGB_COLORS, (void**)&pixel, NULL, NULL);
+HDC memDC =CreateCompatibleDC(::GetDC(NULL));
+HGDIOBJ oldBitmap = SelectObject(memDC,hBitmap);
+</pre>
+<p>pixelは，DIBのメモリが保存されるポインタが保存される．<br />
+このメモリはプログラムで解放する必要はなく，hBitmapを破棄したときに解放される．<br />
+そして，次にGetDCで得たデバイスコンテキスト互換のメモリデバイスコンテキストを作成し，このメモリデバイスコンテキストに作成したhBitmapに結びつける．<br />
+この::GetDC(NULL)が，ずっと引っかかっていたのだ．<br />
+普通は，ウィンドウがあるので，そのウィンドウをのハンドルを使うんだろうが・・・．<br />
+ドキュメントによると，<br />
+-引用-<br />
+デバイスコンテキストの取得対象となるウィンドウのハンドルを指定します。NULL を指定すると、GetDC は画面全体を表すデバイスコンテキストを取得します。<br />
+-引用-<br />
+だそうだ．<br />
+ということは，ビットマップハンドルも，ビットマップハンドルに結びつけるメモリデバイスコンテキストも，画面全体のデバイスコンテキスト互換ということなのか・・・．<br />
+となるとなぁ・・・．デバイスコンテキスト互換というのは，何が互換なんだろう・・・・？<br />
+まぁ，とかく，だいたいそういうことだ．</p>
+<h3 class="line-header">補足情報</h3>
+<p>画面全体のデバイスコンテキストは，以下のコードでも取得できる．</p>
+<pre>
+HDC hdc_disp = CreateDC("DISPLAY", NULL, NULL, NULL);
+</pre>
+<p>ただし，</p>
+<pre>
+DeleteDC(hdc_disp);
+</pre>
+<p>として，取得したDCを明示的に破棄する必要がある．<br />
+※（さ）さんのコメントを追記しました．</p>
+<h3 class="line-header">書いてみる</h3>
+<pre>
+char *msg = "GDIのテスト";
+::TextOut(memDC,0,0,msg,strlen(msg));
+</pre>
+<p>これで，メモリビットマップに「GDIのテスト」という文字が描画される．ｳﾏｰｰｰ．</p>
+<h3 class="line-header">後始末</h3>
+<pre>
+SelectObject(memDC,oldBitmap);
+DeleteObject(hBitmap);
+</pre>
+<p>デバイスコンテキストに結びつけたhBitmapを一応元に戻しておく．<br />
+戻し方は，SelectObjectで返ってくるハンドルを入れるだけでよい．返ってくるハンドルは，SelectObjectをする前のハンドルなのである．<br />
+後は，メモリビットマップをDeleteObjectで，メモリビットマップを解放する．</p>

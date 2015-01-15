@@ -1,0 +1,52 @@
+---
+layout: post
+title: OpenCV2.XをWindows7(64bit)でビルドする
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>OpenCVをWindows7(64bit)でコンパイルした．<br />
+メモ書きである．</p>
+<p><strong>使ったもの</strong></p>
+<ul>
+<li>Visual Studio 2008</li>
+<li>OpenCV2.1のソースコードあるいは2.2</li>
+<li>CMake for Windows</li>
+</ul>
+<h2>1</h2>
+<p>まずOpenCVをダウンロードした．→<a href="http://sourceforge.net/projects/opencvlibrary/files/opencv-win/2.1/">リンク</a><br />
+OpenCVで検索しても，本家のサイトがなかなか出てこなくて苦労した．</p>
+<h2>2</h2>
+<p>Visual Studio 2008はあらかじめWindows7に入れておいた．</p>
+<h2>3</h2>
+<p>CMakeは，<a href="http://www.cmake.org/cmake/resources/software.html">ここ</a>からダウンロードした．<br />
+上記のサイトから，Windows (Win32 Installer)を選んでダウンロードしてインストールした．<br />
+CMakeは，makefileやプロジェクトファイルを作るためのツールのようだ．</p>
+<h2>4</h2>
+<p>GUI版のcmakeを起動して，OpenCVのパスと，ビルドした結果を保存するパスを指定する．<br />
+64bit版でビルドするなら，<br />
+<code><br />
+$gt;opencv$lt;\build\x64\<br />
+</code></p>
+<p>などとするのがいいだろうか．</p>
+<h2>5</h2>
+<p>Configureボタンを押すと，コンパイラなどの設定を選ぶダイアログが出る．<br />
+Visual Studio 9 (win64)を選んでみる．<br />
+設定が終わった後に，generateボタンを押すと，先ほど指定したビルド用のパスにプロジェクトファイルが展開される．</p>
+<h2>6</h2>
+<p>Visual StudioでALL_BUILD.vcprojなんかを開いてビルドすれば，おｋ．<br />
+cmake便利ですね．</p>

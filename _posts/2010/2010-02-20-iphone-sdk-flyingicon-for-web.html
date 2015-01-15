@@ -1,0 +1,37 @@
+---
+layout: post
+title: "[iPhone SDK] FlyingIcon for Web"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>先日，AppStoreで公開したFlyingIconをWeb用に書き出したものです．だいたい中身は同じコードで，いくつか環境に依存する処理は，ifで分岐して実行するようにしました．<br />
+<s>コード的に変更しなければいけないところは，ほとんどありませんでした．</s><br />
+ファイルの保存するためのライブラリ等は，Web用に公開するswfではセキュリティの都合上で使えません．<br />
+外部ドメインに接続するところで四苦八苦しました．これは面倒くさかった．<br />
+なんで，こんなに遠回りなことをしないといけないのだろう・・・・．まぁ，セキュリティのためなんだろうけど，これはかなり骨が折れる．<br />
+<a href="http://fladdict.net/blog/2010/01/flash-for-iphone-2.html" target="_blank">fladdictさんもご自身のブログでおっしゃっておられます</a>が，<a href="http://labs.adobe.com/technologies/flashcs5/appsfor_iphone/" target="_blank">Packager for iPhone</a>は，WebにもiPhoneにも同じコードでアプリケーションが公開できる点がすばらしいです．たとえば，<strong>ゲームのステージ１はWebでお試しプレイができるとなれば，お試しダウンロードができないAppStoreの営業戦略として使える</strong>かもしれません．<br />
+後，ソースコードを公開してもいいらしいので，後日公開します．</p>
+<div id="flashContent" align="center">
+<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="320" height="480" id="FlyingIconAS" align="middle"><param name="movie" value="http://son-son.sakura.ne.jp/programming/FlyingIconAS.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" /><param name="play" value="true" /><param name="loop" value="true" /><param name="wmode" value="window" /><param name="scale" value="showall" /><param name="menu" value="true" /><param name="devicefont" value="false" /><param name="salign" value="" /><param name="allowScriptAccess" value="sameDomain" /><!--[if !IE]>--><br />
+<object type="application/x-shockwave-flash" data="FlyingIconAS.swf" width="320" height="480"><param name="movie" value="<$MTBlogURL$>/programming/FlyingIconAS.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" /><param name="play" value="true" /><param name="loop" value="true" /><param name="wmode" value="window" /><param name="scale" value="showall" /><param name="menu" value="true" /><param name="devicefont" value="false" /><param name="salign" value="" /><param name="allowScriptAccess" value="sameDomain" /><!--<![endif]--><br />
+<a href="http://www.adobe.com/go/getflash"><br />
+<img src="{{ site.url }}/assets//get_flash_player.gif" alt="Get Adobe Flash player" /><br />
+</a><br />
+<!--[if !IE]>--><br />
+</object><br />
+<!--<![endif]--><br />
+</object>
+</div>

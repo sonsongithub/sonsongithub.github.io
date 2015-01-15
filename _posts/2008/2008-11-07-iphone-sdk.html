@@ -1,0 +1,33 @@
+---
+layout: post
+title: "[iPhone SDK] クラスが持っているメソッドを見る"
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>メモ書きです．<br />
+クラスのメソッドは，これで出力できる．</p>
+<pre>
+#import &lt;objc/objc-runtime.h&gt;
+------
+unsigned int outCount;
+Method *p = class_copyMethodList( classObject, &outCount );
+int i;
+for( i = 0; i &lt; outCount; i++ ) {
+SEL sel = method_getName( *(p+i) );
+NSLog( @"%s", sel_getName(sel) );
+}
+</pre>
+<p>objc-runtimeを使えば，色々ハックできますね．ハイ．</p>

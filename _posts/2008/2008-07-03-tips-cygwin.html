@@ -1,0 +1,35 @@
+---
+layout: post
+title: "[Tips] Cygwinのforkを使ったときのエラーを払拭する"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Cygwin上のRubyで`hoge`やら，system関数を使うとやたらエラーが出る・・・・．</p>
+<pre>
+*** unable to remap Hogehoge to same address as parent(0xD80000) != 0xE10000
+XX [main] perl XXXfork_parent: child XXXX died waiting for dll loading
+</pre>
+<p>一通り，ソースコードをチェックしたり，テストしていたりしても解決しない・・・．あまつさえ，lsも実行できない．なんなんだろう・・・・．<br />
+助けてーーーー！Google先生！！！<br />
+出るわ，出るわ，お助け情報．これはどうやらCygwinのforkの問題らしい．<br />
+※対策<br />
+１．rebaseallというツールをcygwinのインストーラでインストール（すでに入っていれば問題ない）<br />
+２．すべてのCygwinにまつわるプロセスを終了．そして，bash上からはrebaseallを実行できないので，ashというシェルを起動する<br />
+<center><img align="center" alt="ash_cygwin.PNG" src="{{ site.url }}/assets//ash_cygwin.PNG" width="436" height="394" /></center><br />
+３．このashを起動し，rebaseall -vを実行する．<br />
+４．ｳﾏｰｰｰｰｰｰｰ<br />
+ぐっさはまった．勘弁してよ．</p>

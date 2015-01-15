@@ -1,0 +1,24 @@
+---
+layout: post
+title: "[MacOSX] MacPorts〜LeopardでOpenCV1.0.0をインストールする"
+categories:
+- blog
+tags:
+- Programming
+- "お勉強"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>python関係でエラーが出るので，以下の環境変数をセットしてインストールする</p>
+<pre>
+export extra_env="gcc"
+port -d install opencv
+</pre>

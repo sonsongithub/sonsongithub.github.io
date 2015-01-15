@@ -1,0 +1,49 @@
+---
+layout: post
+title: "[Tips] sshをパスワードなしでアクセスできるようにする"
+categories:
+- blog
+tags:
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>いや，もうあんまり意味ない，日の目を見ないとはわかってるんですが，最近セットアップしたらうまくいかなくて同じことで悩むことはないと思うけど，悩みたくないので，備忘録．<br />
+(1) PC側で，まず鍵を作る．</p>
+<pre>
+&gt; ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key
+</pre>
+<p>これで，~/.sshにid_rsaとid_rsa.pubが作成される．<br />
+そして，この鍵をsshに読み込む．</p>
+<pre>
+&gt; ssh-add ~/.ssh/id_rsa
+</pre>
+<p>これでPC側の準備完了．<br />
+(2) iPod側の設定<br />
+・iPod側に何らかの方法で，id_rsa.pubをコピーする．<br />
+・~/.sshを作成し，id_rsa.pubをauthorized_keysとしてそこにコピーする．<br />
+・そして，authorized_keysのアクセス権を600にする．<br />
+・さらにホーム~/のアクセス権を744くらい？にする．</p>
+<pre>
+&gt; mkdir ~/.ssh
+&gt; mv id_rsa.pub ~/.ssh/authorized_keys
+&gt; chmod 600 ~/.ssh/authorized_keys
+&gt; chmod 600 ~/.ssh/ ←ついでに
+&gt; chmod 744 ~/
+</pre>
+<p>これでおk．</p>
+<pre>
+all: $(PRODUCT_ABS)
+scp $(PRODUCT_ABS) root@hoge:/Applications/$(PRODUCT_NAME).app/
+</pre>
+<p>とすると，自動で転送されて便利です．</p>

@@ -1,0 +1,199 @@
+---
+layout: post
+title: "[OpenGL] マウスピッキング"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">マウスピッキング・処理の流れ </h3>
+<p>ここではマウスの座標からポリゴンを識別することも目的にします．アプリケーションとしてインタフェースを作るためには欠かせないものです．さらにはマウスにこだわらなくても様々な応用範囲が考えられます．<br />
+OpenGLでは，このセレクション用のAPIがあらかじめ用意されており，簡単に実現することが可能です．処理の流れは，下の流れになります．</p>
+<h3 class="numeric-list">
+<li>セレクションモードへ移行する．</li>
+<li>ポリゴンに識別名をつけながら描画する．</li>
+<li>OpenGLから返されたセレクション情報を整理する．</li>
+<li>ポリゴン識別完成．</li>
+</h3>
+<p>
+<h3 class="line-header">2次元の画面から，3次元のポリゴンを識別する </h3>
+<p>実際の処理の仕組みは少しややこしいです．<br />
+OpenGLで描画された世界は３次元です．しかしながら，マウスによって得られる情報は２次元です．つまりマウスからは特定のポリゴンを一意に指定することは不可能であるということになります．イメージは下のようなります．モニタ上でマウスをクリックすると下の図のようになります．<br />
+<center><img src="{{ site.url }}/assets//ckick_monitor.jpg" /></center><br />
+しかし，実際内部では下図のようにポリゴンが重なっています．<br />
+<center><img src="{{ site.url }}/assets//click_click.jpg" /></center><br />
+クリックによる選択だけでは，奥あるポリゴンを指しているのか，手前のポリゴンなのか，わからないということになります．<br />
+人が操作するときには，直感的に手前を指しているとすることができます．OpenGLでは各ピクセルがどの深さにピクセルが描画されているかが記録されています（デプスバッファ）．このことを利用して実際に手前に描かれているポリゴンの情報を取得することができるわけです．<br />
+<br />
+<h3 class="line-header">コーディング </h3>
+<p>処理の流れはまず，セレクションモードに移るところから始まります．<br />
+glRenderMode(GL_SELECT)，APIによってGL_RENDERからGL_SELECTへと切り替えます．通常ではレンダリングモードはGL_RENDERに設定されています．<br />
+まず，OpenGLがセレクション状況を戻すセレクションバッファを確保します．これはglSelectBuffer(BUFMAX,selectBuf);によって行います．ただし，OpenGLが自動的にメモリ確保してくれるわけではないので，selectBufはプログラム中で確保する必要があります． OpenGLはこのselectBufに対してセレクション処理の結果を返します．以下がマウスで描画ウィンドウをクリックしたときに呼び出される関数です．</p>
+<pre>
+void PickUp(int x,int y){
+float current_aspect=0;                        //アスペクト比
+GLuint selectBuf[BUFMAX];                   //セレクトションバッファ
+GLuint hits;                                          //ヒットナンバー
+GLint viewport[4];                                //ビューポート
+//セレクション開始
+glGetIntegerv(GL_VIEWPORT,viewport); //現在のビューポートを代入
+glSelectBuffer(BUFMAX,selectBuf);         //バッファの選択
+(void)glRenderMode(GL_SELECT);          //セレクションに移行
+glInitNames();                                       //nameバッファの初期化
+glPushName(0);
+glMatrixMode(GL_PROJECTION);         //プロジェクションモード
+glPushMatrix();                      //セレクションモード
+glLoadIdentity();
+gluPickMatrix(x,viewport[3]-y,   //ピッキング行列の乗算
+5.0,5.0, viewport);
+current_aspect = (float)viewport[2]/(float)viewport[3];
+gluPerspective( 60.0, current_aspect, 1.0, 20.0 );
+glMatrixMode( GL_MODELVIEW );    //ここでモデルビューモード
+DrawRects(GL_SELECT);            //セレクションモードで描画
+glMatrixMode(GL_PROJECTION);
+glPopMatrix();
+hits = glRenderMode(GL_RENDER);      //ヒットレコードの戻り値
+SelectHits(hits,selectBuf);
+glMatrixMode( GL_MODELVIEW );        //モデルビューモードへ戻す
+}
+</pre>
+<p>下の個所でセレクションバッファを指定し，セレクションモードへ移行します．<br />
+そして，glInitName，glPushNameによってnameスタックを初期化します．</p>
+<pre>
+//セレクション開始
+glGetIntegerv(GL_VIEWPORT,viewport);     //現在のビューポートを代入
+glSelectBuffer(BUFMAX,selectBuf);  //バッファの選択
+(void)glRenderMode(GL_SELECT);     //セレクションに移行
+glInitNames();         //nameバッファの初期化
+glPushName(0);
+</pre>
+<p>セレクションの際には一度モデルビューを行列を初期化しなおします．マウスピッキング時にはgluPickMatrix関数を使用し，GL_PROJECTIONモードの射影変換行列に変化を加えます．<br />
+gluPickMatrixは，一つ目と二つ目の引数でクリックする点を指定します．そして，次の２つの引数でマージンを与えます．つまりこのサンプルでは5ピクセル分まわりのピクセルも含めてピッキングすることになります．マージンを０にすると選択がかなりしんどいのでこの辺は適当に調節することになります．最後に現在のビューポートをポインタで入力します．glPushMatrixとglPopMatrixを使用する理由はこうしておかないと以前までの（ピッキングを使用しない状態）射影変換行列が変更されてしまうからです．そして，GL_MODELVIEWモードへ移行した後，オブジェクトを描画します．サンプルでは四角形を３つ描画しています．以下の関数が描画関数となります．<br />
+描画モードを確認するためにひとつ引数をもっています．<br />
+glLoadNameやglPushNameはGL_SELECTモードでしか動作しませんが，一応分岐処理してあります．下のようにオブジェクトの描画コードの間にglLoadNameを呼び出していきます．この引数の番号がオブジェクトがピッキング時に識別のためにつけられる名前となります．glLoadNameは静的に識別番号を割り振っていくときに使用します．</p>
+<pre>
+void DrawRects(GLenum mode){
+if(mode==GL_SELECT){
+glLoadName(1);
+}
+glBegin(GL_QUADS);
+glColor3f(0,1,0);
+glVertex3i(1,2,0);
+glVertex3i(1,0,0);
+glVertex3i(0,0,0);
+glVertex3i(0,2,0);
+glEnd();
+if(mode==GL_SELECT){
+glLoadName(2);
+}
+〜〜〜〜〜〜〜〜
+}
+</pre>
+<p>glPushNameは階層型で名前を付けたいときに使います．<br />
+下の例では番号1がオブジェクトAで，番号2-2がオブジェクトB-2という風識別番号を付けています．</p>
+<pre>
+//オブジェクトA
+glPushName(1);
+DrawObjectA();
+glPopName();
+//オブジェクトB
+glPushName(2);
+//B-1
+glPushName(1);
+DrawObjectB-1();
+glPopName();
+//B-2
+glPushName(2);
+DrawObjectB-2();
+glPopName();
+glPopName();
+</pre>
+<p>描画コードに識別番号入力APIを混ぜ，描画することでレクションバッファにセレクションの結果が代入されます．<br />
+最後にGL_RENDERモードへ描画モードへ戻します．そのときに引数が返されます．これがピッキングによってヒットしたオブジェクトの数となります．もしこの戻り値が０ならばマウスは空白（つまりオブジェクトが描画されていない空間）をクリックしたということになります．</p>
+<pre>
+hits = glRenderMode(GL_RENDER);          //ヒットレコードの戻り値
+SelectHits(hits,selectBuf);
+glMatrixMode( GL_MODELVIEW );             //モデルビューモードへ戻す
+</pre>
+<p>次に得られたセレクションバッファからデータを取り出します．<br />
+この処理はSelectHits(hits,selectBuf);によって行っています．<br />
+<br />
+<h3 class="line-header">セレクションバッファ </h3>
+<p>セレクションバッファはunsigned intとして値が返されます．その中身は以下のようになっています．<br />
+<center><img src="{{ site.url }}/assets//selectbuff.jpg" /></center><br />
+まずヒットしたName分のデータがヒットしたデータの数だけならびます．<br />
+各々のデータには識別番号に関するデータが格納されます．　これらのデータはunsigned intの大きさでメモリに並んでいます．　各々のデータの先頭にはヒットしたNameの識別番号の階層の深さが格納されています．　次にヒットしたオブジェクトのデプスバッファの最小値と最大値が格納されます．　最後に階層の深さだけ識別番号が順に格納されます．<br />
+このセレクションバッファからデプスバッファを並び替えたりしながらヒットしたオブジェクトを識別します．例えば下のようなコードになります．</p>
+<pre>
+int SelectHits(GLuint hits,GLuint *buf){
+int i,j;
+// 最大階層数を4と仮定した処理
+GLuint hit_name[4]={-1, -1, -1, -1};
+float depth_min=10.0f;
+float depth_1=1.0f;
+float depth_2=1.0f;
+GLuint depth_name;
+GLuint *ptr;
+// ヒットしたデータなし
+if(hits<=0)return -1;
+// ポインタを作業用ptrへ渡す．
+ptr = (GLuint*)buf;
+printf("ヒット総数 %d?n?n",(int)hits);
+for(i=0; i<hits; i++){
+printf("  ヒット %d",(int)i+1);
+// 識別番号の階層の深さ
+depth_name = *ptr;
+printf("  識別番号の階層数 %d?n",(int)depth_name);
+ptr++;
+depth_1 = (float) *ptr/0x7fffffff;
+printf("    デプスの最小値 %f?n",depth_1);
+ptr++;
+depth_2 = (float) *ptr/0x7fffffff;
+printf("    デプスの最大値 %f?n",depth_2);
+ptr++;
+printf("    識別番号 ");
+// 最小デプスの確認
+if(depth_min>depth_1){
+depth_min = depth_1;
+// 識別番号を保存
+for(j=0; j<depth_name; j++){
+printf("%d ",*ptr);
+hit_name[j] = *ptr;
+ptr++;
+}
+}
+else{
+for(j=0; j<depth_name; j++){
+printf("%d ",*ptr);
+ptr++;
+}
+}
+printf("?n");
+}
+printf("?nデプス最小の識別番号?n");
+for(i=0;i<4;i++){
+if(hit_name[i]==-1)break;
+printf("%d ",hit_name[i]);
+}
+printf("?n?n?n");
+return hit_name;
+}
+</pre>
+<p>以上で完了です．後は選択したポリゴンを煮るなり焼くなり好きにすることが出来ます．<br />
+サンプルは実行結果が随時フィードバックできるGLUTを使用しています．<br />
+<br />
+<h3 class="line-header">ソースコード </h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/picking">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/picking</a></p>

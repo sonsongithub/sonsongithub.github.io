@@ -1,0 +1,58 @@
+---
+layout: post
+title: "[DirectShow] はじめに"
+categories:
+- blog
+tags:
+- Blog
+- Direct3D
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">DirectShow〜はじめに </h3>
+<p>ここでは，Visual C++6.0を開発環境としたプログラミングを紹介する．おそらく，使ってはいないが，.Netシリーズを使ってもC++を使うならばだいたい一緒だろう．開発環境の違いは読者の設定等で吸収して頂きたい．<br />
+このページでは，開発環境の簡単な設定と，フィルタの設定について説明する．DirectShowを使った開発をするためには，DirectX SDKが必要である．DirectX SDKは，Microsoftのダウンロードサイドから手に入れることができる．まず，これをインストールする．また，そこから入手可能なDirectXのドキュメントも結構使えるのでインストールすることをおすすめする．また，DirectX SDKインストール時に，DirectXランタイムのRetailバージョンとDebugバージョンを選ぶことができるが，ここは，適宜選択して，インストールする．ただし，Debugバージョンは，ビデオカードやビデオキャプチャカード等のドライバと相性が悪いことがあり，最悪OSが立ち上がらなくなるので，注意されたい．もしそうなった場合は，セーフモードで起動し，ドライバを停止するか，DirectXのツールでRetailバージョンに戻すなどの処置をする．<br />
+<br />
+<h3 class="line-header">開発環境の設定〜Visual C++6.0 </h3>
+<p>これから行うプログラミングに向けて，開発環境の設定を行う．ここでは，DirectX SDKをデフォルトの C:/DXSDKにインストールしたとして説明する．もし，インストール先を変更した場合は，適宜読み直して，設定して頂きたい．<br />
+<center><img src="{{ site.url }}/assets//include.gif" /></center><br />
+※しかし，最近出たアップデータ(summer 2004)では，インストールパスが変わったようである．C:/Program Files/Microsoft DirectX 9.0 SDK (Summer 2004)になったらしい．また開発のデバッグに必要なライブラリをビルドするために必要なワークスペース等のファイルがVisual C++ 7.0のファイルになってしまっており，Visual C++6.0ではビルドできなくなっている．そのときは，それ以前のバージョンのSDKをインストールし直して使用しなければならないようである．（Visual C++をバージョンアップしろってことか？）<br />
+　<br />
+まず，後述するフィルタの作成に必要なライブラリをビルドする．</p>
+<pre>
+C:/DXSDK/Samples/C++/DirectShow/BaseClasses/
+</pre>
+<p>にあるBaseClasses.dswのワークスペースを開き，ビルドする．そうすると，strmbasd.libがビルドされる．<br />
+<center><img src="{{ site.url }}/assets//library.gif" /></center><br />
+次に，DirectShowを使うために，自作フィルタを使うために，ライブラリファイルと，インクルードファイルのためにパスを設定する．インクルードファイルのためのパスには，</p>
+<pre>
+C:/DXSDK/include/
+C:/DXSDK/samples/C++/DirectShow/BaseClasses/
+</pre>
+<p>の二つを設定する．もし，以後のプログラミングでインクルードファイルを見つけられなかったり，コンパイルエラーが出る場合は，ここで，上記二つのパスの順番をトップに持ってくることで解決することができる可能性がある．<br />
+<br />
+<h3 class="line-header">GraphEditを使ってフィルタの概念を考える． </h3>
+<p>DirectX SDKをインストールすると，GraphEditというアプリケーションがインストールされる．まずは，これでフィルタを使ってみる．<br />
+ここからは，GraphEditの簡単な使い方の流れと概念を説明する． まず，フィルタ追加ダイアログを開く．DirectXに対応するUSB，IEEE1394等のカメラが正しく接続され，認識されている場合， Video Capture Sourcesのカテゴリに以下のようにデバイスの名前が表示される．筆者の環境では，Sonyのビジュアルコミュニケーションカメラが表示されている．<br />
+<center><img src="{{ site.url }}/assets//filterDialog.gif" /></center><br />
+そこで，この名前をダブルクリックし，さらにカテゴリDirectShow Filtersの中からVideo Rendererをダブルクリックし追加する．そして，下図のようにふたつのブロックを接続する．このブロック一つがフィルタと呼ばれる物である．映像ストリームは，右側のピンが出力のピンとなり，左側のピンが入力のピンとなる．下図の場合は，PCGA-UVC11から生成された映像ストリームがVideo Rendererに流れていることを示し，実際にそうなっている．<br />
+<center><img src="{{ site.url }}/assets//grapheditNormal.gif" /></center><br />
+ここで，ツールバーの再生ボタンを押すと，DirectShowのフィルタが動作し，ウィンドウにカメラの画像が表示される．これがカメラのストリームを再生するものとなる．DirectShowでは，このようにフィルタを連結していくことで，映像や音声に関するプログラミングを行うことができる．フィルタは，画像処理のためのものと考えそうだが，ビデオチューナであろうが，ファイルへの書き出しであろうが，処理を行うオブジェクトすべてをフィルタと呼ぶ．これはMicrosoftが勝手に付けただけである．<br />
+<center><img src="{{ site.url }}/assets//normal.gif" /></center><br />
+　例えば，ここでMuxフィルタとFile writerのフィルタをVideo Rendererの代わりに付けるとファイルに書き出すことができる．GraphEditは，フィルタをグラフィカルに接続し，その動作を確認することができ，動画ファイルへの書き出しフィルタ等を作成することで，簡単なアプリケーションも作成することができる．<br />
+<br />
+<h3 class="line-header">さらにフィルタを使う </h3>
+<p>下図は，筆者が作成した2値化フィルタ，BinarizeフィルタをカメラのフィルタとVideo Rendererのフィルタの間に挿入したものである．Color Space Converterというフィルタが間に入っているが，映像ストリームが出力と入力で異なるときに自動的に挿入され，色空間等を直してくれるものである．<br />
+<center><img src="{{ site.url }}/assets//grapheditBinarize.gif" /></center><br />
+これを再生すると，下図の2値化されたものが表示される．つまりDirectShowで画像処理を行うと言うことはまさにこのフィルタを作成していくことなのである．このフィルタは，DirectShowのお作法にのっとって，ActiveX（まぁDLLのようなもの）として作成していく．<br />
+<center><img src="{{ site.url }}/assets//binarize.gif" /></center></p>

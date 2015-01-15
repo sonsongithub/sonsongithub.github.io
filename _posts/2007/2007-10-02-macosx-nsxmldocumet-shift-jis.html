@@ -1,0 +1,51 @@
+---
+layout: post
+title: "[MacOSX] NSXMLDocumet Shift-JISのXMLを読み込む"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>結構，まんどくさい．<br />
+どうやら，NSXMLDocumentの内部は，システムの文字コードで処理されるようなので，ちゃんと文字コードを変換してからパーサに突っ込んでやらないといけない．<br />
+また，一度でもNSStringに文字コードをシステムの文字コード以外で突っ込むと化け化けになるので，その辺もちゃんとしないといけない．<br />
+後，HTMLのようなちゃんとXML勧告に従っていないXML形式をパースする場合には，optionを指定する．optionの各形式は，<a href="http://developer.apple.com/documentation/Cocoa/Conceptual/NSXML_Concepts/Articles/CreatingXMLDoc.html">こちらのページ</a>参照．例えば，HTMLをパースするときは，NSXMLDocumentTidyHTMLになる．</p>
+<pre>
+- (void)hogehoge {
+NSData *rssData = [hoge getXMLData];
+// get data format is SHIFT-JIS
+// convert it into UTF-8
+NSString *decoded_strings = [[NSString alloc]
+initWithData:rssData
+encoding:NSShiftJISStringEncoding ];
+// parse
+[self parseXML:decoded_strings];
+}
+- (NSMutableArray*) parseXML:(NSString*)str {
+NSError *err = nil;
+NSXMLDocument *xmlDoc = [[[NSXMLDocument alloc]
+initWithXMLString:str options:NSXMLDocumentTidyHTML
+error:&err] autorelease];
+// parsing is here
+}
+</pre>
+<p>ただし，内部的には，UTF-8？でコードされているものと思いきや，なんかよくわからない．<br />
+XML内部の日本語データを出すときは，</p>
+<pre>
+[NSString stringWithCString:[strTag UTF8String] encoding:NSASCIIStringEncoding];
+</pre>
+<p>みたいにしてやらないといけない．<br />
+面倒くさすぎる．なんじゃこれ？</p>

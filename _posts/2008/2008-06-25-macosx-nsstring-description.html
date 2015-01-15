@@ -1,0 +1,43 @@
+---
+layout: post
+title: "[MacOSX] - (NSString*) description; でメモリリーク？"
+categories:
+- blog
+tags:
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>MacOSXでツールを作っていたときに，Instrumentsでメモリリークテストをしているときに気付いた・・・．<br />
+私の間違いだと思うのだが，気になるのでブログでも書いて反応を見てみる．<br />
+環境：MacOSX10.5.3(9D34)</p>
+<pre>
+NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+NSMutableArray* list = [NSMutableArray array];
+int i;
+for( i = 0; i <20000; i++ ){
+NSString *str = [NSString stringWithFormat:@"%04d" ,i];
+[list addObject:str];
+}
+NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:list, @"NSMutalbeArray", nil];
+NSString *str = [dict description];
+[pool release];
+</pre>
+<p>これを実行するたびに，少しずつメモリがリークしていく．[dict description]をコメントアウトすると，メモリリークは起こらない．<br />
+Instrumentsを使ってもLeakでは検出できず，ObjectAllocで総量を見ていくしかない．<br />
+<center><br />
+<img alt="leak20080624.png" src="{{ site.url }}/assets//leak20080624.png" width="475" height="159" /><br />
+メモリリークしたときのスクリーンショット<br />
+<img alt="notleak20080624.png" src="{{ site.url }}/assets//notleak20080624.png" width="504" height="164" /><br />
+メモリリークしてないときのスクリーンショット　[dict description];をコメントアウト<br />
+</center><br />
+descriptionが怪しいと思うのだが・・・・．<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/mac/dictLeakTest">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/mac/dictLeakTest</a></p>

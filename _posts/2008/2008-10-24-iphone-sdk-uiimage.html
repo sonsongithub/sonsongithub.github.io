@@ -1,0 +1,45 @@
+---
+layout: post
+title: "[iPhone SDK] UIImageでピクセルを扱う"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Quartz 2DまわりのAPIを使い，UIImageからCGImageRefを経由してピクセルの値を取得することができる．</p>
+<pre>
+UIImage* source = [UIImage imageNamed:@"image.png"];
+CGImageRef inputImage = [source CGImage];
+</pre>
+<p>これでCGImageのポインタを取得できる．CGImageからは，CGImageGetDataProviderとCFDataGetBytePtrを使い，ピクセルの値やピクセルのデータサイズ，1行ごとのバイトサイズなどを取得できる．</p>
+<pre>
+CFDataRef inputData = CGDataProviderCopyData(CGImageGetDataProvider(inputImageRef));
+unsigned char *pixelData = (unsigned char *) CFDataGetBytePtr(inputData);
+int length = CFDataGetLength(inputData);
+size_t width = CGImageGetWidth(inputImageRef);
+size_t height = CGImageGetHeight(inputImageRef);
+size_t bitsPerComponent = CGImageGetBitsPerComponent(inputImageRef);
+size_t bitsPerPixel = CGImageGetBitsPerPixel(inputImageRef);
+size_t bytesPerRow = CGImageGetBytesPerRow(inputImageRef);
+CGColorSpaceRef colorspace = CGImageGetColorSpace(inputImageRef);
+CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(inputImageRef);
+for (int index = 0; index < length; index += 4 ) {
+unsigned char red   = *(pixelData + index);
+unsigned char green = *(pixelData + index + 1);
+unsigned char blue  = *(pixelData + index + 2);
+unsigned char alpha = *(pixelData + index + 3);
+}
+</pre>
+<p>ビットの並びはRGBAのようです．</p>

@@ -1,0 +1,38 @@
+---
+layout: post
+title: "[Tips] NSViewを重ねたときのmouseDownイベント"
+categories:
+- blog
+tags:
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>レスポンダチェーンとかをちゃんと理解していると，明白なことなのかもしれないが，こないだこれにダダはまりしたので，メモっとく．<br />
+あるビュー上にサブビューをおく．</p>
+<pre>
+// Create main view
+id mainView = [[MyView1 alloc] initWithFrame:[window bounds] withName:@"main view"];
+[window setContentView:mainView];
+// Create sub view in main view
+id subview = [[MyView2 alloc] initWithFrame:CGRectMake( 20, 20, 100, 100) withName:@"sub view"];
+[mainView addSubview:subview];
+</pre>
+<p>subview上でマウスをクリックすると，MyView2のmouseDownが実行される．<br />
+subviewの下にあるmainviewには，mouseDownのイベントは届かない．</p>
+<pre>
+- (void) mouseDown:(NSEvent*)event {
+NSLog( @"click - %@", name_ );
+[super mouseDown:event];
+}
+</pre>
+<p>[super mouseDown:event]をmouseDownイベントで実装しておくと，mainviewにもmouseDownイベントが届く．<br />
+順序は，subviewｰ>mainviewの順でmosueDownイベントが発生する様子．</p>

@@ -1,0 +1,47 @@
+---
+layout: post
+title: "[iPhone SDK] AdHocでビルドされたアプリをインストールする(Win&Mac)"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>=><a href="http://son-son.sakura.ne.jp/programming/iphone_sdk_how_to_install_an_a.html">English page is here</a><br />
+今までのベータテストで得た情報（テスターからの）を書き留めます．<br />
+今後のベータテストのなにかしらの役に立てばと思います．<br />
+<b>UDIDの調べ方</b><br />
+※Ad Hoc Helperを使う<br />
+このツールを使うと，メールでUDIDを送ることができる．<br />
+<center><a href="http://click.linksynergy.com/fs-bin/click?id=he6amglY4cw&offerid=94348.698052489&type=10&subid="><img alt="adhoc_install05.jpg" src="{{ site.url }}/assets//adhoc_install05.jpg" width="177" height="195" /></a></center><br />
+※iTunes<br />
+・iPhone/iPod touchの設定画面で下のところをクリックすると識別子を表示させることができる．そこをクリックしている状態でCtrl+Cするとコピーできる．<br />
+<center><img alt="adhoc_install03.jpg" src="{{ site.url }}/assets//adhoc_install03.jpg" width="509" height="135" /></center><br />
+<b>インストール</b><br />
+※解凍<br />
+MacOSXで圧縮したzipファイルをWindowsで解凍すると，ゴミが見える可能性があります．それは無視する．<br />
+<center><img alt="adhoc_install01.jpg" src="{{ site.url }}/assets//adhoc_install01.jpg" width="422" height="340" /></center><br />
+※インストール<br />
+hoge.app，hoge.mobileprovisionの二つのファイルをまとめて選択し，iTunesのライブラリのアプリケーションにドラッグ＆ドロップする．<br />
+<center><img alt="adhoc_install02.jpg" src="{{ site.url }}/assets//adhoc_install02.jpg" width="505" height="292" /></center><br />
+※確認<br />
+iTunesへの登録が完了すると下のようなアイコンがiTunesのライブラリのアプリケーションの中に表示されます．<br />
+<center><img alt="adhoc_install04.jpg" src="{{ site.url }}/assets//adhoc_install04.jpg" width="125" height="154" /></center><br />
+※インストールできなかったら<br />
+今まで，sonsonが経験した，AdHocでインストールできなかったというテスターのトラブルの原因は，<br />
+１．プロビジョニングファイルの不備<br />
+２．テスターがデバイスを交換したことを忘れていた<br />
+３．プロビジョニングファイルが壊れていた<br />
+の３つです．<br />
+ご参考まで．</p>

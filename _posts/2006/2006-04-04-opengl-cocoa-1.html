@@ -1,0 +1,100 @@
+---
+layout: post
+title: "[OpenGL] Cocoa 透明ウィンドウ for MacOSX"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">透明なOpenGLウィンドウ </h3>
+<p>MacOSX10.2になってからOpenGLとCoreGraphicsが統合されたらしい．それによるとOpenGLの描画結果をまんま，スクリーンに描画できるという．実際にどっかのエキスポでデモがあったという．うそくせぇ．ありえねぇ．怪しい．実際のコーディングを見てみないと信用できんなぁ．というわけでAppleが提供するメーリングリストでちょこっと情報をゲットし，そのサンプルを作ってみました．そしてそのサンプルの画面がこれです．<br />
+ウィンドウの境界なしでOpenGLが描画されているように見えます．つまり，スクリーンに対して直接描画するという方法が以下で説明する方法と同じなのかはわかりません．しかし，結構おもしろいものができます．<br />
+<center><img src="{{ site.url }}/assets//opqTeapot.jpg" /></center><br />
+MacOSXではウィンドウやパーツ透色をデフォルトでOSが提供します．それゆえに簡単に透明のウィンドウが作れます．WindowsXPでも透明のウィンドウがサポートされる聞きましたが，どうなんでしょう？Windows2000でもサポートされてるのかな？<br />
+Appleのホームページを見るとこの透明OpenGLは「新しいCoreGraphicsの恩恵だ」みたいに書いてあるのがありましたが，さして新しいAPIを使っているわけでもないですし，理論的にどうなのかもわかりません．ただ，OpenGLコンテキスト自体に少々のスパイスはふりかけています．噂のQuartz Extremの恩恵なのでしょうか？<br />
+描画自体はかなり興味深く，OpenGLで描画した結果がまんまピクセル値としてスクリーンに描かれているようです．それゆえにOpenGLで設定したアルファ値が反映されてしまうのでポリゴンをアルファ値を1以下で書くとみんな透けてしまいます．<br />
+<br />
+<h3 class="line-header">透明なウィンドウと透明なOpenGLビューの作成 </h3>
+<p>まずOpenGLViewを描画するためのウィンドウを作ります．普通のウィンドウとは違い，タイトルバー，そして本体が透明なウィンドウを作成します．これによって，OpenGLViewだけが描画されるわけです．ここで，ウィンドウを透明にしないで，以下のコーディングをするとOpenGLViewが透けて，本体のウィンドウが見えることになります．透明なウィンドウの作成方法は”Cocoaはやっぱり”などで解説されているとおりです．</p>
+<pre>
+- (id) initWithContentRect : (NSRect ) contentRect
+styleMask : (unsigned int) aStyle
+backing : (NSBackingStoreType) bufferingType
+defer : (BOOL ) flag
+{
+// alloc window
+NSWindow* win = [ super
+initWithContentRect : contentRect
+styleMask : NSBorderlessWindowMask
+backing : NSBackingStoreBuffered
+defer : NO ];
+// create color
+NSColor *windowColor = [NSColor clearColor];
+// set color
+[ win setBackgroundColor:windowColor];
+// set window position
+[ win center ];
+// set non-Opaque
+[ win setOpaque : NO];
+// set window level
+[ win setLevel : NSStatusWindowLevel ];
+// set window alpha value
+[ win setAlphaValue : 0.5f ];
+return win;
+}
+</pre>
+<p>これがそのウィンドウの作成方法をオーバライドしたものです．<br />
+まず，背景色を透明にします．これでウィンドウは完全に透明になります．そして，不透明の設定をOFFにします．ウィンドレベルは適当なものを選んでください．ここではかなり上位に配置されるNSStatusWindowLebelに設定しています．最後にウィンドウのアルファ値を設定していますが，これはウィンドウないに描画されるものすべてに反映されるので，ここで半透明にすると，半透明にしていないはずのOpenGLの描画結果も半透明になります．<br />
+次にOpenGLViewに，透明になるように細工します．</p>
+<pre>
+-(id)initWithFrame:(NSRect)frameRect{
+//
+// ピクセルフォーマットの設定とコンテキストの作成
+//
+// set non-opaque OpenGL context
+long opq=0;
+[ [ self openGLContext ]
+setValues:&opq
+forParameter:NSOpenGLCPSurfaceOpacity];
+//opq = -1;
+//[ [ self openGLContext ]
+setValues:&opq
+forParameter:NSOpenGLCPSurfaceOrder];
+[self setNeedsDisplay:YES];
+return( self );
+}
+</pre>
+<p>　ピクセルフォーマットの設定は従来通りです．コンテキストに手を加えます．</p>
+<pre>
+[ [ self openGLContext ]
+setValues:&opq forParameter:NSOpenGLCPSurfaceOpacity];
+</pre>
+<p>このメッセージによって，OpenGLを透明にします，というのは語弊がありますね．こうするとウィンドウの背面にあるものとの描画の時にOpenGLで描画したアルファ値が反映されるようになります．つまり，このNSOpenGLCPSurfaceOpacityに"1"を送ることによってアルファ値を"0.5"として描画したポリゴンにおけるピクセルは，最終的にスクリーンに描画されるときにその影響を受けることになります．<br />
+次に，NSOpenGLCPSurfaceOrderを設定していますが，コメントアウトしています．これを"-1"にするとウィンドウよりもOpenGLが背面で，"1"にすると全面で描画されます．デフォルトでは"1"です．今回は描画するウィンドウ自体が透明なので設定していません．</p>
+<pre>
+- (BOOL)isOpaque
+{
+return NO;
+}
+</pre>
+<p>このメソッドもオーバーライドします．これによってOpenGLView自体が透明になります．これを設定しないとOpenGLのピクセルが透明でもViewが透明でないということになるので期待通りの描画結果が得られません．これで用意は整いました．後は描画するだけで透明になります．<br />
+<br />
+<h3 class="line-header">残されたマウスクリックの問題 </h3>
+<p>サンプルコードを全部見てもらえればわかると思いますが，問題点があります．それはマウスの判定です．NSImageで透明なTIFF画像などを描画するときにはマウスは完全に透明になった部分には反応しません．しかし，このサンプルでは透明になっていてもOpenGLViewが，透明の部分でもそれを処理してしまいます．だから今回のサンプルではマウスでドラッグしてウィンドウ（透明で見えないけど）を移動させるときにマウスイベントを処理させるためだけのViewを作成しています．これに関しては何らかの解決方法があると思いますが．まだわかっていません．<br />
+<br />
+<h3 class="line-header">ソースコード </h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/mac/transparent">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/mac/transparent</a><br />
+本ソースコードを使用したことによる如何なる損害も製作者は責任を負いません．</p>

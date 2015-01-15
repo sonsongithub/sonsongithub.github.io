@@ -1,0 +1,35 @@
+---
+layout: post
+title: Localizable.stringsのエディタはこれで解決か
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>iOSの開発でひとつ大きな課題となるのが，ローカライズのためのLocalizable.stringsの編集である．</p>
+<p>ソースコードに埋め込んだNSLocalizedStringに対応する文字列を</p>
+<p>"cancel" = "キャンセル";</p>
+<p>のように，それぞれの言語のパスに置いてあるファイル，例えば，./English.lproj/Localizable.stringsに一行ずつ書いていく．</p>
+<p>拙作はすべて英語と日本語のみに対応しているのだが，これが数カ国語対応になるともうてんやわんやになることは間違いない．<br />
+ローカライズに抜けがあると，表示に変な文字列が表示されることになる．<br />
+また，それぞれのリソース毎に比較するのも結構面倒くさい．</p>
+<p>私は，含まれるソースコードからNSLocalizedStringを抜き出し，自動的にLocalizable.stringsを読み込み，すでにLocalizable.stringsに対応が書かれているものは，そのままで，新しくソースコードから抽出されたものは，対応文字列を空白にして，Localizable.stringsをアップデートするツールをRubyで書いていたのだが，先日，そのためのツールがMacOSX向けにAppStoreで公開された模様．</p>
+<p>それが，コレ．しかも，安い．</p>
+<p><a href="http://itunes.apple.com/jp/app/linguan/id477163052?mt=12">Linguan</a></p>
+<p>アプリケーションを起動し，Xcodeのプロジェクトファイルを開くと，以下のようにローカライズの対象がテーブルで表示され，それをそのまま編集できる．</p>
+<p><a href="http://sonson.jp/wp/wp-content/uploads/2012/03/lingua.png"><img src="{{ site.url }}/assets//lingua-300x213.png" alt="" title="lingua" width="300" height="213" class="aligncenter size-medium wp-image-2282" /></a></p>
+<p>すばらしい・・・・・．<br />
+これでコマンドラインツールとの戦いは終わった・・・・・．</p>
+<p>iOSで開発している人にはお勧めのツールである．</p>

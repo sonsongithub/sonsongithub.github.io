@@ -1,0 +1,114 @@
+---
+layout: post
+title: "[Tips] MeCabのインストール for MacOSX"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">ダウンロードするもの </h3>
+<p>・[[MeCab本体およびバインディングツール >http://mecab.sourceforge.jp/]]<br />
+・[[IPDIC>http://chasen.aist-nara.ac.jp/stable/ipadic/]]<br />
+ここから，</p>
+<h3 class="numeric-list">
+<li>mecab-0.90rc10.tar.gz</li>
+<li>mecab-ipadic-2.7.0-20051110.tar.gz</li>
+</h3>
+<p>をダウンロードする．<br />
+<br />
+<h3 class="line-header">コンパイル </h3>
+<p>一応，MacなのでUTF-8でコンパイルする．<br />
+<br />
+<h3 class="line-header">mecab本体 </h3>
+<pre>
+>cd mecab-0.90rc10
+>./configure --with-charset=utf8
+>make
+>sudo make install
+</pre>
+<p>
+<h3 class="line-header">ipadic </h3>
+<pre>
+>cd mecab-ipadic-2.7.0-20051110
+>./configure --with-charset=utf8
+>make
+>sudo make install
+</pre>
+<p>これでインストール終了．<br />
+<br />
+<h3 class="line-header">Ruby等とのバインディング </h3>
+<p>ここでは，Rubyとのバインディングのために，mecab-ruby-0.90rc10.tar.gzを利用する．</p>
+<pre>
+>cd mecab-ruby-0.90rc10
+>ruby extconf.rb
+>make
+>sudo make install
+</pre>
+<p>
+<h3 class="line-header">テスト </h3>
+<pre>
+>mecab
+私は昨日，公園にいった
+私       名詞,代名詞,一般,*,*,*,私,ワタシ,ワタシ
+は       助詞,係助詞,*,*,*,*,は,ハ,ワ
+昨日      名詞,副詞可能,*,*,*,*,昨日,キノウ,キノー
+，       記号,読点,*,*,*,*,，,，,，
+講演      名詞,サ変接続,*,*,*,*,講演,コウエン,コーエン
+公園      名詞,一般,*,*,*,*,公園,コウエン,コーエン
+に       助詞,格助詞,一般,*,*,*,に,ニ,ニ
+いっ      動詞,自立,*,*,五段・カ行促音便,連用タ接続,いく,イッ,イッ
+た       助動詞,*,*,*,特殊・タ,基本形,た,タ,タ
+EOS
+</pre>
+<p>Rubyで試す．<br />
+結果が文字化けする場合は，test.rbの文字コードを設定する．</p>
+<pre>
+>cd mecab-ruby-0.90rc10
+>  ruby test.rb
+0.90rc10
+太郎      名詞,固有名詞,人名,名,*,*,太郎,タロウ,タロー
+は       助詞,係助詞,*,*,*,*,は,ハ,ワ
+この      連体詞,*,*,*,*,*,この,コノ,コノ
+本       名詞,一般,*,*,*,*,本,ホン,ホン
+を       助詞,格助詞,一般,*,*,*,を,ヲ,ヲ
+二郎      名詞,固有名詞,一般,*,*,*,二郎,ニロウ,ニロー
+を       助詞,格助詞,一般,*,*,*,を,ヲ,ヲ
+見       動詞,自立,*,*,一段,連用形,見る,ミ,ミ
+た       助動詞,*,*,*,特殊・タ,基本形,た,タ,タ
+女性      名詞,一般,*,*,*,*,女性,ジョセイ,ジョセイ
+に       助詞,格助詞,一般,*,*,*,に,ニ,ニ
+渡し      動詞,自立,*,*,五段・サ行,連用形,渡す,ワタシ,ワタシ
+た       助動詞,*,*,*,特殊・タ,基本形,た,タ,タ
+。       記号,句点,*,*,*,*,。,。,。
+EOS
+BOS/EOS,*,*,*,*,*,*,*,* 0
+太郎      名詞,固有名詞,人名,名,*,*,太郎,タロウ,タロー     7400
+は       助詞,係助詞,*,*,*,*,は,ハ,ワ    8255
+この      連体詞,*,*,*,*,*,この,コノ,コノ  8517
+本       名詞,一般,*,*,*,*,本,ホン,ホン   12365
+を       助詞,格助詞,一般,*,*,*,を,ヲ,ヲ   11377
+二郎      名詞,固有名詞,一般,*,*,*,二郎,ニロウ,ニロー     16262
+を       助詞,格助詞,一般,*,*,*,を,ヲ,ヲ   16202
+見       動詞,自立,*,*,一段,連用形,見る,ミ,ミ 19507
+た       助動詞,*,*,*,特殊・タ,基本形,た,タ,タ        17106
+女性      名詞,一般,*,*,*,*,女性,ジョセイ,ジョセイ      19775
+に       助詞,格助詞,一般,*,*,*,に,ニ,ニ   19634
+渡し      動詞,自立,*,*,五段・サ行,連用形,渡す,ワタシ,ワタシ  22094
+た       助動詞,*,*,*,特殊・タ,基本形,た,タ,タ        20963
+。       記号,句点,*,*,*,*,。,。,。     19104
+BOS/EOS,*,*,*,*,*,*,*,* 18532
+EOS
+</pre>

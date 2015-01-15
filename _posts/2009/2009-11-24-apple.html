@@ -1,0 +1,28 @@
+---
+layout: post
+title: Appleの審査で執行猶予が付いた
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>UISegmentControlは，二つボタンのときにトグル動作をしてしまうので，それを抑えるために，<a href="http://son-son.sakura.ne.jp/programming/iphone_sdk_uisegmentcontrollto.html">[iPhone SDK] UISegmentControllのtoggle動作を止める</a> で紹介した，Undocumented APIを含むコードを使っていました．<br />
+しかし，遂に，審査を突破できなくなりました．Undocumentedなメンバ変数にアクセスしていることを指摘されました．</p>
+<pre>
+_UISegmentedControl._segmentedControlFlags
+</pre>
+<p>アップルからの通達は次回アップデートまでに直してくださいとのことで，今回の審査は見逃してくれました．<br />
+@Psychsさんにアドバイスをもらったのですが，3.1.X？では，UISegmentedControlはトグル動作しないように修正されているようです．つまり，このUndocumented APIを含むコードは，不要となっていたわけです．<br />
+ここからは予想ですが，もしかすると，トグル動作してしまうUISegmentedControlのことをアップルも問題だと考えていて，直すまでは・・・・とか，人間的な感じで対応してくれていたのかもしれません．</p>

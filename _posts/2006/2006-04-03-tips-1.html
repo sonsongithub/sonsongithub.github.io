@@ -1,0 +1,82 @@
+---
+layout: post
+title: "[Tips] まとめーNo.2"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h3 class="line-header">[MFC] アプリケーションのインスタンスハンドル等の取得 </h3>
+<pre>
+AfxGetInstanceHandle()
+GetModuleHandle(NULL)
+</pre>
+<p>ただ，ヘルプにGetModuleHandleは，マルチスレッドの場合は，危険が伴うと書いてあった．</p>
+<h3 class="line-header">[General] wget </h3>
+<p>結構便利かもしれない，HTMLのダウンローダ？インストールもとっても簡単．<br />
+これを使えば，あなたにもすぐダウンローダソフトが作れるかも？</p>
+<h3 class="line-header">インストール </h3>
+<p>wgetは，GNUで開発されている下記から，根気よくダウンロードする．</p>
+<h3 class="line-header">for MacOSX </h3>
+<p>ビルドする．ソースコードが配布されている．ソースコードファイルをダウンロード,解凍し，</p>
+<pre>
+./configure
+make
+make install
+</pre>
+<p>でインストールする．</p>
+<h3 class="line-header">[Cocoa] Xcodeのメモ(1) コンパイル時のフラグ </h3>
+<p><center><img src="{{ site.url }}/assets//targetWindow.jpg" /></center><br />
+プロジェクトあるいはターゲットのGet Infoパネルで設定する．</p>
+<h3 class="line-header">[Cocoa] Xcodeのメモ(2) Cocoaのウィンドウクローズで終了〜Delegate </h3>
+<p>ウィンドウがオリジナルの場合は，windowShouldCloseのメッセージで実装できる．<br />
+ただし，そうではない場合は，他のインスタンスに実装する必要がある．<br />
+ビューあるいはただのオブジェクトのインスタンスがある場合は，InterfaceBuilderでメインウィンドウのDelegateにそれらを割り当てる．<br />
+アプリケーションを終了する場合は以下のメッセージで処理できる．<br />
+NSAppはそのアプリケーションでの唯一のアプリケーションを指す．</p>
+<pre>
+[NSApp terminate:self];
+</pre>
+<p>実際には，以下のようなメソッドをオーバーライドする．</p>
+<pre>
+- (BOOL)windowShouldClose:(id)sender
+{
+[NSApp terminate:self];
+return YES;
+}
+</pre>
+<h3 class="line-header">[Cocoa] XCodeのメモ(3) InterfaceBuilderでNSOpenGLViewをカスタマイズ </h3>
+<p><center><img src="{{ site.url }}/assets//custumGLView.jpg" /></center><br />
+NSOpenGLViewのサブクラスをInterfaceBuilderで作成する場合，インスタンスを配置するときにNSOpenGLViewをルートとし，CustumClassをInspectorで設定すると，initWithFrame等のメソッドをオーバーライドできない．<br />
+上のスクリーンショットのようにCustumViewのサブクラスとして，インスタンスを配置するようにする．<br />
+ちゃんと設定できれば，Inspectorは上のスクリーンショットにようにHiddenのチェックボックスしか表示されなくなる．</p>
+<h3 class="line-header">[Cocoa] XCodeのメモ(4) IPアドレス </h3>
+<p>NSHostクラスを利用する．</p>
+<pre>
+NSHost*host = [NSHost currentHost];
+NSArray*array = [host addresses];
+NSString*ipv6 = [array objectAtIndex:0];
+NSString*ipv4 = [array objectAtIndex:1];
+</pre>
+<h3 class="line-header">[General] vallocとmallocの違い </h3>
+<p>ソースコードを読んでいると，vallocという関数がでてきた．調べてみる．<br />
+>廃止された関数である valloc() は size バイトのメモリを割り当て、割り当てられたメモリへのポインタを返す。 メモリのアドレスはページサイズの倍数になっているはずである。 これは memalign(sysconf(_SC_PAGESIZE),size) と等価である。<br />
+>POSIX では posix_memalign() によって獲得したメモリは free() を使って解放することができる必要がある。 いくつかのシステムでは memalign() や valloc() で割り当てられたメモリを再利用する手段が提供されていない。 (なぜなら free() に渡すことができるのは malloc() から受け取ったポインタだけだが、 例えば memalign() は malloc() を呼び出し、得た値をアラインメントしてしまうからである) GNU libc では ここに述べた 3 つの関数のいずれで獲得したメモリも free() で再利用することができる。<br />
+[[参考文献>http://www.linux.or.jp/JM/html/LDP_man-pages/man3/posix_memalign.3.html]]<br />
+うーむ．どうやら，ページングのサイズに合わせてメモリを確保する類のメモリ関数か．<br />
+廃止されたと書いてあるが・・・・．<br />
+コピーしたりするときにmallocよりも動作が速いとかの利点があるのか？<br />
+未だにAppleのソースコードにこの関数が残っている意味がわからん・・・．<br />
+さらにGNUなどの環境によってfreeに渡せるかも不確かということか．</p>

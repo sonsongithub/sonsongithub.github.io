@@ -1,0 +1,47 @@
+---
+layout: post
+title: "[iPhone SDK] Hack UIWebView - How to get a touch event completed"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>完成！！！私はソースコードをまとめただけかｗ今回のソース完成は，@Psychs, @norioのおかげ．完全に彼らのおかげ．<br />
+それでは，UIWebViewのクリックイベントを取得する方法を説明していく．<br />
+・概要<br />
+UIWebViewは，subviewにUIScrollerを持ち，UIScrollerは，subviewにUIWebDocumentViewを持つ．残念ながらUIScroller，UIWebDocumentViewはともにprivateクラスなので，SDKからはアクセスできないし，ドキュメントにも詳細情報はない．<br />
+このUIWebDocumentViewに対するtouchesXXXX:withEvent:のメソッドをオーバーライドできれば，実は，クリックイベントを取得することができる．しかしながら，上述のようにprivateクラスなのでそれはかなわない．そこでObjective-Cならでは，method Swizzlingでインスタンスのメソッドを実行時に置き換えることで，UIWebDocumentViewのイベントを取得するのだ．<br />
+・method swizzling<br />
+実装上Objective-Cはインスタンスのメソッドを入れ替えられることを知ってはいたが，無知かつ情けない話やったことはなかった．method swizzlingと呼ばれる手法らしい．objc/objc-runtime.hに書いてあるメソッドを使えば，サックリ実現できる．<br />
+・UICWebView</p>
+<pre>
+@implementation UIView (__TapHook)
+- (void)__replacedTouchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+[self __replacedTouchesBegan:touches withEvent:event];
+if( [self.superview.superview isMemberOfClass:[UICWebView class]] ) {
+[(UICWebView*)self.superview.superview hookedTouchesBegan:touches withEvent:event];
+}
+}
+@end
++ (void)installHook {
+Class klass = objc_getClass( "UIWebDocumentView" );
+// replace touch began event
+method_exchangeImplementations(
+class_getInstanceMethod(klass, @selector(touchesBegan:withEvent:)),
+class_getInstanceMethod(klass, @selector(__replacedTouchesBegan:withEvent:)) );
+}
+</pre>
+<p>これで，UIWebDocumentViewのインスタンスに対して，touchesBegan:withEvent:が呼ばれると__replacedTouchesBegan:withEvent:が実行され，__replacedTouchesBegan:withEvent:が呼ばれるとtouchesBegan:withEvent:が実行される．<br />
+メソッドのhookがこれで完成した．上記のソースでは，クリックされたときにUICWebViewのhookedTouchesBegan:withEventを呼び出すようにしている．</p>

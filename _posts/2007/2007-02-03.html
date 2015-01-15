@@ -1,0 +1,68 @@
+---
+layout: post
+title: "お勉強〜ソートの復習"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>こないだふとしたプログラミング中，自分が恐ろしいことに<br />
+ソーティングのアルゴリズムをまったく忘れている（あるいはそもそも覚えていない）<br />
+ことに気づく．<br />
+こいつはヤクイ．というわけで，復習がてらソーティングを思い出しながら．作ってみた．<br />
+このアルゴリズムの名前をバブルソートだと思ってた・・・無知すぎる・・・・orz</p>
+<pre>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+void merge( int *a, int *b, int *c, int size) {
+int a_count = size;
+int b_count = size;
+while( a_count && b_count ) {
+if( *a < *b ) {
+*c++ = *a++;
+a_count--;
+}
+else {
+*c++ = *b++;
+b_count--;
+}
+}
+while( a_count > 0 ) {
+*c++ = *a++;
+a_count--;
+}
+while( b_count > 0 ) {
+*c++ = *b++;
+b_count--;
+}
+}
+int main( int argc, void ** argv ) {
+#define ARRAY_NUM 8
+int a[ARRAY_NUM] = { 3, 1, 4, 8, 7, 6, 2, 5 };
+int b[ARRAY_NUM];
+int*front = a;
+int*back = b;
+for( int j = 1; j < ARRAY_NUM; j*=2 ) {
+for( int i = 0; i < ARRAY_NUM; i+=(j*2) ) {
+merge( front+i, front+i+j, back+i, j );
+}
+int *temp = (int*)back;
+back = front;
+front = temp;
+}
+for( int i = 0; i < ARRAY_NUM; i++ )
+printf( "%d ", front[i] );
+return 0;
+}
+</pre>

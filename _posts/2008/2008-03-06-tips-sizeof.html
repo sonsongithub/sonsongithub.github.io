@@ -1,0 +1,29 @@
+---
+layout: post
+title: "[Tips] sizeofの使い方"
+categories:
+- blog
+tags:
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>こないだちょっと何人かでプログラミング時に悩んだのだが．</p>
+<pre>
+char p = (char*)malloc( sizeof(char) * 256 );
+char buff[256];
+printf( "%d", sizeof( p ) );
+printf( "%d", sizeof( buff ) );
+free( p );
+</pre>
+<p>結果は違うのだが，下のsizeof( buff )って，イマイチ慣れないなぁ．<br />
+配列はデータの宣言自体が全然違うということか．<br />
+どっかでバグを生みそうな気がするので，sizeof( 配列 )はあんまり使いたくないなぁ・・・．</p>

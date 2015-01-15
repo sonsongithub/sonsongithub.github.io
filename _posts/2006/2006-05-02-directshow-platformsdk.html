@@ -1,0 +1,44 @@
+---
+layout: post
+title: "[DirectShow] PlatformSDKでインストール"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>相当前にPlatformSDKでインストールしてみたのを報告したけど，<br />
+<a target="_blank" href="http://son-son.sakura.ne.jp/mt/blog/2006/04/tips_platformsdk.html">http://son-son.sakura.ne.jp/mt/blog/2006/04/tips_platformsdk.html</a><br />
+今回，新しく開発環境を構築する必要が出てきたので，やってみた．<br />
+<br />
+<h3 class="line-header">まず，ビルド</h3>
+<p>参考リンクは，masafumi Lab.と．見つけたブログ．<br />
+<a target="_blank" href="http://www.shader.jp/xoops/html/modules/xfsection/article.php?articleid=17">http://www.shader.jp/xoops/html/modules/xfsection/article.php?articleid=17</a><br />
+<a target="_blank" href="http://b1.alt-r.com/zc/view.php3?m=1&n=859&p=2674">http://b1.alt-r.com/zc/view.php3?m=1&n=859&p=2674</a><br />
+DirectShowのstrmbase.libとstrmbasd.ibをビルド．<br />
+<br />
+<h3 class="line-header">今までのソースコードのビルド</h3>
+<p>しかし，これをそのまま使うと，以前までに作っていたフィルタのビルド時になぜか，ATL関係でリンカエラーが出る．<br />
+このエラーを回避するため，以下のパスのstreams.hを修正する．</p>
+<pre>
+C:Program FilesMicrosoft Platform SDK for Windows Server 2003 R2SamplesMultimediaDirectShowBaseClassesstreams.h
+</pre>
+<p>修正は以下のようにする．</p>
+<pre>
+#define NO_SHLWAPI_STRFCNS
+// 2006/05/02
+//#include &lt;atlbase.h&gt;
+#include &lt;atlcomcli.h&gt;
+#include &lt;strsafe.h&gt;
+</pre>

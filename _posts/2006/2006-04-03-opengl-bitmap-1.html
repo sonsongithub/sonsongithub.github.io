@@ -1,0 +1,190 @@
+---
+layout: post
+title: "[OpenGL] Bitmapファイルへの書き出し"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">一連の処理 </h3>
+<p>OpenGLの描画内容をBitmapファイルへ出力についてである．扱うBitmapはOS/2準拠ではなくWindows準拠とする</p>
+<h3 class="numeric-list">
+<li>レンダリングコンテキストへ描画する．</li>
+<li>確保した配列へその描画内容をglReadPixelsを使って読み込む．</li>
+<li>そのデータをもとにBitmapファイルを書き出す．</li>
+<li>確保したデータを廃棄する．</li>
+</h3>
+<p>一連の作業は上の４つになる．まず，書き出しのためにBitmapファイルの構造から説明する．主にWindowsでのプログラミングをすることを考えるならば，Bitmapファイルを扱うにあたり，WindowsのAPIを使用するのがもっとも手っ取り早いものとなる．しかし，その場合，他の環境で使用することができない．ここでは，OpenGLの移植性を活かすために，WindowsAPIを使用しないBitmapファイルの書き出し方法について説明する．<br />
+Bitmapファイルに関するここでの説明は，あくまで概要レベルである．より詳しい情報は書籍，他のサイトを参考にされたい．<br />
+<br />
+<h3 class="line-header">Bitmapファイルの構造 </h3>
+<p>Bitmapファイルはファイルの先頭にBitmapHeader，BitmapInfoHeaderが書き込まれている．その後に各ピクセルのデータまたはカラーパレット情報などが書き込まれるようになっている．<br />
+書籍やサイトでは，（ここもそうですが）構造体を使って説明するのが，一般的であるようだ．それは，WindowsAPIの中で構造体が使われていることに起因するようだ．このため構造体を作りたくなければ構造体を使わなくてもよい．また，WindowsAPIによっても構造体を直接ファイルに書き込むわけではない．それは，C言語の場合，構造体を直接書き込むと，仕様によってバイト単位で書き込んでしまうことがあるため，ファイルのフォーマット通りに書き込むことができないためである．ただ構造体を使用したほうがBitmapファイルのヘッダの意味を分類しやすいために，構造体を使うことが多いようである．実際，WindowsのAPIも直接構造体を書き込んでいるわけではないのである．</p>
+<pre>
+typedef struct _BitmapHeader{
+char    distinct1;      // 'B'
+char    distinct2;      // 'M'
+int     filesize;          // 総ファイルサイズ
+short   reserve1;      // 予約領域・常に０
+short   reserve2;      // 予約領域・常に０
+int     offset;            // ファイルの先頭からデータまでのオフセット
+}BitmapHeader;
+</pre>
+<p>BitmapHeader構造体である．<br />
+頭の2byteは"BM"が入る．次にBitmapファイルの総ファイルサイズがバイト単位で書き込まれる．次の２つのshort型は予約領域となり，一般的に０が代入される．<br />
+最後のintはファイルの先頭から各ピクセルのカラー値またはパレット番号が書き込まれている部分までのオフセットである．24bitカラーや32bitカラーの場合，パレットが不要のため，この値は，常に，BitmapHeaderとBitmapInfoHeaderを足した14+40=54バイトとなる．256色などのパレットを使用する，ファイルを圧縮する場合は，この値はそうはならない．</p>
+<pre>
+typedef struct _BitmapInfoHeader{
+int     header;            // この構造体のサイズ
+int     width;             // Bitmapのサイズ・横幅
+int     height;            // Bitmapのサイズ・縦幅
+short   plane;　　　　　　 // plane数・常に１
+short   bits;              // Bitmapの色数(bit単位)
+int     compression;       // 圧縮されているか？
+int     comp_image_size;   // 画像全体のサイズ・使わない
+int     x_resolution;      // Bitmapの解像度・使わない
+int     y_resolution;      // 72と設定しておいてもかまわない
+int     pallet_num;        // パレット数
+// 24bitカラー等の場合使わない
+int     important_pallet_num;
+// 重要なパレット数・使わない
+// 24bitカラー等の場合使わない
+}BitmapInfoHeader;
+</pre>
+<p>次が具体的なBitmapファイルのフォーマットが記述されているBitmapInfoHeader構造体となる．<br />
+| &ref(http://son-son.sakura.ne.jp/pict/bitmapInfoHeader.jpg,center); | &ref(http://son-son.sakura.ne.jp/pict/bitmapHeader.jpg,center); |<br />
+<br />
+<h3 class="line-header">OpenGLからの読み込み〜glReadPixels </h3>
+<p>次に実際の描画結果を読み込むOpenGLのAPIについての説明です．</p>
+<pre>
+void glReadPixels(
+GLint x, GLint y,               // 開始点
+GLsizei width, GLsizei height,                // 読み取りサイズ
+GLenum format,             // 読み取り形式設定
+GLenum type,                  // 保存先のポインタの型
+GLvoid *pixels                  // 保存先の配列のポインタ
+);
+</pre>
+<p>glReadPixelsの引数を簡単に説明する．</p>
+<h3 class="numeric-list">
+<li>x，y・・・読み込む画像の左上の開始点を指定</li>
+<li>width，height・・・読み込む画像のサイズ．</li>
+<li>format・・・GL_RGB，GL_RGBAなどのフラグによる読み込むピクセルの色設定．</li>
+<li>type・・・保存先のポインタ，GL_UNSIGNED_BYTEなどの次の*pixelsに代入するポインタの型を指定する．</li>
+</h3>
+<p>pixelsは保存先のポインタとなるため，読み込む画像の大きさ分だけのメモリを確保しておく必要がある．例えば，GL_RGB，24bitカラー，200*200のサイズを読み込むときには，各ピクセルで3byte使用するとして，200*200*3 byteの配列を確保する必要がある． [#a7aba516]<br />
+<br />
+<h3 class="line-header">引数以外の設定について〜バッファの読み込み先 </h3>
+<p>ダブルバッファを使っている場合，OpenGLでは，バックバッファとフロントバッファの二つが管理されている．glReadPixelsを利用するときにダブルバッファを利用している場合，どちらのバッファから読み取りを行うかをしばしば設定する必要がある．この設定は，glReadPixelsを使用する前にglReadBufferを呼び出すことで行うことができる．<br />
+glReadPixelsは，デフォルトで，ダブルバッファのときはバックバッファから読み取るように設定されている．もしこれを変更する場合は，GL_FRONTあるいはGL_BACKのフラグで設定する．<br />
+<br />
+<h3 class="line-header">引数以外の設定について〜読み取りバイト幅の設定 </h3>
+<p>過去コンピュータは，4バイトずつ読み込んだ方が高速であるといった性質？があった．OpenGLもこの影響が残っている．glReadPixelsでOpenGLのバッファの内容を読み取るとき，デフォルトでは横つまり行方向にバッファを4バイトずつ読み込むように設定されている．<br />
+例えば， 24ビットカラーの場合，1ピクセル当たり3バイトのデータ容量を持つことになる．横幅が19ピクセルの場合，一行当たり，19×3=57バイトのデータ容量となる．このとき，OpenGLは，4バイトずつ読み取るため，強制的に57バイト分のデータを4の倍数になるように60バイトとして読み込むのである．このとき，実際にバッファとして存在しない3バイト分は，中身が0として取り扱われる．<br />
+このため，glReadPixelsでバッファの内容を保存するときは，これを考慮して保存先のメモリを確保する必要がある．上述の例の場合，高さが20ピクセルであるとすると，（19×3＋3）×20バイトのメモリを確保する必要がある．<br />
+しかし，以上の操作は非常に面倒である．しかも，現在のコンピュータでは読み取りのバッファを4の倍数にしたところで，差があまりでない．そこで，このバッファの読み取りをややこしい4の倍数ではなく，glPixelStoreで，1の倍数として設定する．たとえば，glPixelStorei( GL_PACK_ALIGNMENT, 1)という風に設定する．<br />
+<center><img src="{{ site.url }}/assets//gl_alignment.jpg" /></center><br />
+<br />
+<h3 class="line-header">読み出し・・・書き出し </h3>
+<p>例えば，下のようなコーディングにする．</p>
+<pre>
+// OpenGL描画
+draw();
+// メモリ確保
+GLubyte* pixel_data = (GLubyte*)malloc((width)*(height)*3*(sizeof(GLubyte)));
+// データ格納のサイズを設定
+glPixelStorei(GL_PACK_ALIGNMENT ,1);
+// データの読み出し
+glReadPixels(
+0,0,
+width,height,
+GL_RGB,
+GL_UNSIGNED_BYTE,
+pixel_data);
+// ここでデータをビットマップファイルへ書き込む
+WriteBitmap("output.bmp",pixel_data,width,height);
+free(pixel_data);
+break;
+</pre>
+<p>　draw()には描画コードであるとする．<br />
+<br />
+<h3 class="line-header">Bitmapファイルへの書き出し </h3>
+<p>　<br />
+Bitmapファイルの書き出しコードである．以下は，ただの用意だが，ファイルはデータで書き込むため，バイナリ形式で開く．</p>
+<pre>
+int WriteBitmap(const char* filename, GLubyte* data, int width, int height){
+FILE *fp;
+BitmapHeader header;
+BitmapInfoHeader info;
+int i=0;
+int j=0;
+int x;
+int y;
+// ファイルオープン
+if( ( fp = fopen(filename, "wb") )==NULL){
+return -1;
+}
+//ヘッダ構造体の初期化
+InitHeaders(&header, &info);
+//Bitmapサイズ
+info.width = width;
+info.height = height;
+int writeWidth;
+</pre>
+<p>上述のglReadPixelにもあったように，Bitmapファイルにも，横幅のバイト数は4の倍数でなければならないという制限がある．具体的には，下図のようにピクセルの列には制限がある．<br />
+<center><img src="{{ site.url }}/assets//bitmapRow.jpg" /></center><br />
+ここで，まず読み取った画像の横幅から必要な空白数を計算する．<br />
+ここで，書き出すフォーマットが24ビットカラーのBitmapファイルであるとして，1ピクセル24ビット（3バイト）であるとする．このとき，その横幅の空白バイト数は，横幅に3をかけて，まず横幅のバイト数を計算する．<br />
+割り切れる場合は，横幅が4の倍数なのでそのまま処理する．割り切れない場合は，その余りを4から引いた値を横幅のバイト数に足すと，空白バイト数を加味した横幅のバイト数を算出できる．この横幅のバイト数を加味し，Bitmapのヘッダ構造体に入力する．</p>
+<pre>
+// データの幅のバイト数が4の倍数であるかをチェック
+if( width*3%4 == 0)
+writeWidth = width*3;
+else
+// そうでなければ，4の倍数にあわせた幅のバイトサイズにする
+writeWidth = width*3 + 4 - (width*3)%4;
+//ファイル容量
+header.filesize =
+writeWidth*height        //ビット情報量
++ 14                    //BitmapHeader構造体サイズ
++ 40;                    //BitmapInfoHeader構造体サイズ
+//ヘッダ書き込み
+WriteHeader(&header,fp);
+WriteInfoHeader(&info,fp);
+</pre>
+<p>　これで，ヘッダ，Infoヘッダの書き込みは終了であり，ピクセルの書き込みになる．</p>
+<pre>
+unsigned char zero=0;
+// イメージデータ書き込み
+for( y=0 ; y < height ; y++ ){
+// データをBGRの順で書き込み
+for( x=0 ; x < width ; x++ ){
+j=fwrite((data+x*3+3*y*width+2),sizeof(GLubyte),1,fp);
+j=fwrite((data+x*3+3*y*width+1),sizeof(GLubyte),1,fp);
+j=fwrite((data+x*3+3*y*width),sizeof(GLubyte),1,fp);
+}
+// 幅のバイト数が4の倍数でないときは０で埋める
+if( width*3%4 != 0)
+for( int j=0;j<4-(width*3)%4;j++)
+fwrite(&zero,sizeof(GLubyte),1,fp);
+}
+// ファイルクローズ
+fclose(fp);
+return 0;
+}
+</pre>
+<p>書き込むときに，ピクセル毎のデータの書き出しの順番を考慮する必要がある．OpenGLは，RGBとピクセル毎にデータが並んでいるのだが，Bitmapファイルは，BGRの順にピクセル毎にデータが並んでいる．このため，書き込みを入れ替えて行わねばならない．また，ここで，横幅のバイト数が4の倍数でない場合，空白バイト数の分だけ，行毎に０を書き込む．以上で，Bitmapファイルの書き込みが完了する．<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/GLUTsaveBMP">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/GLUTsaveBMP</a></p>

@@ -1,0 +1,38 @@
+---
+layout: post
+title: githubとSourceTree周りで色々困った話
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h1>Pushできない！！</h1>
+<p>先日，Photoshopでアイコンを作成し，まとめてリソースをgithubにPushしようとすると・・・・．<br />
+できない！！！！</p>
+<p>エラーメッセージを眺めると，</p>
+<p><code>error: RPC failed; result=22, HTTP code = 413<br />
+fatal: The remote end hung up unexpectedly<br />
+fatal: The remote end hung up unexpectedly</code></p>
+<p>このエラーメッセージでググると，阿鼻叫喚→<a href="https://www.google.co.jp/search?client=safari&amp;rls=en&amp;q=github+RPC+failed&amp;ie=UTF-8&amp;oe=UTF-8&amp;gws_rd=cr&amp;ei=xAG-UrjfK4eOkgWJ5oHYCg">Google</a></p>
+<p>@niwさんが私のTweetに反応するも，似たような（ちょっと違う）エラーで@niwさんが悩んでいることが判明し，解決せず．<br />
+@niwさんが悩んでいる問題も結構深刻で，リポジトリが大きくなると発生する．- <a href="https://help.github.com/articles/working-with-large-files">github</a></p>
+<p>ググってみんなの症状を読み進めていくと，大きいデータをPushしようとすると発生していることが共通項目としてあるということがわかってきた．<br />
+そこで，一旦，コミットを戻して，Photoshopのファイルをひとつずつコミットして，Pushすると・・・・成功！！</p>
+<p>数MBを超えるデータを更新して，Pushをするときは気をつけた方がいいですぞ！！！！</p>
+<h1>MavericksでSourceTreeがおかしい</h1>
+<p>Mavericksにアップデートしてから，SourceTreeを使っていると，毎度認証が必要なとき（たとえばprivateリポジトリにアクセスしたときなど）に変なアラートが出るようになった．</p>
+<p>@norio_nomuraによると，<a href="http://support.apple.com/kb/TS5362?viewlocale=en_US&amp;locale=en_US">Mavericks v10.9.1: Repeated prompts to unlock "Local Items" keychain</a>が，原因っぽい．<br />
+早速試してみると，全然治らない．<br />
+仕方がないので，SourceTreeを一旦削除して，再インストールしてみたら治った．<br />
+なんだったんだ．</p>

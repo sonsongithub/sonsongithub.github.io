@@ -1,0 +1,35 @@
+---
+layout: post
+title: "[iPhone] UIApplication - setStatusBarMode"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<pre>
+[app setStatusBarMode:mode orientation:degree duration:duration_time fenceID:0 animation:anim];
+</pre>
+<p>mode = 0 普通の灰色<br />
+mode = 1 黒の半透明<br />
+mode = 2 見えなくなるーinvisible<br />
+mode = 3 背景が透明<br />
+anim = 0 フェードインフェードアウト<br />
+anim = 1 上に上がってくる<br />
+anim = 2 下へ落ちる，何処かの角を軸に回って，下へ位置する<br />
+anim = 3 画面の上端からニュルっと出てくる<br />
+anim = 4 前のものが次の移動方向に動きながら，次のものがその方向からあがってくる<br />
+anim = 5 前のものが残ったまま，次のものがフェードイン<br />
+anim = 6 ・・・？</p>

@@ -1,0 +1,56 @@
+---
+layout: post
+title: "[Perl] MovableTypeのプラグインを作ってみる．"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>MTAmzon，aws.plなど，色々なプラグインがあるけど・・・・．<br />
+気軽にURLとか貼り付けるだけで，写真とURLを生成してくれるヤツがない．<br />
+そこで作ってみることにした．<br />
+<br />
+<h3 class="line-header">まず，Hackから．</h3>
+<p>というわけで，既存のプラグインのソースコード読んでみることにした．<br />
+<a href="http://www.asmate.net/software/perl/mt-isbn/">mt-isbn.pl</a><br />
+いいせんなんだけど，手軽さとアフィリエイト対応という面で私の要求条件を満たさない．<br />
+そこで，こいつのソースコードと，MovableTypeの技術資料を元にプラグイン製作にとりりかかる．<br />
+いっておくが．<br />
+sonsonは，Perlのソースコードなど，およそ10行程度しか書いたことがない．<br />
+Perlのソースコードは読みにくいと聞いていたが・・・・・．確かに読みにくい．</p>
+<pre>
+MT::Template::Context->add_global_filter(isbn => sub {
+</pre>
+<p>どうやら，このあたりで，自分のタグを読み込んで，その結果を返してやればいいということらしい．<br />
+んで，以前取得したAmzon Web Servicesのアカウントを利用して，商品のIDで情報をとってくればいいということか．</p>
+<pre>
+MT::Template::Context->add_global_filter(
+amazon => sub {
+my ($lines, $args, $ctx) = @_;
+$lines =~ s/[amazon:(.+)]/process($1)/ge;
+return $lines;
+}
+);
+</pre>
+<p>この正規表現を発見するのに・・・・・ああ．リソースが．</p>
+<pre>
+$str =~ s/[amazon:(.+)]/process($1)/ge;
+</pre>
+<p>この部分で，エントリの文中から，[amazon:＜商品のURL＞]を探しだす．<br />
+(.+)でヒットした部分は，$1に渡される．これがURLである．<br />
+このURLをprocessに渡し，Amazonにアクセスして，画像と，URLと，タイトルを取得し，HTMLのタグを生成する．<br />
+この生成されたHTMLタグがprocessの戻り値となる．<br />
+戻り値が文中の[amazon:＜商品のURL＞]と置換される．<br />
+おお！完璧だ．<br />
+以上，防備録でした．</p>

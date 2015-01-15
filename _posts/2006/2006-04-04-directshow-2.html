@@ -1,0 +1,224 @@
+---
+layout: post
+title: "[DirectShow] フィルタの自作"
+categories:
+- blog
+tags:
+- Blog
+- DirectShow
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">DirectShow〜自作のフィルタを作成する </h3>
+<p>フィルタには，いくつかの種類がある．ウィンドウ等に描画するRenderフィルタ，何らかのデバイスからキャプチャフィルタなどがある．それぞれのフィルタには，それぞれの使用目的がある．<br />
+今回，画像処理に用いるフィルタは，Transformフィルタである．このフィルタは，１つの入力と１つの出力を持つ．Transformフィルタでは，2値化やエッジ検出などの処理を簡単に行うことができる．ここでは，もっとも簡単な何の処理も行わない，24bitカラーの画像用のフィルタを作成する．また，画像処理の本質ではないので，フィルタの具体的な一からの作り方，COMプログラミングの本質等には触れない．あくまでガワだけである．っていうか私自身よくわかってません．<br />
+<br />
+<h3 class="line-header">フィルタを作るための準備 </h3>
+<p>フィルタは，まさに一から作ることもできるが，Microsoftの用意したフィルタ作成のオブジェクトを継承してプログラミングするのが最も簡単である．しかし，それでもActiveXを作るためのDLL形式のプロジェクトを作ったり，そのためにGUIDというActiveXを一意に認識できるIDをツールで作成してソースに書き込んだりしなければならない．<br />
+はっきり言って面倒きわまりない． そこで，フリーウェアとして配布されているDirectShowフィルタ作成のためのVisual C++6.0用のウィザードを使用してプログラミングの準備をする．<br />
+参考リンク：http://www.gdcl.co.uk/dshow.htm<br />
+<br />
+<h3 class="line-header">ソースの解説． </h3>
+<pre>
+class Through : public CTransformFilter
+{
+public:
+DECLARE_IUNKNOWN;
+virtual ￣Through();
+static CUnknown *CreateInstance(LPUNKNOWN punk, HRESULT *pHr);
+HRESULT CheckInputType(const CMediaType *mtIn);
+HRESULT CheckTransform(const CMediaType *mtIn, const CMediaType *mtOut);
+HRESULT Transform(IMediaSample *pIn, IMediaSample *pOut);
+HRESULT DecideBufferSize(IMemAllocator *pAlloc,ALLOCATOR_PROPERTIES *pProperties);
+HRESULT GetMediaType(int iPosition, CMediaType *pMediaType);
+private:
+Through(TCHAR *tszName, LPUNKNOWN pUnk, HRESULT *pHr);
+BOOL CheckMediaType(const CMediaType *pMediaType) const;
+HRESULT Copy(IMediaSample *pSource, IMediaSample *pDest) const;
+};
+</pre>
+<p>フィルタのソースコードは，Through.hとThrough.cppからなる．フィルタのヘッダファイルの一部である．このThroughフィルタは，CTransformフィルタを継承している．このフィルタ継承もとのフィルタのソースは，DirectX SDKのサンプルの中にある．<br />
+　(SDK PATH)￥Sample￥C++￥DirectShow￥BaseClasses￥にあるソース群が，基本的なフィルタのソースである．CTransformフィルタの中のメンバ関数：Transformが処理を行う時にコールされる．そして，publicで宣言されている関数が，他のフィルタと接続されるときにコールされるものである．例えば，GetMediaTypeは，入力ピンからくるストリームのフォーマットをチェックする．まぁ，この辺は，あんまり画像処理に関係ないのでおいとく．<br />
+少し必要なのは，CheckMediaTypeで，入力ストリームのピクセルのフォーマットをチェックする．このフィルタでは，24bitカラーのストリームを扱うものである．まぁ，こんなところで，Transform関数の説明に話を進めていこう．<br />
+<br />
+<h3 class="line-header">Transform関数のオーバーライド </h3>
+<p>このCTransform::Transform関数は，GraphEditでいうところの左の入力ピンから右の出力ピンに映像ストリームが流れていく間に呼び出され，その映像ストリームを処理するものである．つまり，この関数に具体的な画像処理のコードを書いていくのである．</p>
+<pre>
+HRESULT Through::Transform(IMediaSample *pIn, IMediaSample *pOut){
+// InをOutにコピーして出力
+HRESULT hr = Copy(pIn, pOut);
+if (FAILED(hr))
+return hr;
+return NOERROR;
+};
+</pre>
+<p>上記のソースコードの赤い文字の引数二つが，ストリームを扱う入出力ピンそのものである．このソースでは，Copyという関数で，pInからpOuthへ，ストリームをコピーしている．つまりこのフィルタは，何の処理もしないまま，ストリームを左から右へ流すということになる．<br />
+では，具体的にCopyで何をやっているのかを調べてみる．<br />
+<br />
+<h3 class="line-header">Copy関数 </h3>
+<p>Copy関数では，ストリームの属性を上流から下流へコピーします．これをちゃんとしなければ当然，ストリームの同期がとれなくなったりしてしまいます．以下のソースリストの赤い部分が，上流のストリームのピクセルのそれぞれの値を下流のストリームのピクセルにコピーする処理です．それ以外は，ストリームの属性ということになります．CopyMemoryは，指定したポインタからポインタへ，３つ目の引数の長さだけコピーする関数です．<br />
+まぁ，これ以外の長ったらしい処理は，別に設定する必要もないので放っておきましょう．うん，そうしよう．<br />
+HRESULT Through::Transform(</p>
+<pre>
+// バッファの確保
+BYTE *pSourceBuffer, *pDestBuffer;
+long lSourceSize = pSource->GetActualDataLength();
+long lDestSize  = pDest->GetSize();
+ASSERT(lDestSize >= lSourceSize);
+// 入力側のメディア情報から画像データのポインタを取得
+pSource->GetPointer(&pSourceBuffer);
+// 出力側のメディア情報から画像データのポインタを取得
+pDest->GetPointer(&pDestBuffer);
+// データをコピー
+CopyMemory( (PVOID) pDestBuffer,(PVOID) pSourceBuffer,lSourceSize);
+// サンプリングタイムをコピーする．
+REFERENCE_TIME TimeStart, TimeEnd;
+if (NOERROR == pSource->GetTime(&TimeStart, &TimeEnd)) {
+pDest->SetTime(&TimeStart, &TimeEnd);
+}
+// メディアのタイミング情報をコピーする
+LONGLONG MediaStart, MediaEnd;
+if (pSource->GetMediaTime(&MediaStart,&MediaEnd) == NOERROR) {
+pDest->SetMediaTime(&MediaStart,&MediaEnd);
+}
+// 同期用のポイントを設定する．
+HRESULT hResult = pSource->IsSyncPoint();
+if (hResult == S_OK) {
+pDest->SetSyncPoint(TRUE);
+}
+else if (hResult == S_FALSE) {
+pDest->SetSyncPoint(FALSE);
+}
+else {  // an unexpected error has occured...
+return E_UNEXPECTED;
+}
+// 入力ピン側のメディアタイプを出力側のメディアタイプへコピーする
+AM_MEDIA_TYPE *pMediaType;
+pSource->GetMediaType(&pMediaType);
+pDest->SetMediaType(pMediaType);
+DeleteMediaType(pMediaType);
+// Prerollのチェック
+hResult = pSource->IsPreroll();
+if (hResult == S_OK) {
+pDest->SetPreroll(TRUE);
+}
+else if (hResult == S_FALSE) {
+pDest->SetPreroll(FALSE);
+}
+else {  // an unexpected error has occured...
+return E_UNEXPECTED;
+}
+// 連続性のチェックとコピー
+hResult = pSource->IsDiscontinuity();
+if (hResult == S_OK) {
+pDest->SetDiscontinuity(TRUE);
+}
+else if (hResult == S_FALSE) {
+pDest->SetDiscontinuity(FALSE);
+}
+else {  // an unexpected error has occured...
+return E_UNEXPECTED;
+}
+// 実際の画像のデータの長さをコピーする
+long lDataLength = pSource->GetActualDataLength();
+pDest->SetActualDataLength(lDataLength);
+return NOERROR;
+};
+</pre>
+<p>それでは，このストリームをコピーする処理を手で実装してみる．ここで，適当に処理を加えれば，2値化なりなんなりできるというわけである．<br />
+そこで，CopyMemoryの代わりにImageProcessingという関数を置き換えて，2値化を行ってみる．まず，上流と下流ストリームの１フレームの中のピクセルのポインタを取得する．んでは，Transform関数に，CopyAttributeとImageProcessingの関数を加えて処理してみよう．</p>
+<pre>
+HRESULT Through::Transform(IMediaSample *pIn, IMediaSample *pOut){
+// Inの属性をOutにコピー
+HRESULT hr = CopyAttribute(pIn, pOut);
+if (FAILED(hr))return hr;
+hr = ImageProcessing(pIn, pOut);
+if (FAILED(hr))return hr;
+return NOERROR;
+};
+</pre>
+<p>　<br />
+それでは，このストリームをコピーする処理を手で実装してみる．ここで，適当に処理を加えれば，2値化なりなんなりできるというわけである．<br />
+そこで，CopyMemoryの代わりにImageProcessingという関数を置き換えて，2値化を行ってみる．まず，上流と下流ストリームの１フレームの中のピクセルのポインタを取得する．以下でTransform関数に，CopyAttributeとImageProcessingの関数を加えて処理を実装する．</p>
+<pre>
+HRESULT Through::CopyAttribute(IMediaSample *pIn, IMediaSample *pOut){
+// ThroughのCopyMemory以外の処理をここで行う．
+return NOERROR;
+};
+</pre>
+<pre>
+HRESULT Through::ImageProcessing(IMediaSample *pIn, IMediaSample *pOut){
+int x,y;
+// ストリームのフレームのポインタを取得
+BYTE *pInData;
+BYTE *pOutData;
+CheckPointer(pOut,E_POINTER);
+CheckPointer(pIn,E_POINTER);
+pOut->GetPointer(&pOutData);
+pIn->GetPointer(&pInData);
+// ストリームのフレームサイズを取得
+AM_MEDIA_TYPE* pType = &m_pInput->CurrentMediaType();
+VIDEOINFOHEADER *pvi = (VIDEOINFOHEADER *) pType->pbFormat;
+ASSERT(pvi);
+int width    = pvi->bmiHeader.biWidth;
+int height    = pvi->bmiHeader.biHeight;    RGBTRIPLE *pOutRGB=(RGBTRIPLE*)pOutData;
+RGBTRIPLE *pInRGB =(RGBTRIPLE*)pInData;
+RGBTRIPLE *pOutRGB =(RGBTRIPLE*)pOutData;
+// 実際の2値化処理
+for( x=0 ; x < width ; x++ ){
+for ( y=0 ; y < height ; y++ ){
+// 単純に2値化
+int pixel = ((pInRGB+y*width+x)->rgbtRed)*((pInRGB+y*width+x)->rgbtRed);
+pixel += ((pInRGB+y*width+x)->rgbtGreen)*((pInRGB+y*width+x)->rgbtGreen);
+pixel += ((pInRGB+y*width+x)->rgbtBlue)*((pInRGB+y*width+x)->rgbtBlue);
+pixel = sqrt( pixel );
+// 適当に閾値決める
+if( pixel > 120 ){
+(pOutRGB+y*width+x)->rgbtRed = 255;
+(pOutRGB+y*width+x)->rgbtGreen = 255;
+(pOutRGB+y*width+x)->rgbtBlue = 255;
+}
+else{
+(pOutRGB+y*width+x)->rgbtRed = 0;
+(pOutRGB+y*width+x)->rgbtGreen = 0;
+(pOutRGB+y*width+x)->rgbtBlue = 0;
+}
+}
+}
+return NOERROR;
+};
+</pre>
+<p>これが2値化処理である．まず，IMediaSampleからGetPointerで，実際のデータを保持しているところのポインタを取得する．当然，入力と出力の両方を取得する．<br />
+次に，流れてきたストリームのメディアの種類を示す構造体？からストリームのサイズを取得する．当然，ストリームの入力と出力でそのサイズが異なる場合，それらをここで吸収しなければならないのだが，この例では，入出力ともに同じフォーマットなので，気にせずにそのままいく．<br />
+　というわけで，現状のメディアタイプのポインタを取得し，その中のVIDEOINFOHEADER構造体のポインタを取得し，ストリームのサイズを取得する．<br />
+次に２つ前の処理で取得した画像データのポインタから，RGBを簡単に使えるポインタに置き換える．おそらくunionか，なんかになっているのだろう？次にこのRGBTRIPLEのポインタを使用して，Red，Green，Blueのそれぞれのピクセルの値を入力側から取得し，その値からRGBの絶対値を算出，グレースケールの2値化処理を行っている．それぞれのピクセルは，ポインタで処理しているが，わかりにくければ，pOutRGB[y*width+x]として．配列っぽく処理してもかまわない．但し，処理は遅くなる（配列の場合常に先頭要素からアドレスを算出するため）．<br />
+DirectShowの画像処理の基本は以上である．このRGBTRIPLEとフレームのサイズさえ取得できれば，後は適当に画像処理の関数にこれらをつっこめば処理できるというわけである．<br />
+<br />
+<h3 class="line-header">実はこれだけではない・・・・気がする </h3>
+<p>これで，非常に単純で，明快な2値化フィルタが完成したわけだが，完成し，ビルドしたフィルタは，Ｗindowsのシステム，つまりレジストリに登録しなければならない．<br />
+そして，この登録のためにGUIDを自分用に作らねばならないのである．上述のウィザードを使用して，スケルトンを生成した場合，このレジストリ登録用のGUIDは，自動的に生成されているが，私のソースコードのコピーを使用したり，過去のソースコードを利用する場合，ソースコードのGUIDの部分を書き換えねばならない．Windows側は，このGUIDを使ってフィルタを区別するので，当然常に一意にGUIDを割り振らねばならない．このGUIDは，GUIDGENをコマンドラインから入力すれば，簡単に生成することができるツールを起動することができる．これは，Visual C++に付属していたはずである．<br />
+<center><img src="{{ site.url }}/assets//guidgen.JPG" /></center></p>
+<pre>
+// {F75623B6-AD0E-4897-AC46-70CBF680417E}
+static const GUID CLSID_Binarize = {0xf75623b6,0xad0e,0x4897,{0xac,0x46,0x70,0xcb,0xf6,0x80,0x41,0x7e}};
+</pre>
+<p>これが典型的なGUID．これを書き換えて，自作のフィルタに固有のIDを割り当てる．Microsoftのツールを使ってこのGUIDを生成する限り，このGUIDの一意性は，確保される．<br />
+完成したフィルタは，コマンドラインregsvr32.exeから登録する．例えば，binarize.axの場合，コマンドプロンプト，（ターミナルだよな）にregsvr32.exe binarize.axと入力する．これで登録が完了すると，その旨を伝えるメッセージボックスが表示される．<br />
+解除したい場合は，スイッチを付けて，regsvr32.exe /u binarize.axとして，その登録を解除する．Visual C++やmakeファイルを使う場合，以下のようにビルドの事後処理にこのコマンドラインを付加しておいて，自動的に登録するようにしておけば便利である．<br />
+<center><img src="{{ site.url }}/assets//setRistration.gif" /></center><br />
+私は，開発したフィルタが常にコンピュータ内でひとつであるように，つねにWINDOWS32￥system32にファイルをコピーしてから登録するようにしている．ただし，この場合，system32にある*.axファイルと名前が重複しないように気を付けてビルド後のコピーを実行する必要がある．できたフィルタは，GraphEditで動作確認をすることができる．<br />
+<br />
+<h3 class="line-header">ソースコード </h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/win/DirectShow/Binarize">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/win/DirectShow/Binarize</a><br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/win/DirectShow/Through">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/win/DirectShow/Through</a><br />
+本ソースコードを使用したことによる如何なる損害も製作者は責任を負いません．</p>

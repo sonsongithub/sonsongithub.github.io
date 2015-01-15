@@ -1,0 +1,78 @@
+---
+layout: post
+title: "[Tips] Flash/JavaScript Integration Kitを使う"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>・<a href="http://weblogs.macromedia.com/flashjavascript/">Flash/JavaScript Integration Kit</a><br />
+ここからキットをダウンロード．<br />
+何ができるかというと，前回のエントリーにも書いた，JavascriptからのFlashの関数呼び出しである．<br />
+１．内容の説明<br />
+このKitの重要な部分だけを切り出すと，<br />
+・FlashJavascriptGateway/installation<br />
+・FlashJavascriptGateway/source/flash/actionscript/com<br />
+の２つのフォルダである．<br />
+installationに入っている以下の二つのファイルは，htmlやswfファイルと一緒にアップロードする．<br />
+まぁ，DLLみたいなもんか．<br />
+・FlashJavascriptGateway/installationJavaScriptFlashGateway.js<br />
+・FlashJavascriptGateway/installationJavaScriptFlashGateway.swf<br />
+またcomは，swfをビルドするときに使うライブラリみたいなもの．これは，Flashで開発するときに飲み必要で，アップロードする必要はない．<br />
+このフォルダは，Flashのライブラリパスに追加するか．flaファイルと同じパスにおいておくとよい．<br />
+・FlashJavascriptGateway/source/flash/actionscript/com<br />
+２．ソースを書く〜swf<br />
+Flash側をまず作る．<br />
+hogeが文字列を引数にとる関数で，_rootにあるdisplayインスタンスにそれを入力する．</p>
+<pre>
+import com.macromedia.javascript.JavaScriptProxy;
+var proxy:JavaScriptProxy = new JavaScriptProxy(_root.lcId, this);
+function hoge( arg ) {
+_root["display"].text = arg;
+}
+</pre>
+<p>これでおｋ．<br />
+３．ソースを書く〜Javascript<br />
+次に，HTMLのJavascriptを書く．</p>
+<pre>
+&lt;HTML&gt;
+&lt;BODY&gt;
+&lt;script type="text/javascript" src="http://son-son.sakura.ne.jp/archive/JavaScriptFlashGateway.js"&gt;
+&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+var uid = new Date().getTime();
+var flashProxy = new FlashProxy(uid, 'http://son-son.sakura.ne.jp/archive/JavaScriptFlashGateway.swf');
+&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+var tag = new FlashTag('http://son-son.sakura.ne.jp/archive/jflash.swf', 300, 200);
+tag.setFlashvars('lcId='+uid);
+tag.write(document);
+&lt;/script&gt;
+&lt;a href="javascript:flashProxy.call('hoge', 'hoge is called.');"&gt;実行&lt;/a&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;
+</pre>
+<p>一つめのscriptが，Flash/JavaScript Integration KitのJavascript側のソース，<br />
+二つめのscriptが，Flash/JavaScript Integration KitのFlash側のソースとなる．<br />
+また，三つ目のscriptは，Flashのobjectファイルを自動生成し，JavascriptとFlashをつなぐところである．<br />
+４．現状の問題点？<br />
+swfを新しくしても更新されない．キャッシュが問題だろう・・・．どうしたものか．<br />
+※どうやら大丈夫な様子．<br />
+※もし，キャッシュがうまく行かない場合は，<a href="http://support.adobe.co.jp/faq/faq/qadoc.sv?228621+002">このサイト</a>を参考にJavascriptのソースをいじればよいかと思われる．</p>
+<pre>
+flashTag += '&lt;embed src="'+this.src+'?1" ';
+</pre>
+<p>ここでは，ソースのパスのおしりに?1をつけてみた．</p>

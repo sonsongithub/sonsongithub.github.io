@@ -1,0 +1,47 @@
+---
+layout: post
+title: "[Perl] MovableTypeのプラグイン - Amazon，リンク，画像"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Amazonのアフィリエイト作成，リンク作成，画像表示のプラグインをひとつにまとめた．<br />
+<br />
+<h3 class="line-header">設定</h3>
+<p><a href="http://son-son.sakura.ne.jp/archive/mt-sonson.pl">プラグイン</a>は，pluginsフォルダにコピーする．<br />
+そして，プラグインを利用するテンプレートのエントリボディの部分に以下のような記述を追加する．</p>
+<pre>
+<$MTEntryBody sonson_plugins="1"$>
+</pre>
+<p>
+<h3 class="line-header">各機能の使い方</h3>
+<p>各機能は，以下のように使う．<br />
+・Amazonアフィリエイトリンク作成機能<br />
+［amazon:Amazonの商品のリンク］<br />
+※使い方<br />
+［amazon:http://www.amazon.co.jp/exec/obidos/ASIN/0321173481/ref=pd_cpt_gw_i/503-9322446-0484703］<br />
+・リンク生成機能<br />
+［sonson_href(リンク先)］<br />
+※使い方<br />
+［sonson_href(http://www.google.co.jp)］<br />
+・画像表示機能<br />
+［sonson_picture:pictureFileName(画像ファイルのリンク先):linkTarget(画像をクリックしたときのリンク先)］<br />
+※使い方<br />
+［sonson_picture:pictureFileName(http://hoge/test01.png):linkTarget(http://hoge/test01.png)］<br />
+※ちなみにここの中カッコは全部全角なので，半角に直して利用してください．<br />
+<br />
+<h3 class="line-header">プラグイン本体</h3>
+<p><a href="http://son-son.sakura.ne.jp/archive/mt-sonson.pl">Perlスクリプトファイル</a><br />
+本ソースコードを使用したことによる如何なる損害も製作者は責任を負いません．</p>

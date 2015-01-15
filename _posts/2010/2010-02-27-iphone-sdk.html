@@ -1,0 +1,46 @@
+---
+layout: post
+title: "[iPhone SDK] 非Flasherから見た「Packager for iPhone」の５つのポイント"
+categories:
+- blog
+tags:
+- App Store
+- Blog
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Flash CS5を使ってiPhoneアプリをつくってみました．<br />
+そこで，Objective-Cでコーディングしてきてた非Flashプログラマーの僕から見た，Flashを使ってiPhoneアプリを作れる「Packager for iPhone」の５つのポイントを書いてみたいと思います．<br />
+今回プログラミングするまでは，ActionScriptとFlashは，まったく初めてではなくて，少しは触ったことはある程度でした．<br />
+１．速く試せる<br />
+速いし，楽しいし，楽．そんなにコーディングしなくても，色々動く．<br />
+ちょっとしたインタラクションをASで組んでしまえば，即iPhoneで動く．<br />
+これは非常にいい．<br />
+Loading時のアニメーションもムービークリップ一個読み込むだけで出せる．<br />
+これはいい．<br />
+２．並列に公開できる<br />
+前のエントリでも公開してみたし，fladdictさんもおっしゃってるけど，Web用とiPhone用，同時に開発できる．<br />
+お試し版を無料とWeb上でステージ１だけで公開し，合わせて有料版を公開する．<br />
+そういう使い道がほんとにマーケットとして成立するかわからないけど，意味はあると思う．<br />
+Flash版だと，ドメインの違いがあるので，その辺のコーディングが面倒くさいのが，たまに傷かなぁ．<br />
+しかも，Windows環境でも開発できる．<br />
+３．手間がかかる<br />
+でも・・・．UIKitが使えないのがかなり痛い．<br />
+iPhoneのdrill downインタフェースでアプリを作るなら，Flashはないと思う．<br />
+全部オリジナルのUIのアプリを作るなら，Flashはいいけど，そうでないなら，開発コストがかなりかかる．<br />
+私は，特にiPhoneのUIKitはそのまま使いたい人なので，この問題点がかなりFlashで開発する点において，障害に感じられる．<br />
+４．高価<br />
+Xcodeは事実上無料．Flashは，アマゾンで70000円くらい．<br />
+ここはつらいですよね．<br />
+※結論？<br />
+あ，４つしかなかった・・・・．後一つは後から考えます．<br />
+僕みたいなUIKitからはみ出したUIを考えられないコーダーにはFlashは手に余るのかもしれない．<br />
+しばらく，Flashを使いながら，５つ目について考えていこう．</p>

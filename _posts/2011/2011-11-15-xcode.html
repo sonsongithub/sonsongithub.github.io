@@ -1,0 +1,32 @@
+---
+layout: post
+title: Xcodeのarm6バイナリに関する欠陥
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>つまりバグです．<br />
+致命的どころか，即死のバグです．</p>
+<p>HMDTさんも取り上げられています．<br />
+<a href="http://hmdt.jp/blog/?p=256">http://hmdt.jp/blog/?p=256</a></p>
+<p>どういうバグかというと，Xcode4.0以降で，ターゲットをarm6にしている状態だと，viewの浮動小数点計算にバグがあります．</p>
+<p>しかも，最適化のバグかというと，そうでもなくて，-Ooでも，-O3でも出る様子．</p>
+<p>このバグはコードレベルは不可避．どうやら，thumbビルドのインストラクションバグとかいう噂が．<br />
+それで，Cのコンパイラフラグに-mno-thumbを追加すると，この問題を回避できるそうです．</p>
+<p>Cのother flagはビルド設定毎に使い分けられるので，AppStoreに提出する用のビルド設定にもちゃんと反映されるようにしてください．</p>
+<p>いい加減にしろ，Xcode.</p>

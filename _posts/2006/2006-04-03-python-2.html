@@ -1,0 +1,64 @@
+---
+layout: post
+title: "[Python] 正規表現"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Python
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">正規表現 </h3>
+<p>なんかなぁ・・・．<br />
+正規表現するなら，Perlだろ？って気もしますが，スクリプト言語ということで，正規表現に挑戦です．<br />
+<br />
+<h3 class="line-header">まず検索 </h3>
+<pre>
+str = '<a>test'
+p = re.compile(r'</a><a>.+</a>')
+m = p.match(str)
+if m:
+print m.group(0)
+</pre>
+<p>実行結果は，</p>
+<pre>
+<a>test</a>
+</pre>
+<p>こうなる．group(0)は，検索結果を示す．<br />
+検索結果として欲しいのは，タグの中身なので，それをこのgroupを使って取り出してみる．</p>
+<pre>
+str = '<a>test'
+p = re.compile(r'</a><a>(.+)</a>')
+m = p.match(str)
+if m:
+print m.group(1)
+</pre>
+<p>実行結果は，</p>
+<pre>
+test
+</pre>
+<p>こうなる．ますます，Perlでいい気がしてきた・・・．<br />
+<br />
+<h3 class="line-header">文字列の置換 </h3>
+<pre>
+import re
+srcLine = 'hello&world'
+srcLine = re.sub(r'&', r'&amp;', srcLine)
+print srcLine
+</pre>
+<p>こうすると，結果は，</p>
+<pre>
+hello&amp;world
+</pre>
+<p>と出力される．</p>

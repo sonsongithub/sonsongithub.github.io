@@ -1,0 +1,66 @@
+---
+layout: post
+title: "[iPhone] まず，ビルドまでの概要．"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>基本的には，CocoaDevとか，iPhoneWikiの和訳みたいになるが，Cocoaなら適当にやってもプログラミングできるだろ？と初めて見る．後，メソッドやらなんやらは，ヘッダファイルを眺めながら，まんま，その辺に転がってるソースコードを動かしてみて，改造してみる．こういうとき，gonzuiは便利なわけだ．<br />
+・<a href="http://www.cocoadev.com">CocoaDev</a><br />
+・<a href="http://www.thebends.org/~allen/iphone/">Allenさんのサイト．Googleの中の人らしい．こんな人と日々プログラミングしてみたいもんだ．</a><br />
+・<a href="http://iphone.fiveforty.net/wiki/index.php/Main_Page">The iPhone Dev Wiki</a><br />
+・・・などなど．<br />
+開発環境の構築は<a href="http://son-son.sakura.ne.jp/programming/tips_iphone_1.html">こちら</a>と<a href="http://son-son.sakura.ne.jp/programming/tips_iphone.html">こちら</a>で．<br />
+<strong>※パッケージ</strong><br />
+アプリケーション自体は，appのパッケージ形式で，中身は，以下の様子．<br />
+・Default.png<br />
+　アプリケーションを起動して，初期画面が表示されるまで使われる画像．<br />
+　スムーズに動いているように見せかけるためのうまい手段だと思う．<br />
+・icon.png<br />
+　アプリケーションアイコン<br />
+・Info.plist<br />
+　名前とか，ネットワークを使うかとか，そういうのを記述する<br />
+・PkgInfo<br />
+　なんだったっけ．MacOSXではファイルの関連づけとかに使った気がする．<br />
+　とりあえず，中身は，APPL????にしとく．<br />
+・バイナリ<br />
+　ソースコードをビルドして作成するバイナリ．<br />
+<strong>ソースコード</strong><br />
+・main.m<br />
+　MyAppクラスのインスタンスをメイン文で作成<br />
+・MyApp.m/h<br />
+　MyAppクラスの実装．<br />
+MyAppクラスでは，applicationDidFinishLaunchingを実装し，そこでViewを作成し，HelloWorldを作成する．<br />
+applicationDidFinishLaunchingは，アプリケーションの起動が終了した直後に呼ばれるメソッドだ．<br />
+ソースコードの解説は，後々．<br />
+<strong>ビルド</strong><br />
+コンパイラおよびリンカは，開発ツールのコンパイラを使う．</p>
+<pre>
+/usr/local/arm-apple-darwin/bin/gcc
+</pre>
+<p>リンカオプションは，frameworkのパス，objcの使用等を明示する．</p>
+<pre>
+-Wl,-syslibroot,/usr/local/arm-apple-darwin/heavenly -lobjc -framework CoreFoundation -framework Foundation -framework UIKit -framework LayerKit -framework CoreGraphics
+</pre>
+<p>さらに，パッケージを作るところもMakefileでやるようにしてまふ．<br />
+楽チンです．<br />
+・・・・・・誰かラクにスクリーンショットとれる方法教えてくれないかなぁ・・・．<br />
+探すか．<br />
+<strong>サンプル</strong><br />
+どぞ．<a href="http://son-son.sakura.ne.jp/archive/helloworld_iphone.tar.gz">ファイルをダウンロード</a><br />
+でも，このプログラムを使った如何なる損害に対して，如何なる責任も，sonsonはおいません．<br />
+hackは，own riskで．</p>

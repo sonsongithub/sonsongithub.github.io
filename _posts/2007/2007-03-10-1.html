@@ -1,0 +1,116 @@
+---
+layout: post
+title: "[お勉強] octaveで主成分分析"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- "お勉強"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>検算のため，ネット上にころがっている主成分分析の例題の行列を使ってみました．</p>
+<h3 class="line-header">共分散・分散行列を使うパターン</h3>
+<pre>
+#!/usr/local/bin/octave -qf
+M = [
+8 9 4;
+2 5 7;
+8 5 6;
+3 5 4;
+7 4 9;
+4 3 4;
+3 6 8;
+6 8 2;
+5 4 5;
+6 7 6;
+]
+mean_column_vec = mean(M)
+r = 1 / rows( M )
+Cov = r * ( M - kron( mean_column_vec, ones( rows(M), 1 ) ) )' * ( M - kron( mean_column_vec, ones( rows(M), 1 ) ) )
+[ A, D ] = eig( Cov )
+</pre>
+<p>これを実行．</p>
+<pre>
+&gt;octave correlation_coefficient_matrix.oct
+M =
+8   9   4
+2   5   7
+8   5   6
+3   5   4
+7   4   9
+4   3   4
+3   6   8
+6   8   2
+5   4   5
+6   7   6
+mean_column_vec =
+5.2000   5.6000   5.5000
+r =  0.10000
+Cov =
+4.16000   1.38000  -0.40000
+1.38000   3.24000  -1.30000
+-0.40000  -1.30000   4.05000
+A =
+-0.598619  -0.682981  -0.418560
+-0.584278   0.014835   0.811418
+0.547973  -0.730286   0.407931
+D =
+5.87310   0.00000   0.00000
+0.00000   3.70232   0.00000
+0.00000   0.00000   1.87458
+</pre>
+<h3 class="line-header">相関係数行列を使うパターン</h3>
+<pre>
+#!/usr/local/bin/octave -qf
+M = [
+8 9 4;
+2 5 7;
+8 5 6;
+3 5 4;
+7 4 9;
+4 3 4;
+3 6 8;
+6 8 2;
+5 4 5;
+6 7 6;
+]
+C = corrcoef( M )
+[ A, D ] = eig( C )
+</pre>
+<p>こいつを実行．</p>
+<pre>
+&gt;octave variance_covariance_matrix.oct
+M =
+8   9   4
+2   5   7
+8   5   6
+3   5   4
+7   4   9
+4   3   4
+3   6   8
+6   8   2
+5   4   5
+6   7   6
+C =
+1.000000   0.375889  -0.097451
+0.375889   1.000000  -0.358875
+-0.097451  -0.358875   1.000000
+A =
+0.4925880   0.6892523  -0.5313081
+-0.7392991   0.0093340  -0.6733125
+-0.4591230   0.7244613   0.5141615
+D =
+0.52668   0.00000   0.00000
+0.00000   0.90266   0.00000
+0.00000   0.00000   1.57066
+</pre>

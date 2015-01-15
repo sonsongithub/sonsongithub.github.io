@@ -1,0 +1,30 @@
+---
+layout: post
+title: Private APIと同じ名前のメソッドについてのAppleの審査問題
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>先日，Appleからこんな審査拒絶（意訳）メールが来た．<br />
+"private APIは将来変更されるため，結果的にユーザに不利益を被る可能性があります．あなたのアプリケーションには，didFailLoadingWithErrorという公開されていないAPIが使われています．もし，上述のAPIと同じ名前のメソッド使っているなら，将来的に審査拒絶の対象となることを避けるために，アップルのprivate APIと衝突しないようにメソッド名の変更した方がいいです．"<br />
+どうやら，@Psyhcsさんも同様の審査基準でリジェクトされている模様．<br />
+Twitterで，private methodの衝突チェックするツールを作るかーとか，盛り上がってきたりした．さっそく私はツールの開発に着手．同時並行で，アップルに，以下のメール（意訳）を返信．<br />
+"わかった．確かにdidFailLoadingWithErrorを使っているけど，それは私が自分で作ったクラスのメソッドだ．アップルが，private APIと同じ関数名を使っていると審査を拒絶するというのなら，アップルは，private APIをすべて公開するべきだ．我々開発者は，private methodの一覧なしに関数名の衝突を回避できない．"<br />
+すると，半日後にアップルから返信（意訳）．<br />
+"指摘，説明，指示，ありがとうございます．今回の問題は，これでいいです．審査拒絶は撤回し，引き続き審査をします．"<br />
+5分後→Ready for saleのメール．<br />
+private methodのチェックツールの使い方を間違えた審査員がいるのかな？<br />
+とりあえず，アップルは話せばわからない審査体制ではないないっぽい．<br />
+みんなバグ報告も含めて，理不尽さはちゃんと追求しようず．</p>

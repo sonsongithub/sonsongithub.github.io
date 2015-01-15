@@ -1,0 +1,141 @@
+---
+layout: post
+title: "[Tips] ffmpeg関連"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>メモメモ．いつか，まとめる？<br />
+mplayer -ss 1.2 -frames 51 -vo jpeg -vf framestep=3step <movie file><br />
+ffmpeg -i "c:	mpmy.flv" -f image2 -ss 00:00:10 -vframes 1 output.png<br />
+usage: ffmpeg [[infile options] -i infile]... {[outfile options] outfile}...<br />
+Hyper fast Audio and Video encoder<br />
+Main options:<br />
+-L                  show license<br />
+-h                  show help<br />
+-version            show version<br />
+-formats            show available formats, codecs, protocols, ...<br />
+-f fmt              force format<br />
+-img img_fmt        force image format<br />
+-i filename         input file name<br />
+-y                  overwrite output files<br />
+-t duration         set the recording time<br />
+-fs limit_size      set the limit file size<br />
+-ss time_off        set the start time offset<br />
+-itsoffset time_off  set the input ts offset<br />
+-title string       set the title<br />
+-timestamp time     set the timestamp<br />
+-author string      set the author<br />
+-copyright string   set the copyright<br />
+-comment string     set the comment<br />
+-album string       set the album<br />
+-v verbose          control amount of logging<br />
+-target type        specify target file type ("vcd", "svcd", "dvd", "dv", "dv50", "pal-vcd", "ntsc-svcd", ...)<br />
+-dframes number     set the number of data frames to record<br />
+-scodec codec       force subtitle codec ('copy' to copy stream)<br />
+-newsubtitle        add a new subtitle stream to the current output stream<br />
+-slang code         set the ISO 639 language code (3 letters) of the current subtitle stream<br />
+Video options:<br />
+-vframes number     set the number of video frames to record<br />
+-r rate             set frame rate (Hz value, fraction or abbreviation)<br />
+-s size             set frame size (WxH or abbreviation)<br />
+-aspect aspect      set aspect ratio (4:3, 16:9 or 1.3333, 1.7777)<br />
+-croptop size       set top crop band size (in pixels)<br />
+-cropbottom size    set bottom crop band size (in pixels)<br />
+-cropleft size      set left crop band size (in pixels)<br />
+-cropright size     set right crop band size (in pixels)<br />
+-padtop size        set top pad band size (in pixels)<br />
+-padbottom size     set bottom pad band size (in pixels)<br />
+-padleft size       set left pad band size (in pixels)<br />
+-padright size      set right pad band size (in pixels)<br />
+-padcolor color     set color of pad bands (Hex 000000 thru FFFFFF)<br />
+-vn                 disable video<br />
+-vcodec codec       force video codec ('copy' to copy stream)<br />
+-sameq              use same video quality as source (implies VBR)<br />
+-pass n             select the pass number (1 or 2)<br />
+-passlogfile file   select two pass log file name<br />
+-newvideo           add a new video stream to the current output stream<br />
+Advanced Video options:<br />
+-pix_fmt format     set pixel format<br />
+-intra              use only intra frames<br />
+-vdt n              discard threshold<br />
+-qscale q           use fixed video quantiser scale (VBR)<br />
+-lmin lambda        min video lagrange factor (VBR)<br />
+-lmax lambda        max video lagrange factor (VBR)<br />
+-mblmin q           min macroblock quantiser scale (VBR)<br />
+-mblmax q           max macroblock quantiser scale (VBR)<br />
+-qdiff q            max difference between the quantiser scale (VBR)<br />
+-rc_eq equation     set rate control equation<br />
+-rc_override override  rate control override for specific intervals<br />
+-me method          set motion estimation method<br />
+-me_threshold       motion estimaton threshold<br />
+-strict strictness  how strictly to follow the standards<br />
+-deinterlace        deinterlace pictures<br />
+-psnr               calculate PSNR of compressed frames<br />
+-vstats             dump video coding statistics to file<br />
+-vhook module       insert video processing module<br />
+-intra_matrix matrix  specify intra matrix coeffs<br />
+-inter_matrix matrix  specify inter matrix coeffs<br />
+-top                top=1/bottom=0/auto=-1 field first<br />
+-dc precision       intra_dc_precision<br />
+-vtag fourcc/tag    force video tag/fourcc<br />
+-qphist             show QP histogram<br />
+-vbsf bitstream filter<br />
+Audio options:<br />
+-aframes number     set the number of audio frames to record<br />
+-ab bitrate         set audio bitrate (in kbit/s)<br />
+-aq quality         set audio quality (codec-specific)<br />
+-ar rate            set audio sampling rate (in Hz)<br />
+-ac channels        set number of audio channels<br />
+-an                 disable audio<br />
+-acodec codec       force audio codec ('copy' to copy stream)<br />
+-vol volume         change audio volume (256=normal)<br />
+-newaudio           add a new audio stream to the current output stream<br />
+-alang code         set the ISO 639 language code (3 letters) of the current audio stream<br />
+Advanced Audio options:<br />
+-atag fourcc/tag    force audio tag/fourcc<br />
+-absf bitstream filter<br />
+Subtitle options:<br />
+-scodec codec       force subtitle codec ('copy' to copy stream)<br />
+-newsubtitle        add a new subtitle stream to the current output stream<br />
+-slang code         set the ISO 639 language code (3 letters) of the current subtitle stream<br />
+Audio/Video grab options:<br />
+-vd device          set video grab device<br />
+-vc channel         set video grab channel (DV1394 only)<br />
+-tvstd standard     set television standard (NTSC, PAL (SECAM))<br />
+-ad device          set audio device<br />
+-grab format        request grabbing using<br />
+-gd device          set grab device<br />
+Advanced options:<br />
+-map file:stream[:syncfile:syncstream]  set input stream mapping<br />
+-map_meta_data outfile:infile  set meta data information of outfile from infile<br />
+-benchmark          add timings for benchmarking<br />
+-dump               dump each input packet<br />
+-hex                when dumping packets, also dump the payload<br />
+-re                 read input at native frame rate<br />
+-loop_input         loop (current only works with images)<br />
+-loop_output        number of times to loop output in formats that support looping (0 loops forever)<br />
+-threads count      thread count<br />
+-vsync              video sync method<br />
+-async              audio sync method<br />
+-vglobal            video global header storage type<br />
+-copyts             copy timestamps<br />
+-shortest           finish encoding within shortest input<br />
+-dts_delta_threshold   timestamp discontinuity delta threshold<br />
+-ps size            set packet size in bits<br />
+-muxdelay seconds   set the maximum demux-decode delay<br />
+-muxpreload seconds  set the initial demux-decode delay<br />
+</movie></p>

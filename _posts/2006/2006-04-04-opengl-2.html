@@ -1,0 +1,136 @@
+---
+layout: post
+title: "[OpenGL] ステンシルバッファ"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">ステンシルとは？ </h3>
+<p>ステンシル，stencilは型板のことです．板に星型の穴をあけて，その板越しに色を塗ると紙には星型のマークが書ける．そういう板のことをステンシルといいます．<br />
+OpenGL上で実現されるステンシルバッファの機能もまさにそのとおりのものになります．<br />
+OpenGLで使用するバッファの概念図は以下のようになります．<br />
+<center><img src="{{ site.url }}/assets//buffers.jpg" /></center><br />
+ステンシルバッファはカラーバッファ，デプスバッファに続く各ピクセルが持つバッファのひとつとなります．他のバッファと違い，ステンシルバッファは描画結果には反映されません．右の例はユーザが「ステンシルバッファが"0"の部分には描画しない．」とプログラムすることで得られる結果となります．つまりステンシルバッファとはピクセル毎に使用できるフラグと考えることが出来ます．<br />
+<br />
+<h3 class="line-header">ピクセルバッファの初期化 </h3>
+<p>ピクセルバッファを使用するには当然，ピクセルフォーマットでステンシルバッファを使用するように初期化しなければいけません．例えばWindowsでは，ピクセルフォーマット構造体がこうなります．</p>
+<pre>
+static PIXELFORMATDESCRIPTOR pfd = {
+sizeof(PIXELFORMATDESCRIPTOR),     //この構造体のサイズ
+1,                                 //OpenGLバージョン
+PFD_DRAW_TO_WINDOW |               //Windowスタイル
+PFD_SUPPORT_OPENGL |       //OpenGL
+PFD_DOUBLEBUFFER,          //ダブルバッファ使用可能
+PFD_TYPE_RGBA,                     //RGBAカラー
+24,                                //色数
+0, 0,                              //RGBAのビットとシフト設定
+0, 0,                              //G
+0, 0,                              //B
+0, 0,                              //A
+0,                             //アキュムレーションバッファ
+0, 0, 0, 0,                    //RGBAアキュムレーションバッファ
+32,                                //Zバッファ
+1,                                 //ステンシルバッファ
+0,                                 //使用しない
+PFD_MAIN_PLANE,                    //レイヤータイプ
+0,                                 //予約
+0, 0, 0                      //レイヤーマスクの設定・未使用
+};
+</pre>
+<p>　これでステンシルバッファを使用することが出来ます．GLUTの場合だとこうなります．</p>
+<pre>
+glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_STENCIL);
+</pre>
+<p>やっぱりGLUTは便利ですね．次にステンシルバッファをクリアする値を設定します．glClearColorやglClearDepthと同じでglClearを実行したときにどんな値で塗りつぶすかを設定する必要があります．ステンシルバッファを"0"で塗りつぶします．</p>
+<pre>
+glClearStencil(0);
+</pre>
+<p>次にglClearにステンシルバッファを塗りつぶすように設定します．こうしないと描画ごとにステンシルバッファがクリアされません．</p>
+<pre>
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+</pre>
+<p>これでクリア時にステンシルバッファもすべてクリアされます．<br />
+使用前の設定はこれで終わります．<br />
+<br />
+<h3 class="line-header">ステンシルバッファへの書き込み </h3>
+<p>今回のサンプルはステンシルを書き込んだ部分だけティーポットをワイヤーフレームで描画するというものです．結果はこうなります．<br />
+まずステンシルバッファにステンシル値"1"を正方形の大きさで書き込みます．<br />
+以下は描画部分のコードです．</p>
+<pre>
+/////////////////////////////////////////////
+//四角形の描画範囲にステンシル１を付加する
+glEnable(GL_STENCIL_TEST);
+glStencilFunc( GL_ALWAYS, 1, ￣0);
+//これから描画するもののステンシル値にすべて１タグをつける
+glStencilOp(GL_REPLACE,GL_REPLACE,GL_REPLACE);
+</pre>
+<p>まずステンシルテストの使用を開始します．これ以後ではステンシルバッファが効果を持つことになります．次にステンシルバッファをどうしようするかを設定します．glStencilFuncは，一つ目の引数で書き込み先ステンシル値と指定したステンシル値（二つ目の引数）との評価方法を設定します．指定したステンシル値は，常に3つ目の引数と論理積されます．3つ目の引数を無視したい場合は￣0などのすべてのビット値が1の値をしようすれば常に書き込もうとする値は，論理積に影響されません．2つ目引数の例には，GL_LESS（書き込み先の方が少ない），GL_NEVER（常に評価は付加），GL_EQUAL(書き込み先と一致)などがあります．<br />
+ここではGL_ALWAYS，常に評価は成功を使用します．つまり以後に描画したもののピクセルのステンシルの値は常に"1"に置き換えられることになります．<br />
+次にglStencilOpで評価時のステンシルバッファの処理方法を設定します．1つ目の引数はステンシルバッファの上記で設定したテストに失敗したときの扱いです．また2つ目の引数はステンシルテストには成功したけれども書き込み先のピクセルでデプスバッファによるテストに失敗した時の処理，3つ目の引数はそのデプステストに成功したときの処理の設定となります．<br />
+このサンプルでは常にGL_REPLACEによってステンシル値，"1"が書き込まれることになります．</p>
+<pre>
+/////////////////////////////////////////////
+//カラー・デプスバッファマスクをセットする
+//これで以下の内容のピクセルの色の値は，書き込まれない．
+glColorMask(0,0,0,0);
+glDepthMask(0);
+</pre>
+<p>次に描画する四角形はステンシル値だけに書き込みたいのでカラーとデプスバッファにマスクをします．<br />
+glColorMaskとglDepthMaskに，BOOLで"1"または"0"を入力してマスクをするかどうかを設定することが出来ます．今回はすべての値を書き込みたくないのですべてに"0"を入力しています．</p>
+<pre>
+//四角形を描画
+glPushMatrix();
+//四角形を動かすため
+glTranslatef(4*cos(t*0.1),sin(t*0.1),0);
+glBegin(GL_QUADS);
+glVertex3f( 1, 1,0);
+glVertex3f(-1, 1,0);
+glVertex3f(-1,-1,0);
+glVertex3f( 1,-1,0);
+glEnd();
+glPopMatrix();
+/////////////////////////////////////////////
+//ビットマスクを解除
+glColorMask(1,1,1,1);
+glDepthMask(1);
+</pre>
+<p>四角形を描画します．ただし，ステンシルバッファにだけ書き込まれます．そして書き込んだ後，カラー・デプスバッファのマスクを解除します．<br />
+<br />
+<h3 class="line-header">ステンシルバッファの評価・利用 </h3>
+<p>次に書き込んだステンシルバッファを評価しながらティーポットを描画します．</p>
+<pre>
+glStencilOp(GL_KEEP,GL_KEEP ,GL_KEEP);
+/////////////////////////////////////////////
+//ティーポット・オブジェクトの描画
+//ステンシルが1のピクセルにワイヤーフレームで描画
+glStencilFunc( GL_EQUAL, 1, ￣0);
+glColor3f(1,0.5,0.5);
+glutWireTeapot(3);
+/////////////////////////////////////////////
+//ティーポット・オブジェクトの描画
+//ステンシルが1のピクセルにソリッドモデルで描画
+glStencilFunc( GL_EQUAL, 0, ￣0);
+glColor3f(1,0.5,0.5);
+glutSolidTeapot(3);
+/////////////////////////////////////////////
+//ステンシルテスト終了
+glDisable(GL_STENCIL_TEST);
+</pre>
+<p>以後の処理ではステンシル値を書き込むことはないのでglStencilOpの処理はすべてそのままにしておくためにGL_KEEPにします．<br />
+次にglStencilFuncで以後の書き込み先をステンシル値"1"に限定し，そしてティーポットを描画します．次に書き込み先にステンシル値"0"を設定してからソリッドモデルのティーポットを描画します．<br />
+最後にステンシルバッファの使用を解除します．<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/simple_stencil">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/simple_stencil</a></p>

@@ -1,0 +1,94 @@
+---
+layout: post
+title: "[Python] 日本語を使ってみる"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Python
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">日本語 </h3>
+<p>日本語には，色々コーデックがある．<br />
+だから，よくわからなくなるんだが・・・・．<br />
+扱いそうなモノは・・・<br />
+-SHIFT-JIS<br />
+-EUC-JP<br />
+-UTF-8<br />
+などなど．<br />
+んで，Pythonで日本語を使えるようにするためにライブラリをインストールする．<br />
+以下のサイトからダウンロードできる．パッケージになっているので簡単にインストールできる．<br />
+現在の環境は，MacOSX10.4.5だが，Python2.3用Mac OS X 10.3.x用インストーラでインストールできた．<br />
+[[JapaneseCodecs>http://www.python.jp/Zope/download/JapaneseCodecs]]<br />
+<br />
+<h3 class="line-header">試す </h3>
+<p>UTF-8，EUC-JP，SHIFT-JISの3種類のテキストファイルを開いて，ターミナルに出力，あるいは<br />
+検索をかけてみるテスト．</p>
+<pre>
+#! /usr/local/bin/python
+# coding=utf-8
+import sys
+import re
+def main(argv):
+#shift-jisで開く
+f = open('shiftjis.txt','r')
+jstr = unicode(f.readline(),'shift_jis')
+f.close
+utf_str = jstr.encode('utf-8')
+print utf_str
+#試しに検索してみる
+if re.search("これは", utf_str):
+print "発見！"
+print ""
+f = open('euc.txt','r')
+jstr = unicode(f.readline(),'euc_jp')
+f.close
+print jstr.encode('utf-8')
+f = open('utf.txt','r')
+jstr = f.readline()
+f.close
+print jstr
+# main
+main(sys.argv)
+</pre>
+<p>動いたけど・・・．よくわからん．<br />
+色々な情報源を調べて，site.pyを編集したりしてみたが，全然うまくいかなかった．<br />
+これでうまくいってるからいいかぁ・・・．<br />
+しかし，エンコードが間違っている時のことを考えて，何らかの対処をせねばなるまい．<br />
+<br />
+<h3 class="line-header">例外処理で解決！？ </h3>
+<p>ここで，覚え立ての例外処理を加えてやってみる．</p>
+<pre>
+#! /usr/local/bin/python
+# coding=utf-8
+import sys
+import re
+def readline_with_unicode(f):
+encode_symbols = ['shift_jis', 'euc_jp', 'utf-8']
+for i in range(len(encode_symbols)):
+try:
+jstr = unicode(f.readline(),encode_symbols[i])
+print jstr.encode('utf-8')
+return 0
+except:
+print "readline is failed, with",encode_symbols[i]
+def main(argv):
+if len(argv)>1:
+f = open(argv[1],'r')
+readline_with_unicode(f)
+# main
+main(sys.argv)
+</pre>
+<p>だせぇ・・・・．<br />
+なんか，例外処理をもうちょっとうまくできんのか・・・．思案中・・・・．</p>

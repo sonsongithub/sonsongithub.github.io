@@ -1,0 +1,44 @@
+---
+layout: post
+title: "[iPhone SDK] Localizable.strings自動生成スクリプト"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK(English)
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>iPhone，MacOSXのアプリケーションは，Localizable.stringファイルと，APIのNSLocalizedStrings()を使うことで簡単にローライズできる．<br />
+たとえば，ソースコード中で以下のように書き，</p>
+<pre>
+NSString* message = NSLocalizedStrings( @"key" , @"comment" );
+</pre>
+<p>バンドルのリソースファイルを以下のようにしておく．</p>
+<pre>
+--- Japanese.lproj/Localizable.strings
+"key" = "キー";
+--- English.lproj/Localizable.strings
+"key" = "Key";
+</pre>
+<p>こうすることで，変数messageには，実行時の言語環境に基づいて，文字列が入力される．<br />
+ソースコードが3ファイルくらいだと，このNSLocalizedStringsの抜き出しも簡単なのだが，ファイルが50個とかになってくると，さすがに手作業ではできない．<br />
+Appleからはgenstringsというツールが提供されているが，お世辞にも使いやすいとは言えない．常に新しくNSLocalizedStringsを抽出するので，Localizable.stringsにすでに書き込んだリソースを新しくするたんびにマージする必要がある．NSLocalizedStringsに独自マクロを使ったりすると，もう対応できない．<br />
+そんで，Rubyでスクリプトを書いてみた．<br />
+このツールは，ソースコードを全部検査し，NSLocalizedStringsを見つけ出し，リストアップする．<br />
+さらに，すでに存在するLocalizable.stringsをすべて読み込み，見つけ出したNSLocalizedStringsのキーに値を割り当てる．<br />
+そして，第2引数に指定したLocaleに対応するLocalizable.stringsを表示してくれるものである．</p>
+<pre>
+ruby ./extractLocalized.rb ./your_app/ English
+</pre>
+<p>適当に書き換えて，改善しながら使ってみてください．<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/trunk/iPhone2.0/ruby/localizedExtractor.rb">http://code.google.com/p/sonson-code/source/browse/trunk/iPhone2.0/ruby/localizedExtractor.rb</a></p>

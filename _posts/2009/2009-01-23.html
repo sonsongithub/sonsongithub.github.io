@@ -1,0 +1,27 @@
+---
+layout: post
+title: "はてブのAtomAPIがうまく動かない"
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Obj-Cではてなブックマークにブックマークを追加するコード書いていたところ，うまくいかない．常に403が返ってくる．当初は，X-WSSEの認証ミスかと思ったが，そこは大丈夫だった（他の認証が必要なはてなのサービスは動いた）．また，<a href="http://d.hatena.ne.jp/KishikawaKatsumi/20090102/1230826251">この辺のオープンソース</a>も参考して，試してみたが・・・動かず．<br />
+そこで，Obj-Cでそのままネット関連のデバッグをするのはタルいので，先人の知恵をネットから拝借し，そもそも，はてなブックマークがどういう挙動で，どう正しくうまくのかをPerlやらRubyやらで検証したところ，結論から言うと，全然動かなかった．<br />
+参考させてもらったコードは，以下．PerlとRubyで試してみた．<br />
+・<a href="http://txqz.net/blog/2006/02/02/1125">http://txqz.net/blog/2006/02/02/1125</a><br />
+・<a href="http://d.hatena.ne.jp/toward/20051225/ruby_hatena_wsse">http://d.hatena.ne.jp/toward/20051225/ruby_hatena_wsse</a><br />
+・<a href="http://d.hatena.ne.jp/emergent/20081129/1227926637">http://d.hatena.ne.jp/emergent/20081129/1227926637</a><br />
+ここの情報にもあるように403が返ってくるのだ・・・．私がどこか間違っていることを望んでこれからもボチボチ調査する．<br />
+どうしたものか．はてなブックマークの投稿対応は無理かな．</p>

@@ -1,0 +1,96 @@
+---
+layout: post
+title: "[Tips] gonzui -　改造"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h3 class="line-header">読み込み対象の絞り込み</h3>
+<p>gonzuiは，読み込みをはじく，フィルタとしての正規表現パターンを設定することが可能だが，<br />
+読み取りを許可するパターンを設定する方法はない．<br />
+そこで，gonzuiを改造してみた．<br />
+ただ，これ，やっぱり，デフォルトのフィルタと共存させるのはちょっとつらいなぁ．<br />
+なんか，いいアイデアないかなぁ．</p>
+<h3 class="line-header">んで，改造</h3>
+<p>gonzuircに，include_patternを追加する．以下抜粋．</p>
+<pre>
+:exclude_pattern          => /~$|.bak$|CVS|.svn/,
+:include_pattern          => /.cpp$|.c$|.h$/,
+:gonzui_log_file          => "/var/gonzui/gonzui.log",
+</pre>
+<p>そして，このconfigファイルを読み込むConfigクラス，config.rbを修正する．</p>
+<pre>
+module Gonzui
+class Config
+include Util
+def initialize
+# 中略
+@include_pattern = nil
+</pre>
+<p>これでinclude_patternをConfigクラスのメンバ変数として使える．<br />
+次にfetcher.rbのAbstractFetcherを編集．</p>
+<pre>
+class AbstractFetcher
+include Util
+def initialize(config, source_uri, options = {})
+@include_pattern = @config.include_pattern
+</pre>
+<p>次にexclude_patternに被せるため，かなりダサイ関数？を追加．</p>
+<pre>
+def include_only_extention(relative_path)
+if( @include_pattern==nil)
+return false
+end
+if(@include_pattern.match(relative_path)!=nil)
+return false
+end
+return true
+end
+</pre>
+<p>んでもって，collect関数？を修正．</p>
+<pre>
+def collect
+directory = @base_uri.path
+relative_paths = []
+Dir.all_files(directory).map {|file_name|
+next if exclude?(file_name)
+next if include_only_extention(file_name)
+relative_path = File.relative_path(file_name, directory)
+relative_paths.push(relative_path)
+}
+return relative_paths
+end
+</pre>
+<p>さらにHTTPFetcherクラスも修正．</p>
+<pre>
+def collect
+relative_paths = []
+@content.scan(/href=(["'])(.*?)1/i).each {|qmark, link|
+u = URI.parse(link)
+next if u.path.nil?
+u.path.chomp!("/")
+next unless u.relative?
+next if /^./.match(u.path)
+next if exclude?(u.path)
+next if include_only_extention(u.path)
+relative_paths.push(u.path)
+}
+return relative_paths
+end
+</pre>
+<p>これでgonzuircのinclude_patternに書き込まれた正規表現をパスしたもののみがデータベースにインポートされるようになるはず．<br />
+誰か，綺麗なのを作ったら，ください．<br />
+なんか，不安だ．このソースコード．</p>

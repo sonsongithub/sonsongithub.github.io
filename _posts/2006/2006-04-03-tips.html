@@ -1,0 +1,190 @@
+---
+layout: post
+title: "[Tips] まとめーNo.1"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Ruby
+- SQL
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h3 class="line-header">[WinSDK]  タスクバーのON/OFF(Windows) </h3>
+<p>隠すときは，</p>
+<pre>
+const char *pszTaskBar="Shell_TrayWnd";
+:ShowWindow(::FindWindow(pszTaskBar , NULL),SW_HIDE);
+</pre>
+<p>で隠す． 表示する場合は，ShowWindowの第二引数をSW_SHOWにする．<br />
+これは，SW_HIDEにすると，以降隠れっぱなしになるので，もし隠した後，アプリケーションを強制終了した場合は，何らかの形でSW_SHOWを呼ばなければならない．</p>
+<h3 class="line-header">[WinSDK] デスクトップサイズの取得(Windows) </h3>
+<p>現在，表示されているデスクトップ領域を取得するには，以下のAPIを利用する．</p>
+<pre>
+RECT workSpace;
+SystemParametersInfo(SPI_GETWORKAREA,0,&workSpace,0);
+</pre>
+<p>　但し，タスクバーの大きさ（つまり高さ）は，このRECTの戻り値に含まれないため，画面全体のサイズを取得する場合は，28Pixelを加算する．</p>
+<h3 class="line-header">[WinSDK] 外部アプリケーションの起動(Windows) </h3>
+<p>外部のアプリケーションの起動するには，CeateProcessを利用する．</p>
+<pre>
+STARTUPINFO si;
+PROCESS_INFORMATION pi;
+// 構造体を0クリアする．
+ZeroMemory(&si, sizeof(STARTUPINFO));
+ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
+// 起動するアプリケーションのパラメータ
+si.cb = sizeof(STARTUPINFO);
+si.dwFlags = STARTF_USESHOWWINDOW;
+si.wShowWindow = SW_SHOW;
+// アプリケーション作成
+CreateProcess(
+NULL,
+_T("..??target.exe"),
+NULL,
+NULL,
+FALSE,
+0,
+NULL,
+NULL,
+&si,
+&pi);
+</pre>
+<p>STARTUPINFO構造体に，起動するアプリケーションのパラメータを設定する．また，PROCESS_INFORMATIONには，起動したアプリケーションの情報が保存される．この情報は起動したアプリケーションをコントロールしたり，メッセージを送信したりするときに利用するため，保存しておく．起動しっぱなしでいいなら，必要はないが．</p>
+<h3 class="line-header">[WinSDK] 外部アプリケーションへのメッセージ送信・終了(Windows) </h3>
+<p>　起動した外部アプリケーションにメッセージを送信する場合，そのウィンドウハンドルを指定する必要がある．ウィンドウハンドルの取得には，二つの方法がある．ウィンドウの名前からウィンドウハンドルを取得する方法と，プロセスIDから類推する方法である．<br />
+　ここでは，プロセスIDから類推する方法について説明する．このとき，処理の流れは， ::EnumWindows(); を利用する．EnumWindowsは，これをコールした瞬間，Windowsが管理しているウィンドウすべてにEnumWindowsがコールをかける．そして，あらゆるウィンドウが順番にEnumWindowsの第一引数に登録した関数を呼び出すのである．</p>
+<pre>
+// EnumWindowsの呼び出し
+::EnumWindows(EnumWndCallbackGethWnd, (LPARAM)(this));
+// EnumWindowsの第一引数に指定する関数（つまりコールバック関数）
+static BOOL EnumWndCallbackGethWnd(HWND hWnd, LPARAM lParam);
+</pre>
+<p>上記の関数がポイントとなる．このEnumWndCallbackGethWnd関数を実装し，帰ってきたコールを処理する．この関数は，いつ呼ばれるかわからないため，通常のクラスのメンバ関数として，実装することはできない（当たり前，インスタンスがない可能性があるからね．）．EnumWindowsの第二引数は，EnumWndCallbackGethWndがコールバックされるときの第二引数となる．<br />
+　次にこのコールバック関数を実装する．</p>
+<pre>
+BOOL EnumWndCallbackGethWnd(HWND hWnd, LPARAM lParam)
+{
+// CreateProcess()で取得したPROCESS_INFORMATION構造体のポインタを取得
+// hogeクラスのポインタが第二引数で渡されると仮定
+hoge *obj= (hoge*)(lParam);
+// さらにhogeクラスのメンバ変数に外部アプリケーション起動時の
+// PROCESS_INFORMATION構造体を保存していると仮定
+PROCESS_INFORMATION pi = obj->m_pi;
+// コールバックしてきたウィンドウのウィンドウハンドルから
+// プロセスIDを求める
+DWORD lpdwProcessId = 0;
+::GetWindowThreadProcessId(hWnd, &lpdwProcessId);
+// CreateProcessで起動したアプリのプロセスIDとメインウィンドウを
+// 作成したプロセスIDが同じ場合、起動したアプリを終了させる
+if(pi.dwProcessId == lpdwProcessId)
+{
+obj->m_childhwnd = hWnd;
+return FALSE;
+}
+return TRUE;
+}
+</pre>
+<p>ここで得た，ウィンドウハンドルに対して，WM_CLOSEを送信することで，終了させることができる．</p>
+<h3 class="line-header">[WinSDK] 外部アプリケーションへのメッセージ送信・WM_COPYDATA(Windows) </h3>
+<p>　起動した外部アプリケーションあるいはその他のアプリケーションにデータを引き渡す方法である．本来，WindowsNT以降のようなメモリ管理がなされるOSでは，プロセス間で勝手にメモリを共有することはできない．そこで，ファイルを書き出すというデータの共有方法があるが，非常に面倒くさいし，なんかかっこわるい．こういうときは，WM_COPYDATAイベントを利用する．<br />
+　WM_COPYDATA自体の使い方は簡単である．送信するデータのサイズとデータのポインタをパッケージにして送るだけである．</p>
+<pre>
+// 送信するデータ
+struct hoge data;
+COPYDATASTRUCT cds;
+cds.dwData = COPYDATA_MESSAGE_HWND;    // WM_COPYDATAを受け取った後の識別子
+cds.cbData = sizeof(data);             // 送信するデータのサイズ
+cds.lpData = &data;                    // 送信するデータのポインタを渡す
+// 自分のハンドルを送信
+int result = ::SendMessage(
+hWnd,
+WM_COPYDATA,
+(LPARAM)(HWND)m_hWnd,
+(LPARAM)(LPVOID*)&cds
+);
+</pre>
+<p>データのサイズを設定するだけで，どんな構造体も設定することができる．ただし，送信するデータは，受信側のアプリケーションが受け取り，処理するまでメモリが解放されないように維持する必要がある．<br />
+次に受信側のアプリケーションでWM_COPYDATAを処理する．処理しないと，SendMessageの結果は，FALSEとなる（当たり前）．</p>
+<pre>
+BOOL CreceiveAppDlg::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
+{
+// dwDataからデータの種類の識別子を判別
+// 当然ここは，受信と送信で識別子を統一する必要がある
+switch( pCopyDataStruct->dwData ){
+case COPYDATA_MESSAGE_HWND:
+// lpDataにデータのポインタが格納されているので，データを引き渡す
+int *pointor = (int*)pCopyDataStruct->lpData;
+int receivedData = *pointor;
+return TRUE;
+}
+return CDialog::OnCopyData(pWnd, pCopyDataStruct);
+}
+</pre>
+<p>これが受信側のメッセージ処理となる．MFCの場合は，OnCopyDataのメッセージハンドラに処理を記述し，SDKの場合は，メッセージコールバック関数にWM_COPYDATAの処理を追加する．</p>
+<h3 class="line-header">[WinSDK] コールバックの小手先(Windows) </h3>
+<p>　コールバックにも実は問題点はある． 実は，ウィンドウをハンドルを複数持つ場合，プロセスIDを指定しても，それがコールバック先であるか判断することできない．なぜならば，ひとつのプロセスが複数のウィンドウハンドルを持つことになるからである．<br />
+　この場合は，EnumWindowsCallBackに小手先を加える． コールバックは，FALSEを返すまでは，実行中のウィンドウすべてにメッセージを投げ続ける．そこで，投げる先のウィンドウハンドルを持つウィンドウのみが反応する処理をメッセージ受信側に実装しておく．</p>
+<pre>
+// テキトーコーディング
+if(pi.dwProcessId == lpdwProcessId)
+{
+obj->m_childhwnd = hWnd;
+int result = SendMessage( hWnd, WM_ORIGINAL, obj->m_hWnd, 0 );
+if( result )
+return FALSE:
+}
+return TRUE;
+</pre>
+<p>　こうすると，反応するウィンドウだけにコールバックで処理を加えることができる．<br />
+　</p>
+<h3 class="line-header">[WinSDK] SetRect，SetPos </h3>
+<pre>
+SetWindowRect・・・画面の左上を原点とする座標系でウィンドウの位置，サイズを設定．
+SetWindowPos・・・ウィンドウの左の上を原点とする座標系でウィンドウの位置，サイズを設定する．
+</pre>
+<h3 class="line-header">[General] ?演算子 </h3>
+<p>　target = (条件式) ? a : b<br />
+　条件式が真であれば，aが代入，偽であれば，bが代入される．</p>
+<h3 class="line-header">[WinSDK] WM_CLOSE(Windows) </h3>
+<p>　WM_DESTROYは危険．WM_CLOSEにしよう．</p>
+<h3 class="line-header">[WinSDK] メモリからBitBlt(Windows) </h3>
+<p>　BitBlt用のビットマップオブジェクト，<br />
+HBITMAP m_hBitを作成する．これをどこかの初期化タイミングに行う．</p>
+<pre>
+BITMAPINFO      bmi;
+// BITMAPINFOHEADER の設定
+bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+bmi.bmiHeader.biWidth = width;
+bmi.bmiHeader.biHeight = height;
+bmi.bmiHeader.biPlanes = 1;
+bmi.bmiHeader.biBitCount = 24;
+bmi.bmiHeader.biCompression = BI_RGB;
+bmi.bmiHeader.biSizeImage = 0;
+bmi.bmiHeader.biXPelsPerMeter = 6000;
+bmi.bmiHeader.biYPelsPerMeter = 6000;
+bmi.bmiHeader.biClrUsed = 0;
+bmi.bmiHeader.biClrImportant = 0;
+// 描画用のビットマップを作成する
+m_hBit = CreateDIBSection(::GetDC(NULL), &bmi, DIB_RGB_COLORS, (void**)&m_pFrameBuffer, NULL, NULL);
+</pre>
+<p>　<br />
+このときの&m_pFrameBufferがピクセルを保存する場所のポインタになる．このビットマップは，Windowsが勝手に管理してくれるので，プログラム側から，保存するための配列を確保したりする必要はない．</p>
+<pre>
+// メモリDCを作成
+CDC mDC;
+mDC.CreateCompatibleDC(pDC);
+// ビットマップから CBitmap オブジェクトを作成し、メモリDCで選択する。
+mDC.SelectObject(CBitmap::FromHandle(m_hBit));
+// メモリDCから画面DCにビットマップをコピーする。
+pDC->BitBlt(0, 0, rect.Width(),rect.Height(), &mDC, 0, 0, SRCCOPY);
+</pre>

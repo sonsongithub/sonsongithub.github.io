@@ -1,0 +1,65 @@
+---
+layout: post
+title: "[MacOSX] MacPortsでoctave3.0.0をインストールする"
+categories:
+- blog
+tags:
+- MacOSX
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>2008/04/26，現在のoctave3.0.0をMacPorts経由でインストールする<br />
+※概要<br />
+octave3.0.0をインストールするためのMacPortsのProfileが<a href="http://trac.macports.org/projects/macports/attachment/ticket/13686/Portfile">公開</a>されている．とりあえず，こちらにも<a href="http://son-son.sakura.ne.jp/archive/Portfile_octave_3.0.0.tar.gz">コピー</a>した．<br />
+このPortfileを使ってMacPorts経由でインストールする．<br />
+オリジナルのPortfileを使ったインストール方法は，以下のサイトを参考にした．<br />
+・<a href="http://d.hatena.ne.jp/hakobe932/20070513/1179059638">http://d.hatena.ne.jp/hakobe932/20070513/1179059638</a><br />
+・<a href="http://lapangan.net/darwinports/index.php?HowTo%2FLocalPortfile">http://lapangan.net/darwinports/index.php?HowTo%2FLocalPortfile</a><br />
+※Portfile<br />
+まず，ローカルパスにPortfileをインストールする．私は/usr/local/にした</p>
+<pre>
+mkdir /usr/local/localports/
+mkdir /usr/local/localports/math
+mkdir /usr/local/localports/math/octave
+cp ~/Portfile /usr/local/localports/math/octave/
+</pre>
+<p>フォルダ構成は上記のようにする必要があるかは知らない．<br />
+それで，portのコマンドをつかってインデックスを生成する．</p>
+<pre>
+cd /usr/local/localports
+portindex
+Creating software index in /usr/local/localports
+Adding port math/octave
+　　　
+Total number of ports parsed:    1
+Ports successfully parsed:    1
+Ports failed:            0
+</pre>
+<p>これでインデックスが生成される．次にこのインデックスをoctaveが読み込むようにセットする．<br />
+設定ファイルは，/opt/local/etc/macports/sources.confで，このファイルをたとえば，以下のように書き込む．</p>
+<pre>
+file:///usr/local/localports
+rsync://rsync.macports.org/release/ports/
+</pre>
+<p>ローカルを上に書くのは，パッケージが重複する場合，上に書いたインデックスに含まれるものが優先されるからである．<br />
+これでお膳立てが終了．</p>
+<pre>
+port search octave
+octave                         math/octave    3.0.0        a Matlab-like environment for numerical analysis
+octave                         math/octave    2.9.15       a Matlab-like environment for numerical analysis
+octave-forge                   math/octave-forge 2006.07.09   Additional script and function files for Octave.
+</pre>
+<p>上のものが新しい3.0.0のoctaveだ．<br />
+port install octaveで上のパッケージがインストールされる．ｳﾏｰｰｰｰ．</p>
+<p><!--more--><br />
+私の環境ではgsedがちゃんとインストールされていなかったために，エラーがでて，portでgsedをインストールしなおした．</p>

@@ -1,0 +1,65 @@
+---
+layout: post
+title: "[お勉強] IEだけ挙動が激しく異なる件～prototype.jsで対応"
+categories:
+- blog
+tags:
+- Blog
+- Javascript
+- Programming
+- "お勉強"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>どうやら，IEでは，pageXとpageYを使えないようである．<br />
+そこで，天下無敵のprototype.jsを利用してみることにする．<br />
+※参考文献<br />
+・<a href="http://www.imgsrc.co.jp/~kuriyama/prototype/prototype.js.html">prototype.jsの使い方</a><br />
+・<a href="http://www.prototypejs.org/">prototype.js</a><br />
+※prototype.jsのイベント処理<br />
+prototype.jsを利用して，イベントごとのメソッドを登録すると，prototype.jsオリジナルのメソッドでマウスの座標を取得したりすることができる．</p>
+<pre>
+&lt;div id="canvas" style="width:490px;height:300px;
+border-style:solid;border-width:thin;"&gt;&lt;/div&gt;
+&lt;script src="./prototype.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+function Area( inputx, inputy, inputnumber ) {
+var x = inputx;
+var y = inputy;
+var number = inputnumber;
+this.setup = setup;
+function setup() {
+area = "area" + number;
+$('canvas2').innerHTML += "&lt;div id='" + area + "'&gt;"+area+"&lt;/div&gt;\n"
+$(area).style.position = "absolute";
+$(area).style.left = x + "px";
+$(area).style.top  = y + "px";
+$(area).style.width  = 50 + "px";
+$(area).style.height = 50 + "px";
+$(area).style.backgroundColor = "#AAAAAA";
+}
+}
+function clicked(event) {
+obj = new Area( Event.pointerX(event), Event.pointerY(event), objs.size() );
+obj.setup();
+objs.push( obj );
+}
+function startup(){
+objs = new Array();
+Event.observe( 'canvas2', 'click', clicked, false);
+}
+startup();
+&lt;/script&gt;
+</pre>
+<pre>
+Event.observe( 'canvas2', 'click', clicked, false);
+</pre>
+<p>を使って，メソッドを登録すると，prototype.jsで拡張されたeventオブジェクトをイベント発生時受け取り，処理することができる．</p>

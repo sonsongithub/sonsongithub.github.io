@@ -1,0 +1,39 @@
+---
+layout: post
+title: '[iPhone SDK] Avoid target="_blank" problem'
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>This is @norio_nomura's hack, this is his great work.<br />
+In fact, WebView passes "webView:createWebViewWithRequest:" method to UIWebViewWebViewDelegate before the new window opening. It is called for deciding which webview will be used as view to open a next URL. However UIWebView's UIWebViewWebViewDelegate returns nil for "webView:createWebViewWithRequest:" because it isn't implemented, default.<br />
+Therefore, to avoid target="_blank" problem, we should implement this method into "<br />
+UIWebViewWebViewDelegate" class with dynamic programming style. So, following code.</p>
+<pre>
+static id webViewcreateWebViewWithRequestIMP(id self, SEL _cmd, id sender, id request) {
+return [sender retain];
+}
++ (void)installNewWindowDelegateHook {
+Class klass = objc_getClass( "UIWebViewWebViewDelegate" );
+if( klass == nil )
+return;  // unfortunately, UIWebViewWebViewDelegate has gone...
+class_addMethod( klass,
+@selector(webView:createWebViewWithRequest:),
+(IMP)webViewcreateWebViewWithRequestIMP,
+"@@:@@" );
+}
+</pre>
+<p>Already done!<br />
+Thank you, @norio_nomura.</p>

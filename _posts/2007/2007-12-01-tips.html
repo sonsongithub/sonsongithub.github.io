@@ -1,0 +1,80 @@
+---
+layout: post
+title: "[Tips] やっぱりObj-C1.0のメモリ管理がクソな件"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "その他"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>やってらんねー．<br />
+Objective-C 2.0からやっとガーベッジコレクションがついたObj-Cシリーズだが．<br />
+やっぱりだめだ．iPhoneのランタイムはObj-C1系統だし，以前のランタイムでビルドしたバイナリはガーベッジコレクションに対応していないので，管理・非管理に気をつけないといけない．<br />
+だりぃ．<br />
+（さ）さんから，質問がありましたが，ザッと説明するとこんな感じ？<br />
+Obj-Cはインスタンスが保持カウンタを持っています．</p>
+<pre>
+p = [[HogeClass alloc] init];
+</pre>
+<p>こうすると，pの保持カウンタは1です．<br />
+allocでインスタンスを生成，initで初期化という意味です．<br />
+この保持カウンタが０になると，pは，解放されます．<br />
+つまり，あるメソッドの中で上の様にインスタンスを作成した場合は，releaseをしないといけないのです．</p>
+<pre>
+void hoge() {
+id p = [[HogeClass alloc] init];
+[p release];
+}
+</pre>
+<p>こうすると，pは，hogeが実行し終わったタイミングで解放されます．<br />
+ここまでは，フーーーーーーーンなんですが．<br />
+Obj-Cには，autorelease機能があります．</p>
+<pre>
+void hoge() {
+id pool = [[NSAutoreleasePool alloc] init];
+id p = [[[HogeClass alloc] init] autorelease];
+[pool release];
+}
+</pre>
+<pre>
+void hoge() {
+id pool = [[NSAutoreleasePool alloc] init];
+id p = [NSString stringWithString:@"hoge"];
+[pool release];
+}
+</pre>
+<p>クラスメソッドでインスタンスを生成すると，そのインスタンスに自動的にautoreleaseが送られます．上二つの両方とも，poolが解放されると同時にpは解放されます．<br />
+インスタンスにautoreleaseを送ると，NSAutoreleasePoolにそのインスタンスが登録されます．<br />
+そして，そのNSAutoreleasePoolのインスタンスが解放されるときに，自動的に登録されているインスタンスそれぞれにreleaseが送られます．<br />
+Cocoaでプログラミングするときは，NSApplicationMainのメインイベントループから抜けるときにautoreleaseしたオブジェクトにreleaseが送られます．<br />
+※以下，追記修正<br />
+どうやら，僕は，今まで勘違いしており，<br />
+>イベントループ内で毎回生成されるNSAutoreleasePool<br />
+>は、ループが一回転するごとに解放されるので、基本<br />
+>的にこれに登録されたオブジェクトに割り当てられた<br />
+>メモリはイベント処理が終わると解放される。<br />
+これをループの外で呼んでいると思っていたところにあったようです．<br />
+しかも，実際にイベントごとにメモリの挙動を調べてみると，あるメソッド終了後に解放されているように一見，見える．これは，ループが一回転したときに解放されていることだったのですね・・・・・．無知で恥ずかしい．<br />
+つまりこういうわけだ．</p>
+<pre>
+while() {    // メッセージループ
+id pool = [[NSAutoreleasePool alloc] init];
+// process
+[pool release];
+}
+</pre>
+<p>しかし，別にメモリ管理がやりやすいわけではないぞ．<br />
+結局参照じゃ保持カウンタは，増えないわけで，自前でreleaseしてやらないといけない．<br />
+しかも，やったことはないけど，絶対マルチスレッドで参照とかやったら，相当めんどくさいことになると思う・・・．<br />
+※間違いがあったら，ツッコミお願いします．</p>

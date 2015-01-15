@@ -1,0 +1,68 @@
+---
+layout: post
+title: "[Ruby] ファイルの一括処理"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Python
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">ディレクトリのファイルリスト </h3>
+<p>ディレクトリのファイルリストは，以下で取得できる．</p>
+<pre>
+Dir.chdir("./wiki")
+fileList =Dir.glob("*.txt")
+for i in 0..(fileList.size-1)
+print fileList[i], "/n"
+end
+</pre>
+<p>これで，拡張子がtxtのファイルの一覧がfileListに代入される．<br />
+<br />
+<h3 class="line-header">ファイルの読み込み </h3>
+<p>ファイルの末尾はeofで確認できるので，1行ずつの読み込みは，以下のように行える．<br />
+ファイルからの読み込みは，getsで行う．</p>
+<pre>
+while !fr.eof
+str = fr.gets
+print str
+end
+</pre>
+<p>
+<h3 class="line-header">置換して書き込む </h3>
+<p>今回のプログラム全体は，こうなった．</p>
+<pre>
+#!/usr/bin/ruby
+def eliminateChilda(fileName)
+readFilePath = "/Users/sonson/develop/Ruby/wiki/" + fileName
+writeFilePath = "/Users/sonson/develop/Ruby/wiki2/" + fileName
+fr = open(readFilePath,"r")
+fw = open(writeFilePath,"w")
+while !fr.eof
+str = fr.gets
+result = str.gsub(/~?n/,"?n")
+fw.print result
+end
+fr.close
+fw.close
+end
+def main()
+Dir.chdir("./wiki")
+fileList =Dir.glob("*.txt")
+for i in 0..(fileList.size-1)
+eliminateChilda(fileList[i])
+end
+end
+main()
+</pre>

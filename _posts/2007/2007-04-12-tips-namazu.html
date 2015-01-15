@@ -1,0 +1,81 @@
+---
+layout: post
+title: "[Tips] namazuで検索"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta:
+  _oembed_c9a7dd3067b3f24045b2f1df679ffa39: "{{unknown}}"
+  _oembed_85c5ff2342d17b7fe0efc2ca1233b522: "{{unknown}}"
+  _oembed_bff44978c08c355ac8bfc769456be1c6: "{{unknown}}"
+  _oembed_3dfa6308788cf0bd5de1849f5c177e85: "{{unknown}}"
+  _oembed_f41dec8ba829eedbe84ce9772b8d869a: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h2>namazuをセットアップ</h2>
+<p>・nkf<br />
+・KAKASI<br />
+・chasen<br />
+・mecab<br />
+・xpdf<br />
+をとりあえずインストールする．<br />
+これらは，portでインストールする．<br />
+次にnamazuをソースコードからインストールする．<br />
+http://www.namazu.org/</p>
+<pre>
+./configure
+make
+sudo make install
+</pre>
+<p>さらに，namazuで日本語のインデックスを作成するため，環境変数LANGを変更する．<br />
+固定するには，shellの環境変数を変更する．<br />
+私は，bashを使っており，めんどくさいので/etc/profileに以下を追加した．</p>
+<pre>
+export LANG=jp
+</pre>
+<p>次に，mknmzの設定ファイルを見る．<br />
+説明サイトではデフォルトでいけるみたいなことを書いたけど，とりあえず設定ファイルを書き換えてみた．<br />
+nkfと，Chasenと，WAKATIのところだけ，コメントアウトを消して，修正した．<br />
+そうするとうまくいった．</p>
+<h2>番外〜pdfを検索する</h2>
+<p>pdfは，xpdfというツール使ってインデックスを作ることになる．<br />
+しかし，そのままでは，xpdfが日本語を処理できないため，languageパックをインストールする．<br />
+おそらく，そのままの場合，下のようなエラーが出るはず．</p>
+<pre>
+Unable to convert pdf file (maybe copying protection)
+</pre>
+<p>xpdf-japanese.tar.gzをインストールする．<br />
+/usr/local/share/xpdf/japanese<br />
+に中身を全部コピーする．<br />
+そして，さらに<br />
+/usr/local/etc/xpdfrcにadd-to-xpdfrcの中身を追加する．<br />
+しかし，port等を使ってインストールした場合は，パスが異なるので，それを変えてadd-to-xpdfrcの中身を追加する．<br />
+確認は，pdftotextを使って日本語のpdfファイルを読み取ってみる．<br />
+pdftotextでエラーが出ている場合は，ここまでの設定がおかしいということになる．</p>
+<h2>しばらくするとまたおかしくなった．</h2>
+<p>Perlのエラーが出ていたので，環境変数を整理した．<br />
+その後，インデックスを再構築すると，まったく検索できない状態となった．<br />
+中を見てみると，どうやら，分かち書きが全然できていない様子．<br />
+・・・．どういうこっちゃ．<br />
+色々，設定を試みた結果．LANGの値のようだ．</p>
+<pre>
+export LANG=jp
+</pre>
+<p>これはあまりよろしくないらしい．<br />
+というわけで，</p>
+<pre>
+export LANG=ja_JP.UTF-8
+</pre>
+<p>としておく．<br />
+なんで，今までできてたんやろう・・・・．意味がわからん．</p>

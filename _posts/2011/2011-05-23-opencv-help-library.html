@@ -1,0 +1,37 @@
+---
+layout: post
+title: OpenCV Help Libraryを作ってみた
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>OpenCVをiOS上で使うときに，面倒くさいのが，UIImageやCGImageからのIplImageへの相互変換ですよね．<br />
+それらの面倒くさいやつらを<a href="https://github.com/sonsongithub/OpenCV-Help-Library">OpenCV Help Library</a>として実装してみた．</p>
+<p><a href="https://github.com/sonsongithub/OpenCV-Help-Library">https://github.com/sonsongithub/OpenCV-Help-Library</a></p>
+<p>後，cvLoadImageもQuartzのラッパーとして実装してみた．<br />
+正直，サポートしてる画像の形式も少ないし，バグバグだろうけど，なんかの礎になればと．</p>
+<p>以下のような感じで，IplImageを作ったりできます．</p>
+<p><code><br />
+// Convert to CGImageRef from IplImage<br />
+CGImageRef p = CGCreateImageWithIplImage(originalSourceImage);<br />
+// Convert to IplImage(RGB) from CGImageRef<br />
+IplImage *duplicatedFromCGImage = CGCreateIplImageWithCGImage(p);<br />
+Sample code - Load IplImage<br />
+</code></p>
+<p><code><br />
+NSString *path = [[NSBundle mainBundle] pathForResource:@"testImage_Gray_PNG24.png" ofType:nil];<br />
+IplImage *original = cvLoadImage([path UTF8String], CV_LOAD_IMAGE_COLOR);<br />
+</code></p>

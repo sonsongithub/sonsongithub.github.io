@@ -1,0 +1,57 @@
+---
+layout: post
+title: JenkinsでIPAファイルをビルドしてTestFlightで飛ばす
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><a href="http://sonson.jp/?p=2557">前の続き</a></p>
+<p>続いて，TestFlightにアップロードするために，ビルドしたアプリケーションをipaファイルにパッケージングする．<br />
+jenkinsのXcodeプラグインは，ipaファイルをビルドする機能がついているのだが，私の環境ではうまく動作しなかった．<br />
+バージョン情報とかの設定が必要なのかもしれない．</p>
+<p>そこで，直接ビルドツールxcrunを使い，xcodeのビルド後にipaファイルをビルドすることにする．<br />
+※Xcodeプラグインも内部的にも同じxcrunを使っているので同じ結果になるはずなんだけど・・・・．ちょっとわからない．</p>
+<p><strong>xcrunでビルド</strong><br />
+<code><br />
+xcrun -sdk iphoneos PackageApplication --embed hoge.mobileprovision ${WORKSPACE}/hoge.app -o ${WORKSPACE}/hoge.ipa<br />
+</code></p>
+<p>--embedオプションが必要なのかちょっと，不明瞭なんだが，一応，つけておく．TestFlightで配布するときのプロビジョニングファイルを埋め込んでおく．<br />
+これで，ipaファイルがビルドされるはずだ．</p>
+<p><strong>dSYM</strong><br />
+次に，TestFlightの機能をフルに生かすためにdSYMファイルをアップロードする用意をする．<br />
+私はここでハマった．当たり前だが，dSYMファイルはディレクトリなんですよね・・・・・・・．<br />
+なので，まずiOSのビルド後にdSYMファイルをzipで圧縮する．これをTestFlightプラグインに読み込ませる．</p>
+<p><code><br />
+zip -r ${WORKSPACE}/hoge.app.dSYM.zip ${WORKSPACE}/hoge.dSYM<br />
+</code></p>
+<p><strong>TestFlight</strong><br />
+ビルド後の処理にTestFlightによるアップロードを設定する．TestFlightプラグインをインストールしていれば，"ビルド後の処理を追加"ボタンで追加できる．<br />
+設定が必要な項目は，</p>
+<p>・API Token<br />
+・Team Token<br />
+・IPA File<br />
+・dSYM File</p>
+<p>だ．</p>
+<p>API Tokenは，TestFlightの右上の自分のアイコンをクリックして，Account Setting→APIを選ぶと見られる．<br />
+Team Tokenは，TestFlightの右上の自分のアイコンの左隣の自分の名前をクリックして，”Edit Info”を選ぶと見られる．<br />
+これを見つけるのにかなり時間がかかった・・・・・・．</p>
+<p>IPAファイルと，dSYMファイルは，フルパスで指定する．</p>
+<p>${WORKSPACE}/hoge.ipa<br />
+${WORKSPACE}/hoge.dSYM.zip</p>
+<p>これでビルドしたときに自動的にTestFlightにアップロードされる．<br />
+テストの対象者は，"Distribution Lists"で指定する．複数入力できるっぽい．あらかじめTestFlightでつくっておいたテストチームのタイトルを入力すればよい．<br />
+"Notify Team"にチェックを入れておくと，そのままテスターにメール通知もされるので非常に便利だ．</p>
+<p>これで勝つる！！！！</p>

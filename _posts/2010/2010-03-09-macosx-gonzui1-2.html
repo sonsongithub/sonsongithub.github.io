@@ -1,0 +1,30 @@
+---
+layout: post
+title: "[MacOSX] gonzui1.2のパッチ"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>便利なソースコード検索ツール<a href="http://gonzui.sourceforge.net/index.html.ja">gonzui</a>ですが，最近のbdbのバージョンアップのせいで，"Fixnum expected"とかいうエラーでうまく動かないというバグが出てるので，それを修正するパッチを作りました．<br />
+<a href="http://son-son.sakura.ne.jp/archive/gonzui.patch">ファイルをダウンロード</a></p>
+<pre>
+> tar zxf gonzui-1.2.tar.gz
+> patch -p0 -d . < gonzui.patch
+</pre>
+<p>でパッチを当ててください．<br />
+適当に作ったので，チェックしてから使ったほうがいいですお．<br />
+※同じようにしている人がいたので参考リンク<br />
+<a href="http://d.hatena.ne.jp/kameid/20090425/1240679978">http://d.hatena.ne.jp/kameid/20090425/1240679978</a></p>

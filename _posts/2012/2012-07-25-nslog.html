@@ -1,0 +1,44 @@
+---
+layout: post
+title: NSLogをReleaseビルドでどうやって消すか。
+categories:
+- blog
+tags:
+- Blog
+- "本"
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>こないだの<a href="http://atnd.org/events/30549">勉強会</a>でどうやら結論が出たっぽいよ．</p>
+<p>「printfとかのデバッグ用の出力をリリースビルドではやっぱり消したいよね・・・・．マクロで．」という問題である．</p>
+<p>@5mingame2が発表の中で指摘していたコードでいいっぽい．<br />
+すごく知的な感じで素敵．</p>
+<pre>
+<del datetime="2012-07-29T05:57:39+00:00">#ifdef  _DEBUG
+    #define DNSLog(...);    NSLog(__VA_ARGS__);
+#else
+    #define DNSLog(...);    0 && NSLog(__VA_ARGS__);
+#endif</del>
+</pre>
+<p>
+0 &amp;&amp;の代わりにコメントアウトでいいんじゃないの？って@5mingame2に聞いたら，「それなら，複数行に対応できないじゃない，この情弱が！」って怒られてないけど，マイルドにアドバイスをくれて納得．</p>
+<p><strong>追記</strong><br />
+なんか，コメントアウトでも複数行でも動くっぽい．</p>
+<pre>
+#ifdef  _DEBUG
+    #define DNSLog(...);    NSLog(__VA_ARGS__);
+#else
+    #define DNSLog(...);    // NSLog(__VA_ARGS__);
+#endif
+</pre>
+<p></p>

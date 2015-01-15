@@ -1,0 +1,33 @@
+---
+layout: post
+title: "本ブログもiPhoneのMobileSafariに対応しました。"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><img alt="20080818_01.png" src="{{ site.url }}/assets//20080818_01.png" width="160" height="240" align="right" />前にも一度申し上げたように弊サイトのアクセスの多くをiPhone/iPod touchが占めています．そこで，流行？の<a href="http://cremadesign.jp/blog/iphone/iphone_template_for_mt.html">iPhoneテンプレート for MT</a>を使って，iPhone用のサイトも作りました．<br />
+少し前から，iPhone/iPod touchで見ていらっしゃる方はすでにお気づきでしょう．<br />
+結構導入は簡単でした．<br />
+また，自分のサイトをちょっといじって，User-Agentを見てiPhone用のページへジャンプするJavascriptを埋め込みました．</p>
+<pre>
+&lt;SCRIPT type="text/javascript"&gt;
+&lt;!--
+if(navigator.userAgent.indexOf('iPod')!=-1||navigator.userAgent.indexOf('iPhone')!=-1){
+location.href='./i/index.html';
+} else {
+}
+--&gt;
+&lt;/SCRIPT&gt;
+</pre>

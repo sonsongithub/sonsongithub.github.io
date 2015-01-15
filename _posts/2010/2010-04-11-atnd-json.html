@@ -1,0 +1,42 @@
+---
+layout: post
+title: ATND JSONオブジェクトのバグ？
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>ATND APIでJSONオブジェクトで結果を得ようとすると，たまに返されるJSONオブジェクトに円マークがエスケープなしで混入される．<br />
+このため，普通のJSONパーサでは読めない（例外でちゃうからね）．</p>
+<pre>
+require 'json'
+require 'open-uri'
+require 'timeout'
+def download(uri)
+begin
+open(uri){|f|
+f.read
+}
+rescue TimeoutError
+else
+end
+end
+original = download("http://api.atnd.org/events/?keyword=rake:money&format=json&count=20")
+a = 0x1C
+k=""                         # なんかRubyっぽくない
+k = k + a.chr
+revised = t.gsub(k,"")
+v=JSON.parse(revised)        # 置換された後なのでパースできる
+v=JSON.parse(original)       # エラー
+</pre>

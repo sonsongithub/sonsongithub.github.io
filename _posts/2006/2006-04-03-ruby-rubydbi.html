@@ -1,0 +1,102 @@
+---
+layout: post
+title: "[Ruby] RubyDBI"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Ruby
+- SQL
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>データベースの用意は完成．こいつをRubyからいじってみる．<br />
+なんと，Rubyからデータベースを気にせず？プログラミングができるインタフェースが用意されているという．<br />
+そいつをインストールしてみる．<br />
+<br />
+<h3 class="line-header">Ruby/DBIインストール for MacOSX（環境あんまり関係無いと思うが） </h3>
+<p>MySQLと，PostgreSQLを両方とも使ってみたいが，とりあえず，PostgreSQLで試してみる．<br />
+必要なモノは，SQLite，SQLの拡張モジュール？，Ruby/DBIの3つ．</p>
+<h3 class="numeric-list">
+<li>[[SQLite>http://www.sqlite.org/]]</li>
+<li>[[PostgresSQL用のモジュール>http://ruby.scripting.ca/postgres/]]</li>
+<li>[[Ruby/DBI>http://rubyforge.org/projects/ruby-dbi/]]</li>
+</h3>
+<p>これらを，この順番でインストール．<br />
+<br />
+<h3 class="line-header">SQLite </h3>
+<p>こいつは，普通通り，</p>
+<pre>
+>./configure
+>make
+>sudo make install
+</pre>
+<p>でOK．<br />
+<br />
+<h3 class="line-header">PostgresSQL用のモジュール </h3>
+<p>こいつは，Rubyのスクリプトでmakeの設定をする．</p>
+<pre>
+>ruby extconf.rb --with-pgsql-dir=/usr/local/pgsql
+>make
+>sudo make install
+</pre>
+<p>これで，OK．extconf.rbのオプションはググって参考にした．<br />
+　※MacOSX Tiger 10.4.5，Ruby 1.8.4<br />
+<br />
+<h3 class="line-header">Ruby/DBI </h3>
+<p>こいつもRubyのスクリプトで．</p>
+<pre>
+>ruby setup.rb config --without=dbd_sybase
+>ruby setup.rb setup
+>sudo ruby setup.rb install
+</pre>
+<p>これで，OK．上記と同様にextconf.rbのオプションはググって参考にした．<br />
+<br />
+<h3 class="line-header">テスト〜早速試す </h3>
+<p>PostgresSQLからデータを読み込むスクリプト書いてみる．<br />
+前のPostgreSQLの設定で試したデータベースをのぞいてみる．<br />
+データベースはこんな感じ．</p>
+<pre>
+test=# select * from human;
+name   | age
+----------+-----
+hoge     |  20
+hogehoge |  27
+(2 rows)
+</pre>
+<p>スクリプト．</p>
+<pre>
+#!/usr/local/bin/ruby
+require "dbi"
+dbh = DBI.connect("DBI:Pg:test", 'username', 'passowrd')
+if(dbh)
+print "connected.?n"
+# select from datatable "human"
+sth = dbh.prepare("select * from human")
+sth.execute
+#  pirnt each row from db.
+while row=sth.fetch do
+print row,"?n"
+end
+dbh.disconnect
+else
+print "connection failed.?n"
+end
+</pre>
+<p>これでOK．実行してみる．</p>
+<pre>
+>ruby test.rb
+>connected.
+>hoge20
+>hogehoge27
+</pre>
+<p>をを！できた．でも，なんだか要素がくっついている・・・．</p>

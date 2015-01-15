@@ -1,0 +1,45 @@
+---
+layout: post
+title: "オレオレポップオーバー〜UZMultipleLayeredPopoverController"
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>UIPopoverController，グダグダですよね． 階層的に表示すると審査で文句言われるし，ビューコントローラからUIPopoverControllerのインスタンスにアクセスできないし，UIPopoverControllerを破棄してもインスタンスは開放されないし，容易に多重表示されちゃうし・・・・． とりあえず，グダグダです．</p>
+<p>そこで，仕方がないのでiOS7のUIっぽいオリジナルのポップオーバーを作りました．</p>
+<p><iframe width="640" height="480" src="//www.youtube.com/embed/ePbiWwZu3w4" frameborder="0" allowfullscreen></iframe></p>
+<p>[cpp]<br />
+@interface UIViewController (UZMultipleLayeredPopoverController)<br />
+ - (void)dismissCurrentPopoverController;<br />
+ - (void)dismissMultipleLayeredPopoverController;<br />
+ - (void)presentMultipleLayeredPopoverWithViewController:(UIViewController<em>)viewController<br />
+ 　　　　　　　　　　　　　　　　　　　　　　contentSize:(CGSize)contentSize<br />
+ 　　　　　　　　　　　　　　　　　　　　　　　 fromRect:(CGRect)fromRect<br />
+ 　　　　　　　　　　　　　　　　　　　　　　　　 inView:(UIView</em>)inView<br />
+ 　　　　　　　　　　　　　　　　　　　　　　　direction:(UZMultipleLayeredPopoverDirection)direction;<br />
+@end<br />
+[/cpp]</p>
+<p>これら3つのメソッドだけで利用することができます． ポップオーバー上に表示するビューは，ビューコントローラをセットして作ります． このため，従来のUINavigcationControllerのように使うことができます． たとえば，以下のようなコードで，Storyboardから生成したビューコントローラをポップオーバー上に配置できます．</p>
+<p>[cpp]<br />
+id viewController = [self.storyboard instantiateViewControllerWithIdentifier:@&quot;NavigationController&quot;];<br />
+[self presentMultipleLayeredPopoverWithViewController:viewController<br />
+ 　　　　　　　　　　　　　　　　　　　　　contentSize:CGSizeMake(320, 480)<br />
+ 　　　　　　　　　　　　　　　　　　　　　　 fromRect:button.frame<br />
+ 　　　　　　　　　　　　　　　　　　　　　　　 inView:self.view<br />
+ 　　　　　　　　　　　　　　　　　　　　　　direction:UZMultipleLayeredPopoverAnyDirection];<br />
+[/cpp]</p>
+<p>ソースは，BSDライセンスでgithubで公開しています． 使ってみてください．</p>
+<p><a href="https://github.com/sonsongithub/UZMultipleLayeredPopoverController">github</a></p>

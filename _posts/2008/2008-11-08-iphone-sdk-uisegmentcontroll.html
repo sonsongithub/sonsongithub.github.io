@@ -1,0 +1,38 @@
+---
+layout: post
+title: "[iPhone SDK] UISegmentControllのtoggle動作を止める"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>UISegmentControllは，セグメントが二つの時はtoggle動作，つまり，どちらを押しても反応するようなデフォルト設定になっている．<br />
+それを抑制する方法が，AppleのDiscussionにあったので，抜粋．</p>
+<pre>
+@interface UISegmentedControl(StopToggle)
+- (BOOL) toggleWhenTwoSegments;
+- (void) setToggleWhenTwoSegments: (BOOL) flag;
+@end
+@implementation UISegmentedControl(StopToggle)
+- (BOOL) toggleWhenTwoSegments {
+return ( _segmentedControlFlags.dontAlwaysToggleForTwoSegments == 0 );
+}
+- (void) setToggleWhenTwoSegments: (BOOL) flag {
+_segmentedControlFlags.dontAlwaysToggleForTwoSegments = (flag ? 0 : 1);
+}
+@end
+</pre>
+<p>・抜粋<br />
+<a href="http://discussions.apple.com/thread.jspa?messageID=8091051">http://discussions.apple.com/thread.jspa?messageID=8091051</a></p>

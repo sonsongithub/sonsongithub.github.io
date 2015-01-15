@@ -1,0 +1,88 @@
+---
+layout: post
+title: "[iPhone SDK] iPhone 浮動小数点 vs 固定小数点"
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>iPhoneのCPUはarmです．<br />
+浮動小数点の計算はどの程度のものなのか．<br />
+そして，浮動小数点の計算が遅いなら，固定小数点はどうなるだろう．<br />
+ということで，ベンチマークを取ってみた．お題は．<br />
+※512x512のグレースケールのレナ画像に分散1.5のガウシアンをたたみ込む<br />
+・分散1.5のガウシアンフィルタの窓の大きさは，5x5で打ち切った<br />
+・端のたたみ込みは無視した→実質たたみ込みの計算回数は508x508<br />
+・つまり，1回の計算で25次元ベクトルの内積計算を508x508回することになる．<br />
+※以上のたたみ込み計算を100回繰り返し平均を測定<br />
+・フィルタ作成時間も含めた<br />
+・固定小数点の場合は（float→255段階変換のための）量子化テーブル作成時間も含めた<br />
+※結果<br />
+・armでビルド<br />
+　→浮動小数点 0.738466 seconds<br />
+　→固定小数点 0.503873 seconds<br />
+・thumbでビルド<br />
+　→浮動小数点 2.571696 seconds<br />
+　→固定小数点 0.955603 seconds<br />
+・参考までにC2D<br />
+　→浮動小数点 0.031821 seconds<br />
+　→固定小数点 0.039582 seconds<br />
+浮動小数点計算が速い．2x2行列と2次元ベクトルの乗算をテストした時は浮動小数点の方と固定小数点の結果が大体同じ時間だったので，この結果から一概に固定小数点の方が速いとは言い切れない．armビルドでアプリを作るなら，計算が軽い，あるいはリアルタイム性が低いならarmモード+浮動小数点で十分かも知れない．<br />
+もうちょっとデータを取った方がいいのかも．あるいは，両方で実装して速い方を採用するとか？<br />
+一方，thumbでビルドする（バイナリを小さくしたいなど）場合は，固定小数点の効果は抜群．効果は絶大．ま，当たり前だけど．<br />
+・・・・・C2Dやっぱ速いね．<br />
+※参考のソースコード</p>
+<pre>
+#define _f16(x) (x*32768)
+#define _f32(x) (x*65536)
+#define _d16(x) ((float)x/32768)
+#define _d32(x) ((float)x/65536)
+---------
+int bytes = sizeof(unsigned char) * width * height * 4;
+unsigned char* target_pixel = (unsigned char*) malloc( bytes );
+int filter_size = 0;
+int* window = makeGaussianWindowFixed( &filter_size, sigma );
+int i,x,y;
+int w_x, w_y;
+int offset = filter_size / 2;
+int quantize_table[300];
+for( i = 0; i &lt; 256; i++ ) {
+if( i &lt; 256 )
+quantize_table[i] = i;
+else
+quantize_table[i] = 255;  // for safety, but so not much safety :)
+}
+for( x = offset; x &lt; width - offset; x++ ) {
+for( y = offset; y &lt; height - offset; y++ ) {
+int r = 0;
+for( w_x = 0; w_x &lt; filter_size; w_x++ ) {
+for( w_y = 0; w_y &lt; filter_size; w_y++ ) {
+#if TARGET_IPHONE_SIMULATOR
+int point = bytesPerRow * ( y + w_y - offset) + 3 * ( x + w_x - offset );
+#else
+int point = bytesPerRow * ( y + w_y - offset) + 4 * ( x + w_x - offset );
+#endif
+r += ( *( window + filter_size * w_y + w_x ) * (*(source + point)) );
+}
+}
+int point = 4 * width * y + 4 * x;
+*(target_pixel + point     ) = quantize_table[(int)_d32(r)];
+*(target_pixel + point + 1 ) = quantize_table[(int)_d32(r)];
+*(target_pixel + point + 2 ) = quantize_table[(int)_d32(r)];
+*(target_pixel + point + 3 ) = 255;
+}
+}
+free( window );
+return target_pixel;
+</pre>

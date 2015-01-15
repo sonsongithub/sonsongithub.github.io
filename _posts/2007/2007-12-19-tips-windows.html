@@ -1,0 +1,28 @@
+---
+layout: post
+title: "[Tips] Windowsでsocket通信が遅い"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Linux，MacOSXなら速いのに・・・．<br />
+そういうときは，TCP_NODELAYを疑う．</p>
+<pre>
+int on = 1;
+setsockopt( sock, SOL_SOCKET, SO_REUSEADDR, (void *) &on, sizeof(on));
+setsockopt( sock, IPPROTO_TCP, TCP_NODELAY, (void *) &on, sizeof(on));
+</pre>
+<p>これでおk．<br />
+SO_REUSEADDRは，関係ないけど，書いておいた．</p>

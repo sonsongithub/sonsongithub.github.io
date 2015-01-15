@@ -1,0 +1,227 @@
+---
+layout: post
+title: "[OpenGL] WindowsSDK"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">はじめに </h3>
+<p>Windows上でのMFCを使わない，SDKレベルでの開発におけるOpenGLプログラミングについて説明する．まず，ここではWindowsアプリケーションのプログラミングには言及しないため，他のWindowsプログラミングのサイト，本などを参考にしてもらいたい．<br />
+<br />
+<h3 class="line-header">WindowsAPIを使ったプログラミングの流れ </h3>
+<p>OpenGLを使用する流れは以下のようになります．（ここではSDKプログラミングを含めています．）</p>
+<h3 class="numeric-list">
+<li>ウィンドウを作成する．</li>
+<li>ピクセルフォーマット構造体にデータを入力する．</li>
+<li>ピクセルフォーマット構造体のデータを確認する．</li>
+<li>ピクセルフォーマット構造体を入力する．</li>
+<li>ピクセルフォーマットとデバイスコンテキストからレンダリングコンテキストを作成する．</li>
+<li>レンダリングコンテキストをデバイスコンテキストに結びつける．</li>
+</h3>
+<p>ピクセルフォーマットの設定のタイミングはWM_CREATE時に行う．ウィンドウをハンドルを利用するので，ウィンドウが作成された後であれば，実際はいつ行っても良いが，WM_CREATEのときが初期化としては，適当であると考えられる．<br />
+この関数はメインのウィンドウプロシージャからウィンドウハンドルを受け取り，レンダリングコンテキストを返すものである．</p>
+<pre>
+HGLRC Init_Pixel(HWND hWnd)
+{
+HGLRC hRC;
+HDC hDC;
+int pixelformat;
+static PIXELFORMATDESCRIPTOR pfd = {
+sizeof(PIXELFORMATDESCRIPTOR),    //この構造体のサイズ
+1,                                    //OpenGLバージョン
+PFD_DRAW_TO_WINDOW |  //Windowスタイル
+PFD_SUPPORT_OPENGL |  //OpenGL
+PFD_DOUBLEBUFFER,  //ダブルバッファ使用可能
+PFD_TYPE_RGBA,  //RGBAカラー
+24,        //色数
+0, 0,      //RGBAのビットとシフト設定
+0, 0,      //G
+0, 0,      //B
+0, 0,      //A
+0,         //アキュムレーションバッファ
+0, 0, 0, 0,//RGBAアキュムレーションバッファ
+16,        //Zバッファ
+0,         //ステンシルバッファ
+0,         //使用しない
+PFD_MAIN_PLANE,    //レイヤータイプ
+0,         //予約
+0, 0, 0    //レイヤーマスクの設定・未使用
+};
+//デバイスコンテキストを作成する．
+if (!(hDC=GetDC(hWnd))){
+MessageBox(hWnd,
+"Getting HDC Failed....","ERROR",MB_OK);
+return NULL;
+}
+//ピクセルフォーマットの指定
+if ( (pixelformat = ChoosePixelFormat(hDC, &pfd)) == 0 ){
+MessageBox(hWnd,
+"ChoosePixelFormat Failed....", "Error", MB_OK);
+return NULL;
+}
+//ピクセルフォーマットの設定
+if (SetPixelFormat(hDC, pixelformat, &pfd) == FALSE){
+MessageBox(hWnd,
+"SetPixelFormat Failed....", "Error", MB_OK);
+return NULL;
+}
+//OpenGLレンダリングコンテキストの作成
+if (!(hRC=wglCreateContext(hDC))){
+MessageBox(NULL,
+"Creating HGLRC Failed....","ERROR",MB_OK);
+return NULL;
+}
+ReleaseDC(hWnd,hDC);
+return hRC;
+}
+</pre>
+<p>以上がピクセルフォーマットを設定するコードである．まず，PIXELFORMATDESCRIPTOR構造体にそれぞれの設定値を代入する．この構造体を使って，ピクセルフォーマットを作成し，そのピクセルフォーマットを用いて，レンダリングコンテキストを作成する．<br />
+次に，この関数の戻り値であるレンダリングコンテキストをデバイスコンテキストへ結び付けます．こうすることで，現在のOpenGLのレンダリングコンテキストを，現在のアプリケーションのデバイスコンテキストにアタッチすることができる．</p>
+<pre>
+//カレントコンテキスト
+hDC = GetDC(hWnd);
+wglMakeCurrent(hDC,hRC);
+</pre>
+<p>
+<h3 class="line-header">viewport </h3>
+<p>Viewportもレンダリングコンテキストの作成と同様にいつ行ってもかまわない．しかし，viewportは，ウィンドウへの描画領域の設定のためのものであるため，一般に変更が必要になる代表的なタイミングはウィンドウのリサイズ時，つまりWM_SIZEです．</p>
+<pre>
+void Resize(HWND hWnd){
+GLdouble aspect;
+RECT rect;
+//現在のウィンドウのサイズを取得
+GetClientRect(hWnd, &rect);
+//それによってビューポートを設定する
+glViewport(0, 0, rect.right, rect.bottom);
+//アスペクト比の初期化
+aspect = (GLdouble)rect.right/(GLdouble)rect.bottom;
+//プロジェクションモードで射影
+glMatrixMode( GL_PROJECTION );
+gluPerspective( 60.0, aspect, 1.0, 10.0 );
+//ノーマルのモデルビューモードへ移行
+glMatrixMode( GL_MODELVIEW );
+}
+</pre>
+<p>これがInitGL.cppに記述されたリサイズ時の関数です．<br />
+まず引数のウィンドウハンドルhWndから現在のウィンドウのクライアント領域の大きさを得て，それをもとにglViewportによってViewportを設定します．<br />
+視体積のアスペクト比をウィンドウサイズから算出し，投視変換を再設定します． このとき，viewportのサイズから透視変換のアスペクト比を算出し，利用している．<br />
+<br />
+<h3 class="line-header">描画コードの呼び出しタイミング </h3>
+<p>APIを用いたGDIプログラミングの場合，WM_PAINTのタイミングで描画コードを書きますがOpenGLではそれにこだわる必要はない．任意のタイミングでglFinish()またはSwapBuffers(HDC)を使うことで描画を実行することができる．<br />
+glFinishは一連の描画コードをバッファからすべて実行するときに使用する．OpenGLはステートメント型なのでバッファにコマンドがたまると実行される．glFinishは，このバッファにたまったコマンドをまとめて，実行するものである．うまく描画されないときにはこのglFinishが抜けていることがある．<br />
+SwapBuffers(HDC)は，ダブルバッファを用いているときに使用する．このAPIによってバックバッファの描画内容をフロントバッファへとコピーすることができる．これによって見かけ上スムーズな描画，つまりアニメーションが行えるというものです．<br />
+どちらも，何らかの適当なタイミングで呼び出さなければ，スムーズなアニメーションを実現することはできない．1つは，タイマーをセットし，任意のタイミングで描画を行う．2つは，アプリケーションの待機時間つまりアイドリング時を利用して描画するものである．<br />
+<br />
+<h3 class="line-header">タイマーを利用した描画コード呼び出し </h3>
+<p>これといって特別にすることはありません．任意のタイミング描画コードを呼び出すことになります．<br />
+例えば，以下のように描画用の関数Drawを作成します．</p>
+<pre>
+//描画関数
+void Draw(void){
+//ウィンドウを塗りつぶす
+glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+//視点の変換行列の初期化
+glLoadIdentity();
+//視点の決定
+gluLookAt(
+0,0,0,
+0,0,5,
+0,1,0);
+glPushMatrix();
+glRotatef(90,0,1,0);
+glutSolidTeapot(0.5);
+glPopMatrix();
+hDC = wglGetCurrentDC();
+//ダブルバッファ
+SwapBuffers(hDC);
+}
+</pre>
+<p>これをWM_TIMERや，WM_LBUTTONDOWNなどで呼び出せば，描画できます．<br />
+<br />
+<h3 class="line-header">アイドリング時での描画コード呼び出し </h3>
+<p>こちらの場合は少し異なります．<br />
+Windowsでプロシージャを呼び出すメッセージループに細工をする必要があります．</p>
+<pre>
+// ウインドウを表示
+ShowWindow(hWnd, nCmdShow);
+UpdateWindow(hWnd);
+//アイドル時にアニメーションさせるためのメッセージループ
+while(TRUE){
+if(PeekMessage(&msg,NULL,0,0,PM_REMOVE)){
+//WM_QUITを明示的に処理する
+if(msg.message==WM_QUIT)
+break;
+TranslateMessage(&msg);
+DispatchMessage(&msg);
+}
+//他になにも処理がないので描画する
+else{
+Draw();
+}
+}
+</pre>
+<p>こんな感じです．実際にやっていることは至極単純です．いつものメッセージループはこんな感じでしょう．</p>
+<pre>
+// ウインドウを表示
+ShowWindow(hWnd, nCmdShow);
+UpdateWindow(hWnd);
+// メッセージループ
+while(GetMessage(&msg, NULL, 0, 0)) {
+TranslateMessage(&msg);
+DispatchMessage(&msg);
+}
+</pre>
+<p>上のメッセージループはPeekMessageによってメッセージがあるかないかを判断します．ただし，PeekMessageはGetMessageと違い，明示的にWM_QUITなどの処理を自動的に行わないためコードを書き足す必要があるわけです．これによってPeekMessageが何もメッセージを受け取っていないと0を返すのでelseの方へ流れ，Draw()が呼び出されることになります．これがアイドリング時に自動的に再描画する仕組みです．<br />
+<br />
+<h3 class="line-header">OpenGLの解放 </h3>
+<p>最後にOpenGLを開放します．WM_DESTROYタイミングでRelease_GLWindow(HWND)を呼び出し，OpenGLを開放します．</p>
+<pre>
+void Release_GLWindow(HWND hWnd){
+HDC hDC;
+HGLRC hRC;
+//OpenGLレンダリングコンテキストと
+//デバイスコンテキストを取得
+hRC = wglGetCurrentContext();
+hDC = wglGetCurrentDC();
+//カレントコンテキストを解放
+wglMakeCurrent(NULL, NULL);
+if(!hRC){
+//OpenGLレンダリングコンテキストがない
+MessageBox(hWnd,
+"Release HGLRC Failed....","ERROR",MB_OK);
+}
+if(hRC){
+//解放
+wglDeleteContext(hRC);
+}
+if(!hDC){
+//デバイスコンテキストがない
+MessageBox(hWnd,
+"Release HDC Failed....","ERROR",MB_OK);
+}
+if(hDC){
+//解放
+ReleaseDC(hWnd, hDC);
+}
+}
+</pre>
+<p>ここでは一応，コンテキストの有無を確認しながら開放処理を行っています．<br />
+現在のカレントコンテキストにNULLをセットし，無効にします．そのあとレンダリングコンテキストを開放，そして最後にデバイスコンテキストを開放します．<br />
+<br />
+<h3 class="line-header">ソースコード </h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/simple">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/simple</a><br />
+本ソースコードを使用したことによる如何なる損害も製作者は責任を負いません．</p>

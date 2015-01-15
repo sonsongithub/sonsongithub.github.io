@@ -1,0 +1,45 @@
+---
+layout: post
+title: "[お勉強] 非凸多角形の三角形分割"
+categories:
+- blog
+tags:
+- Blog
+- OpenCV
+- OpenGL
+- Programming
+- "お勉強"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>昔，モデルビューアのまねごとみたいなソフトを作ったときについでにつくった<br />
+のを思い出してつくってみた．<br />
+アルゴリズムは，以下の流れ．<br />
+１．もっとも原点から遠い頂点を探す．<br />
+２．その頂点の両隣の頂点からなる三角形の外積ベクトルの方向を保存する．<br />
+３．その頂点と，その両隣の頂点からなる三角形の内部に他の頂点があるかを調べる．<br />
+４．もし内部に頂点がなければ，その頂点とその両隣の頂点からなる三角形を分割要素<br />
+　　として，その頂点を削除し，１に戻る．<br />
+５．頂点が内部にある場合は，隣の頂点に移動する<br />
+６．移動先の頂点と，その両隣の頂点からなる三角形の外積ベクトルの方向を計算し，<br />
+　　２．で求めた外積ベクトルと同じ方向かをチェック．<br />
+７．もし同じ方向であれば，その頂点と，その両隣の頂点からなる三角形の内部に他<br />
+　　の頂点があるかを調べる．内部になければ，その頂点とその両隣の頂点からなる<br />
+　　三角形を分割要素として，その頂点を削除し，１に戻る．<br />
+８．もし異なる方向であれば，あるいは内部に他の頂点がある場合は，５．に戻る．</p>
+<div align="center">
+<img alt="Screenshot_2.png" src="{{ site.url }}/assets//Screenshot_2.png" width="250" height="272" />
+</div>
+<p>これで，任意の非凸多角形を三角形に分割できる．<br />
+多角形の中でも原点からもっとも遠い距離にある頂点は，凸角を構成するという性質を利用している．<br />
+※これを3次元に展開するとどうなるだろうか・・．<br />
+本ソースコードを使用したことによる如何なる損害も製作者は責任を負いません．<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/src/polygon">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/src/polygon</a></p>

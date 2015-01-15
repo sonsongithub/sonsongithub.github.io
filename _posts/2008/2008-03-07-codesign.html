@@ -1,0 +1,31 @@
+---
+layout: post
+title: codesign？ iPhone SDKの秘密？
+categories:
+- blog
+tags:
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>XCodeで，ターゲットをarmに設定して，ビルドしてみると，エラーが出た．<br />
+どうやら，この部分が噂の認証キーのようだ．</p>
+<pre>
+CodeSign /Users/sonson/Desktop/test/build/Debug-aspen/test.app/test
+cd /Users/sonson/Desktop/test
+/usr/bin/codesign -f -s "iPhone Developer" /Users/sonson/Desktop/test/build/Debug-aspen/test.app/test
+Codesign error: no certificate for identifier "iPhone Developer" was found in your keychain
+</pre>
+<p>iPhone developer programに参加するとこのキーがもらえるということだろうか．<br />
+なんにせよ，日本じゃなんにもおもしろくないなぁ・・・・．<br />
+後，$99/年なら，開発するのつらいなぁ・・・．<br />
+優しいユーザさん，寄付ｷﾎﾞﾝﾇ．メール待ってますｗ</p>

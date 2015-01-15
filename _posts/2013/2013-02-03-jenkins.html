@@ -1,0 +1,84 @@
+---
+layout: post
+title: JenkinsでiOSアプリケーションを自動ビルドする
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Jenkins．<br />
+継続的自動インテグレーションってやつなんだが，ドメインがjenkins-ciなあたり，下のAA以外思いつかないわけだが．</p>
+<p>　　　　　　,-――――――-.<br />
+　　　　　 /　　　　　　　　　　 |<br />
+　　　　　/　　　　　　　　　　　|<br />
+　　　　 /　 　　　　　　　　　　 |<br />
+　　　　l"ジェンキン寿司　　　l<br />
+　　 ,､_lー-―――――‐--、/l<br />
+　　 i ﾄ､ﾐﾐ　,r‐- ､｀`'ニ=‐、.彡ﾘ.<br />
+　　 ヾ,iﾊ゛.´ _,,､_ 　i.;　_,.　｀ 彡'i)<br />
+　　　 ｀､j,'　 `ﾟ''´:.ﾉ i::<･ゝ) .ﾊン 　　　　　　へいらっしゃい!!<br />
+　　　　　i, 　 ｀ ,､/　i_　｀`　,r'<br />
+　　　,r〃'i　 ,r'ヽ、 _,〉　　/.<br />
+　　 /i:ﾄ､;;i, 　ﾐ=_‐_-, 'i　/ヽ__<br />
+r-‐'´i::::ﾊ;;ヾ、‐‐-､　 ノ´/i:::'i｀i‐- ､_<br />
+::i' .l:i 'i::::i ヾ;;`‐---‐'i':/ i､ 'i::!　i::::i　｀<br />
+:i'　i:|　!:::l _,r.､;;;;;,r''´ヽi. ll::i　i::i　l:::'i</p>
+<p>iMacを新調して，メモリをﾌﾙﾌﾙでのっけたら，なにやらせても余裕綽々なので，バックでJenkinsでビルドやテストをさせることにした．<br />
+特にやりたいのが，TestFlightへのアップロードだ．毎度ビルドして，TestFlightに・・・というのは面倒くさい．<br />
+素直にはすすまないところを，Xcodeでビルドするところまでまとめてみる．</p>
+<p>JenkinsでiOSの自動ビルドをするポイントは，どうやら・・・・</p>
+<p>・jenkinsアカウントで処理することを忘れない<br />
+・秘密鍵と証明書をシステムにインストールするとはかどる<br />
+・jenkinsアカウントのホームパスに注意する</p>
+<p>の３点っぽい．以下で詳しく説明していこう．</p>
+<p><strong>Jenkins</strong><br />
+Jenkins自体のインストールは至極簡単．<a href="https://www.google.co.jp/search?client=safari&rls=en&q=jenkins-ci&ie=UTF-8&oe=UTF-8&redir_esc=&ei=D8oNUf-uOs7wmAX4n4CYBw">Jenkinsのサイト</a>からパッケージをダウンロードしてインストールするだけである．</p>
+<p>しかし，このインストールの結果に若干がクセが見られ，それを理解してないと後々ごちゃごちゃになるので以下の２点に気をつける．</p>
+<p>・Jenkinsはjenkinsアカウントが実行する．<br />
+・Jenkinsのツール類は，/Users/Shared/Jenkinsにインストールされる．</p>
+<p>あと，jenkinsの管理画面で，以下のプラグインをインストールしておこう．</p>
+<p>・github関連のプラグイン<br />
+・xcode関連のプラグイン（SICCI for Xcode Plugin，XCode integration）</p>
+<p><strong>githubからcloneして，pullする</strong><br />
+パブリックリポジトリなら問題ないのだが，プライベートリポジトリだと，gitからのチェックアウトの設定に一癖ある．<br />
+jenkinsアカウントでgitからフェッチしてくるので，jenkinsのアカウントにたいして，鍵を設定する必要がある．<br />
+こんな感じでjenkinsアカウントで鍵を生成し，githubに登録すればよい．</p>
+<p>> sudo -u jenkins ssh-keygen -t rsa -C "your_email@youremail.com"</p>
+<p>そして，/Users/Shared/Jenkins/.ssh/id_rsa.pubをgithubのSSH Keysに登録する．登録後，再度以下のコマンドで認証がうまくいくかをテストしておく．</p>
+<p>> sudo -u jenkins ssh -T git@github.com</p>
+<p>これでsshの設定は完了．</p>
+<p>gitのrepositoryは，git@github.com:hoge/bar.gitのように指定する．</p>
+<p>ここまでは簡単なのでが・・・・Xcode周りでややこしいのは三つ．</p>
+<p>・xcodebuildコマンドのライセンス確認<br />
+・証明書と秘密鍵<br />
+・プロビジョニング</p>
+<p><strong>xcodebuild</strong><br />
+xcodebuildは，SDK5くらいからサポートされたXcodeのプロジェクトをコマンドラインからビルドしたりできる便利ツールだ．<br />
+jenkinsのxcodeプラグインもこれを使っている．<br />
+普通にxcodebuildを利用すると，最初にライセンス許諾への同意を求められる．自動化ツールは，当然これに反応できないので，あらかじめ対応しておく．<br />
+jenkinsアカウントになってから一度ライセンスに対応しておけばいいはずなんだが，なかなかうまくいかなかった．<br />
+私は，suでも一応許諾作業をやった気がする（ごちゃごちゃ作業しすぎてわけがわからなくなった）．</p>
+<p>> sudo -u jenkins xcodebuild・・・agreeと入力して同意する<br />
+> sudo xcodebuild・・・agreeと入力して同意する</p>
+<p>iOSビルドでもっとも重要かつ複雑なのが証明書と鍵の処理だ．<br />
+jenkinsアカウント用に鍵と証明書をインストールするのは，複雑そうなので，証明書と鍵をシステム全体で共有できるようにする．<br />
+ただし，この方法は，マシンを共有している場合，ほかのユーザに証明書が共有されてしまうっぽいのでおすすめできない．ちゃんと考慮して行うべきである．<br />
+自分のアカウントにインストールされている鍵と証明書は，「ログイン」から「システム」にドラッグアンドドロップするだけ移動できる．<br />
+よくできているなぁ・・・・．<br />
+これでiOSにまつわる証明書と鍵をすべて移動しておく．</p>
+<p><strong>プロビジョニングファイル</strong><br />
+プロビジョニングファイルは，xcodebuildが認識するパスに保存しておく．</p>
+<p>/Users/Shared/Jenkins/Library/MobileDevice/Provisioning Profile</p>
+<p>ここに*.mobileprovisionプロビジョニングファイルをすべてコピーしておけばよい．</p>
+<p>とりあえず，これでJenkinsでgithubからフェッチして，ビルドすることができるようになったはず・・・・だ・・・・・．</p>

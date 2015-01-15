@@ -1,0 +1,63 @@
+---
+layout: post
+title: "[iPhone] toolchainのバグ？〜_objc_msgSend_fpret"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- Objective-C
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>どうやら，2007/10/31現在，配布されている開発ツール群にバグがある模様．<br />
+それは，</p>
+<pre>
+double objc_msgSend_fpret(id self, SEL op, ...)
+</pre>
+<p>が実装されておらず，リンク時にエラーが出る．これは，Tigerかつtoolchainv05のときはでなかったので，XCode3.0で変わったフレームワークや，sdk10.4とかの兼ね合いでそうなっていると考えられる．<br />
+MobileFinderや，MobileChatでは，すでに認知されており，対策がなされている．<br />
+っていうか，無茶な対策だと思いますが・・．ムリクリ実装しています．<br />
+対策は，以下のようにmain文に無理矢理実装してしまう．</p>
+<pre>
+#import &lt;Foundation/Foundation.h&gt;
+#import &lt;UIKit/UIKit.h&gt;
+#import "MyApp.h"
+#import &lt;/usr/local/arm-apple-darwin/include/objc/objc-class.h&gt;
+int main(int argc, char *argv[]) {
+NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+int ret = UIApplicationMain(argc, argv, [MyApp class]);
+[pool release];
+return ret;
+}
+double objc_msgSend_fpret(id self, SEL op, ...) {
+Method method = class_getInstanceMethod(self->isa, op);
+int numArgs = method_getNumberOfArguments(method);
+if(numArgs == 2) {
+double (*imp)(id, SEL);
+imp = (double (*)(id, SEL))method->method_imp;
+return imp(self, op);
+} else if(numArgs == 3) {
+// FIXME: this code assumes the 3rd arg is 4 bytes
+va_list ap;
+va_start(ap, op);
+double (*imp)(id, SEL, void *);
+imp = (double (*)(id, SEL, void *))method->method_imp;
+return imp(self, op, va_arg(ap, void *));
+}
+//FIXME: need to work with multiple arguments/types
+fprintf(stderr,
+"ERROR: objc_msgSend_fpret, called on &lt;%s %p&gt; with selector %s, had to return 0.0\n",
+object_getClassName(self), self, sel_getName(op));
+return 0.0;
+}
+</pre>

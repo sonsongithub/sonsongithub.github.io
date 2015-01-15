@@ -1,0 +1,44 @@
+---
+layout: post
+title: "[Ruby] RubyでOfficeを操る"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>win32rubyには，OLE？というWindowsのコントロールを操る機能がある．<br />
+これが実は激しく使える．<br />
+U氏曰く，Microsoftに魂売ったみたいで嫌なんだけど・・・（激しく同意）<br />
+※参考リンク・・・情報源多数．ググレ<br />
+<a href="http://jp.rubyist.net/magazine/?0003-Win32OLE">http://jp.rubyist.net/magazine/?0003-Win32OLE</a><br />
+<a href="http://www.morijp.com/masarl/homepage3.nifty.com/masarl/article/ruby-win32ole.html">http://www.morijp.com/masarl/homepage3.nifty.com/masarl/article/ruby-win32ole.html</a><br />
+使い方は簡単で，cygwin版か，win32版のRubyをインストールすれば使える．<br />
+たとえば，Outlookの受信ボックスとか，ExcelファイルをRubyからさわることができるのだ．<br />
+以下は，ただのファイルを開いて閉じるスクリプト．</p>
+<pre>
+require 'win32ole'
+filename = "./input.xls"
+filename = getAbsolutePath(filename)
+fso = WIN32OLE.new('Scripting.FileSystemObject')
+filename = fso.GetAbsolutePathName(filename)
+xl = WIN32OLE.new('Excel.Application')
+xl.Visible = true
+WIN32OLE.const_load(xl, ExcelConst)
+book = xl.Workbooks.Open(filename)
+xl.Workbooks.Close
+xl.Quit
+</pre>
+<p>Excelが使えると便利だーよ．<br />
+次は，個別にセルにアクセスする．</p>

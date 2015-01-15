@@ -1,0 +1,78 @@
+---
+layout: post
+title: "[Perl] HTTP,Expat，XML::Parserをインストール for MacOSX"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>MacOSXのDeveloper Toolsでデフォルトでインストールされていなかったので，インストール．<br />
+<br />
+<h3 class="line-header">libwww-perl</h3>
+<p>libwww-perlというライブラリにだいたい，Web関係のヤツはそろっているようだ．<br />
+<a href="http://search.cpan.org/~gaas/libwww-perl/">libwww-perl</a><br />
+ここからダウンロードして，インストール．<br />
+とりあえず，オプションは，言われたとおりにデフォルトでやってみた．</p>
+<pre>
+>perl Makefile.PL
+This package comes with some sample programs that I can try
+to install in /usr/bin.
+Note that you can avoid these questions by passing
+the '-n' option to 'Makefile.PL'.
+Do you want to install lwp-request? [y] y
+Do you want to install lwp-mirror? [y] y
+Do you want to install lwp-rget? [y] y
+Do you want to install lwp-download? [y] y
+The lwp-request program will use the name it is invoked with to
+determine what HTTP method to use.  I can set up alias for the most
+common HTTP methods.  These alias are also installed in
+/usr/bin.
+Do you want to install the GET alias? [n] n
+Do you want to install the HEAD alias? [n] n
+Do you want to install the POST alias? [n] n
+Checking for URI........... ok
+Checking for HTML::Parser.. ok
+Checking for MIME::Base64.. ok
+Checking for Net::FTP...... ok
+Checking for Digest::MD5 .. ok
+Checking if your kit is complete...
+Looks good
+Writing Makefile for LWP
+>make
+>sudo make install
+</pre>
+<p>動いたｗ<br />
+<br />
+<h3 class="line-header">Expat</h3>
+<p><a href="http://sourceforge.net/projects/expat/">Expat</a><br />
+ダウンロードして，インストール．</p>
+<pre>
+>./configure
+〜〜中略〜〜
+config.status: creating Makefile
+config.status: creating expat_config.h
+>make
+>sudo make install
+</pre>
+<p>動いたｗｗｗｗｗ<br />
+<br />
+<h3 class="line-header">XML-Parser</h3>
+<p><a href="http://search.cpan.org/~msergeant/XML-Parser-2.34/">XML-Parser</a><br />
+・・．ダウンロードしてインストール．<br />
+怒られるので，Expatのパスを指定して，インストール．</p>
+<pre>
+>perl Makefile.PL EXPATLIBPATH=/usr/local/lib EXPATINCPATH=/usr/local/include
+>make
+>sudo make install
+</pre>

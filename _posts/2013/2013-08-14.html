@@ -1,0 +1,58 @@
+---
+layout: post
+title: "パーセントエスケープで勘違い"
+categories:
+- blog
+tags:
+- App Store
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Cocoaのテストコードを整理していて，SJISの文字列をパーセントエスケープでうまく処理ができていないことを発見．<br />
+ちょっと調べてみた．</p>
+<p>Rubyで書くとこんな感じ．</p>
+<p>[shell]<br />
+&gt;&gt; require 'cgi'<br />
+=&gt; true<br />
+&gt;&gt; CGI.escape(&quot;名前&quot;.tosjis)<br />
+=&gt; &quot;%96%BC%91O&quot;<br />
+[/shell]</p>
+<p>Objective-Cでは，巷では色々議論されているけど，あれはあくまでエスケープしない文字の話であって，今回とは関係ない．<br />
+普通にエスケープするとこうなる．はず．</p>
+<p>[shell]<br />
+NSString *string = @&quot;名前&quot;;<br />
+CFString *escaped = CFURLCreateStringByAddingPercentEscapes(NULL, string, NULL, CFSTR (&quot;;,/?:@&amp;=+$#&quot;), kCFStringEncodingDOSJapanese);<br />
+NSLog(@&quot;%@&quot;, escaped);<br />
+=&gt; %96%BC%91%4F<br />
+[/shell]</p>
+<p>さて，結果が違いますね・・・・．他のデータで試しても同じ．<br />
+BathyscapheなどのCocoaを使ったオープンソースのコードを使って試してみても，得られる結果は同じようです．</p>
+<p>さて，これは一体なんなんだと．<br />
+調べてみると，Shift JISのようなデータに非予約文字が入っている場合は，そのまま非予約文字で出力してもかまわないという仕様があるそうです．<br />
+<cite><br />
+"マルチバイト文字はバイト単位で変換する。Shift_JISの2バイト目など、バイトが非予約文字に対応するなら、その文字をそのまま使用しても良い。 - <a href="http://ja.wikipedia.org/wiki/パーセントエンコーディング">wikipedia</a>"<br />
+</cite></p>
+<p>"その文字をそのまま使用しても良い。"なのか，"その文字をそのまま使用しなければならない。"なのかが問題．<br />
+もし，どちらでもいいというのであれば，Rubyなんかでも正しくアンエスケープされるはず・・・と思ってやってみると・・・・・あ，ちゃんとできた．</p>
+<p>[shell]<br />
+&gt;&gt; CGI.unescape(&quot;%96%BC%91%4F&quot;).toutf8<br />
+=&gt; &quot;\345\220\215\345\211\215&quot;<br />
+&gt;&gt; CGI.unescape(&quot;%96%BC%91O&quot;).toutf8<br />
+=&gt; &quot;\345\220\215\345\211\215&quot;<br />
+[/shell]</p>
+<p>というわけで，どちらでもいいっぽい．<br />
+Wikipediaなんか読まずに仕様嫁よと言われそうなので・・・・え・・・後で読みますけど・・・いや読むのだるい・・・正しくは仕様？か<a href="http://tools.ietf.org/html/rfc3986">RFCの勧告</a>を参照のこと・・・．</p>
+<p>Rubyで作ったデータをテストとかに使ったりするので，この不一致はうっとおしい・・・・．<br />
+とりあえず，Cocoaで予約文字をエスケープしないコードを作ってみたけど，これのテストするのもまたやっかい・・・・・．悩ましい．<br />
+結論，私が無知でした．勉強になりました．</p>

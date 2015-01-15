@@ -1,0 +1,42 @@
+---
+layout: post
+title: '[iPhone SDK] How to install iPhone app which is built with "AdHoc" profile
+  for Windows and Mac'
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><b>How to find UDID</b><br />
+※Use "Ad Hoc Helper"<br />
+You can email UDID with this tool.<br />
+<center><a href="http://click.linksynergy.com/fs-bin/click?id=he6amglY4cw&offerid=94348.698052489&type=10&subid="><img alt="adhoc_install05.jpg" src="{{ site.url }}/assets//adhoc_install05.jpg" width="177" height="195" /></a></center><br />
+※Use iTunes<br />
+・You can display UDID of your iPhone/iPod touch by click the following area in iPhone/iPod touch's preference screen. You can copy UDID with Ctrl+C after click there.<br />
+<center><img alt="adhoc_install03.jpg" src="{{ site.url }}/assets//adhoc_install03.jpg" width="509" height="135" /></center><br />
+<b>How to install</b><br />
+※Expand<br />
+If app is zipped, you have to expand it. There are some unrelated files whose name begin from "_.", but you should ignore such files.<br />
+<center><img alt="adhoc_install01.jpg" src="{{ site.url }}/assets//adhoc_install01.jpg" width="422" height="340" /></center><br />
+※Install via iTunes<br />
+Select 2 files, hoge.app，hoge.mobileprovision simultaneously and then drag and drop these 2 files into iTunes's application library.<br />
+<center><img alt="adhoc_install02.jpg" src="{{ site.url }}/assets//adhoc_install02.jpg" width="505" height="292" /></center><br />
+※Confirmation<br />
+Following icon is shown in iTunes's application library when your installation is successed.<br />
+<center><img alt="adhoc_install04.jpg" src="{{ site.url }}/assets//adhoc_install04.jpg" width="125" height="154" /></center><br />
+※Uhh... I can't install it....<br />
+Because...?<br />
+１．Provisioning file has some problems.<br />
+２．Don't you exchange/get new iPhone after you inform your UDID to developer.<br />
+３．Provisioning file has broken.</p>

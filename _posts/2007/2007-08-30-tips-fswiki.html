@@ -1,0 +1,40 @@
+---
+layout: post
+title: "[Tips] FSWikiをnamazuで検索する，Rubyで．"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>FSWiki(free style wiki)をnamazuで検索・・・・・めんどうくさい．<br />
+※正直，クローラを作るのもめんどうくさい．<br />
+そういうことで，<br />
+１．fswikiのdataをスキャン<br />
+２．dataのファイル名をunescapeして，タイトルを作成<br />
+３．wiki.cgi?page=タイトルにして，検索結果を置換<br />
+の流れでnamazu.cgiの結果を置換するcgiをRubyでプログラミング．<br />
+ながれ．<br />
+１．URIでnamazu.cgiを取得<br />
+２．wiki.cgiのトップを取得<br />
+３．namazu.cgiの結果の中身を上の手順で置換<br />
+４．メインのDIV要素にnamazu.cgiの検索結果を挿入<br />
+５．ｳﾏｰｰｰｰｰ<br />
+※めんどくさかったこと<br />
+・print "Content-Type: text/html; charset=euc-jp\n\n"<br />
+・&lt;META http-equiv="Content-type" content="text/html; charset=euc-jp"&gt;<br />
+　文字コード統一のため．これつけとかないと，CGIとブラウザの文字コードが・・・・．<br />
+・URI.unescape( str )<br />
+　escapeされたタイトルをなおしたり，なおさなかったりするため<br />
+・$KCODE = 'EUC'<br />
+　とりあえず，Ruby内部はEUCで統一．</p>

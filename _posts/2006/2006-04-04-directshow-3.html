@@ -1,0 +1,155 @@
+---
+layout: post
+title: "[DirectShow] フィルタを使ったアプリケーションの作成"
+categories:
+- blog
+tags:
+- Blog
+- DirectShow
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">DirectShowのフィルタを使ったアプリケーション </h3>
+<p>前回までは，作成したフィルタをGraphEditで使用していた．これでは，自分でフィルタを使ったプログラミングをすることができない．ここでは，DirectShowを使ったアプリケーションの作成方法について，説明する．<br />
+このサンプルは，ひとつのキャプチャデバイスを備えたPC上で動作し，キャプチャデバイスから得られる映像をストリームとして，画面に表示する．<br />
+<br />
+<h3 class="line-header">プログラムの流れ </h3>
+<p>DirectShowプログラミングの流れを紹介する．</p>
+<h3 class="numeric-list">
+<li>COMを初期化</li>
+<li>グラフビルダーを作成</li>
+<li>各フィルタを作成</li>
+<li>フィルタをつなぐ</li>
+<li>レンダリング先の設定</li>
+<li>処理を開始</li>
+</h3>
+<p>〜〜〜〜〜〜〜〜〜〜〜</p>
+<h3 class="numeric-list">
+<li>処理を止める</li>
+<li>各ビルダー，フィルタを解放</li>
+<li>COMを解放</li>
+</h3>
+<p>となる．<br />
+DirectShowは，COMプログラミングなので，COMをちゃんと初期化し，解放しなければならない，筆者はあまり興味がなく，勉強していないため，割愛させていただく．<br />
+<br />
+<h3 class="line-header">初期化〜グラフビルダの作成 </h3>
+<p>結局，何をするにもここが一番の鬼門．ひとつずつ説明していこう．<br />
+まず，CoInitializeで，COMを初期化する．<br />
+グラフビルダーを作成する．これは処理全般に関わるものである．<br />
+次にキャプチャのためのデバイスを検索する．ここの処理は，デバイスが接続されたときにWindows側から自動的に割り振られる番号の1番はじめのモノを利用している．このため，もしいくつかのキャプチャデバイスが接続されており，それらを使い分けたい場合は，デバイス名を取得し，識別する必要がある．</p>
+<pre>
+BOOL GetCaptureDevice(IBaseFilter **ppSrcFilter)
+{
+HRESULT hResult;
+// デバイスを列挙する
+ICreateDevEnum *pDevEnum = NULL;
+hResult = CoCreateInstance(CLSID_SystemDeviceEnum,
+NULL, CLSCTX_INPROC, IID_ICreateDevEnum, (void **)&pDevEnum);
+if (hResult != S_OK)return FALSE;
+// 列挙したデバイスの一番目をデバイスとして取得する
+IEnumMoniker *pClassEnum = NULL;
+hResult = pDevEnum->CreateClassEnumerator(CLSID_VideoInputDeviceCategory, &pClassEnum, 0);
+if (hResult != S_OK)return FALSE;
+// デバイスをフィルタに接続する
+ULONG cFetched;
+IMoniker *pMoniker = NULL;
+if (pClassEnum->Next(1, &pMoniker, &cFetched) == S_OK){
+// 最初のモニカをフィルタオブジェクトにバインドする
+pMoniker->BindToObject(0, 0, IID_IBaseFilter, (void**)ppSrcFilter);
+pMoniker->Release();
+}else
+return FALSE;
+// グラフビルダに追加する
+hResult = g_pGraph->AddFilter(g_pSrc, L"Video Capture");
+if (hResult != S_OK)return FALSE;
+// オブジェクトの片づけ
+pClassEnum->Release();
+pDevEnum->Release();
+return TRUE;
+}
+</pre>
+<p>キャプチャデバイスをフィルタに割り当て，g_pSrcをキャプチャされた映像を流すフィルタとして，設定する．最後にg_pSrcをVideo Captureとして，グラフビルダに追加し，キャプチャの設定は終了．次は，キャプチャを行うためのキャプチャビルダを作成し，グラフビルダに接続する．</p>
+<pre>
+// キャプチャビルダの作成
+hResult = CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL,
+CLSCTX_INPROC, IID_ICaptureGraphBuilder2, (void **)&g_pBuilder);
+if (hResult != S_OK)return FALSE;
+// グラフにキャプチャビルダをセット
+hResult = g_pBuilder->SetFiltergraph(g_pGraph);
+if (hResult != S_OK)return FALSE;
+// メディアコントロールを取得
+g_pGraph->QueryInterface(IID_IMediaControl, (void **)&g_pMediaCtrl);
+</pre>
+<p>さらに，DirectShowの制御のためのMediaControl（メディアコントロール）を取得する．APIで，g_pMediaCtrlにメディアコントロールのポインタを割りあてる．このg_pMediaCtrlで処理の再生や停止等を行う．<br />
+<br />
+<h3 class="line-header">フィルタの作成 </h3>
+<p>ここでは，フィルタを作成し，前ステップでセットしたキャプチャフィルタに作成したフィルタを接続する．</p>
+<pre>
+hResult = CoCreateInstance(CLSID_Through, NULL,
+CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void **)&g_pThrough);
+if (hResult != S_OK)return FALSE;
+// グラフビルダに追加する
+hResult = g_pGraph->AddFilter(g_pThrough, L"Through");
+if (hResult != S_OK)return FALSE;
+// VideoRendererのインスタンスを作成
+hResult = CoCreateInstance(CLSID_VideoRenderer, NULL,
+CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void **)&g_pVideoRenderer);
+if (hResult != S_OK)return FALSE;
+// グラフビルダに追加する
+hResult = g_pGraph->AddFilter(g_pVideoRenderer, L"Video Renderer");
+if (hResult != S_OK)return FALSE;
+</pre>
+<p>ここでは，sonson自作のThroughフィルタと，ストリームをレンダリングするVideoRendererフィルタを作成し，それぞれグラフビルダにセットしている． CoCreateInstanceで，フィルタのインスタンスを作成する．一番目の引数がフィルタのレジストリのIDとなる．CLSID_Throughは，ソースコードで#defineなどで明記しておく必要がある．またCLSID_VideoRendereなどの基本的なIDは，stream.h？かどこかに明記されているので，自前で明記する必要はない．<br />
+<br />
+<h3 class="line-header">フィルタの接続 </h3>
+<p>この処理は，ある意味直感的にプログラミングできる．キャプチャビルダのメソッドRenderStreamで，3つめの引数と5つめの引数で接続元と，接続先を設定する．</p>
+<pre>
+// ソースのフィルタをThroughフィルタに接続
+hResult = g_pBuilder->RenderStream(&PIN_CATEGORY_CAPTURE,&MEDIATYPE_Video,g_pSrc,0,g_pThrough);
+if (hResult != S_OK)return FALSE;
+// ThroughフィルタをVideoRendererに接続
+hResult = g_pBuilder->RenderStream( 0, &MEDIATYPE_Video, g_pThrough, NULL, g_pVideoRenderer );
+if (hResult != S_OK)return FALSE;
+</pre>
+<p>　ここでは，キャプチャソースg_pSrcにg_pThroughを接続し，g_pThroughにg_pVideoRendererを接続している．ここに色々フィルタを接続することで，処理をストリームに加えることができる．<br />
+<br />
+<h3 class="line-header">ストリームの表示先の設定 </h3>
+<p>通常，このまま表示するとレンダリング結果が表示されるウィンドウが自動的に開かれる．これをプログラミングで指定したウィンドウに表示する場合は，それを明示的に指定する必要がある．</p>
+<pre>
+// グラフビルダからウィンドウを取得する
+hResult = g_pGraph->QueryInterface(IID_IVideoWindow, (void **) &g_pVideoWindow);
+if (hResult != S_OK)return FALSE;
+// ウィンドウのオーナーとなるウィンドウのハンドルを指定する
+hResult = g_pVideoWindow->put_Owner( (OAHWND)hWnd );
+if (hResult != S_OK)return FALSE;
+// ウィンドウのスタイルを指定する
+hResult = g_pVideoWindow->put_WindowStyle(WS_CHILD| WS_CLIPSIBLINGS);
+if (hResult != S_OK)return FALSE;
+// ウィンドウの領域サイズを取得し，書き込む範囲を設定する
+RECT rect;
+GetWindowRect(hWnd,&rect);
+hResult = g_pVideoWindow->SetWindowPosition(0, 0, rect.right-rect.left,rect.bottom-rect.top);
+if (hResult != S_OK)return FALSE;
+// ウィンドウを可視状態にする
+hResult = g_pVideoWindow->put_Visible(OATRUE);
+if (hResult != S_OK)return FALSE;
+</pre>
+<p>以上がその処理である．この処理の後，メディアコントロールからストリームを再生する．g_pMediaCtrl->Run();で再生する．<br />
+<br />
+<h3 class="line-header">終了処理 </h3>
+<p>まず，g_pMediaCtrl->Stop();でストリームを停止し，それぞれのビルダ，フィルタを解放する．オブジェクトは，Releaseメソッドで解放する．最後にCoUninitializeでCOMを解放する．<br />
+<br />
+<h3 class="line-header">ソースコード </h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/win/DirectShow/SkeltonMFC">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/win/DirectShow/SkeltonMFC</a><br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/win/DirectShow/SkeltonSDK">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/win/DirectShow/SkeltonSDK</a><br />
+本ソースコードを使用したことによる如何なる損害も製作者は責任を負いません．</p>

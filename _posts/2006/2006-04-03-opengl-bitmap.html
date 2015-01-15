@@ -1,0 +1,116 @@
+---
+layout: post
+title: "[OpenGL] Bitmapファイルの読み出し"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">bitmapファイルの読み込み〜テクスチャ生成 </h3>
+<p>Windows準拠のビットマップファイルを読み込み，テクスチャとして使用します．<br />
+Bitmapファイルの詳しい構造については，こちらを参考にしてください．<br />
+一連の作業は以下になります．</p>
+<h3 class="numeric-list">
+<li>ビットマップファイルからデータを読み込む．</li>
+<li>OpenGLにそのデータを渡してテクスチャを作成し，設定．</li>
+<li>ポリゴンに貼り付ける．</li>
+</h3>
+<p>
+<h3 class="line-header">実装 </h3>
+<p>サンプルでは，テクスチャの生成をGenTextureBitmap関数で行っています．戻り値はテクスチャ番号で，引数はテクスチャのファイル名です．<br />
+OpenGL上ではテクスチャはOpenGLのAPIで管理します．<br />
+GenTextureBitmap関数は，まずファイルオープンし，そこからビットマップの情報を取り出します．<br />
+まず，ヘッダなどの情報を読み込み，それらのチェックを行ったあと，実際の読み出しをします．さらに書き込み時と同様に横幅のバイト数を4byteに合わせるために空白を読み込みます．ただ現時点ではOpenGLが2の累乗のサイズしかテクスチャとして使用できないため必要がないといえばありませんが，無視すれば一般のBitmapファイルは読み込めません．</p>
+<pre>
+bit_24:
+unsigned char red,green,blue;
+unsigned int size = 3*info.width*info.height;
+//ビットデータ読み込み
+//メモリ確保
+bitdata= (unsigned char*)malloc(size*sizeof(unsigned char));
+// 横幅のバイト数を4の倍数に合わせる
+int offset = 4 - width*3/4;
+//読み込み
+for(j=(info.height-1);j>=0;j--){
+for(i=(info.width-1);i>=0;i--){
+fread( &red, sizeof(unsigned char),1,fp);
+fread( &green, sizeof(unsigned char),1,fp);
+fread( &blue, sizeof(unsigned char),1,fp);
+*(bitdata+3*i+3*j*info.width)  = blue;
+*(bitdata+3*i+3*j*info.width+1)= green;
+*(bitdata+3*i+3*j*info.width+2)= red;
+}
+// 横幅の余剰分を読み込み捨てる
+for(int margin;margin<offset;margin++){
+unsigned char zero=0;
+fread( &zero, sizeof(unsigned char),1,fp);
+}
+}
+//テクスチャ作成
+glGenTextures(1, &tex_number);
+glBindTexture(GL_TEXTURE_2D, tex_number);
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, info.width,
+info.height, 0, GL_RGB, GL_UNSIGNED_BYTE, bitdata);
+//メモリ開放
+free(bitdata);
+// ファイルクローズ
+fclose(fp);
+return tex_number;
+</pre>
+<p>ここで，テクスチャ関係のAPIが２，３でてきます．<br />
+まず，glGenTexturesでテクスチャ自体を作成します．このとき，まだテクスチャ自身は作成されますが，実際のデータは何も設定されていません．次にglBindTextureでテクスチャマップの特性を設定します．ここでは画像ファイルからのものなので2次元のGL_TEXTURE_2Dを設定します．<br />
+次にglTexImage2Dでテクスチャにデータを与え，テクスチャを作成します．<br />
+この引数を説明すると，まずテクスチャは２次元なのでGL_TEXTURE_2Dです．次にテクスチャのMIPMAPレベルを設定します．<br />
+次に読み込ませるテクスチャファイルの各画素の要素数を入力します．RGBの内容なのでGL_RGBを設定します．<br />
+4，5番目の引数はテクスチャファイルの大きさです．<br />
+6番目の引数は境界の有無，次の引数は作成するテクスチャにOpenGL上でのどういったパラメータを割り当てるかという設定です．普通に描画するだけなのでここではGL_RGBとなります．<br />
+9番目の引数は，読み込ませるデータのポインタ型です．10番目の引数はデータの先頭ポインタとなります．<br />
+これでテクスチャオブジェクトがOpenGL上に作成されます．もうビットマップのデータは必要がないので破棄します．<br />
+次にこの生成されたテクスチャオブジェクトを実際に使用するための設定を行います．</p>
+<pre>
+//テクスチャの生成
+tex = GenTextureBitmap("texture.bmp");
+glBindTexture(GL_TEXTURE_2D, tex);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+glEnable(GL_TEXTURE_2D);
+</pre>
+<p>これはmain.cppの中の初期化の部分です．<br />
+何を設定しているかというと，どういう風にテクスチャを貼り付けるかなどの問題についてです．<br />
+テクスチャオブジェクトの設定方法は，まずglBindTexture関数を呼び出し，その後そのテクスチャオブジェクトに対し処理を行うと言った手法になります．<br />
+もし何種類もテクスチャオブジェクトを使用しているとすれば，こうなります．</p>
+<pre>
+//ひとつめのテクスチャ
+glBindTexture(GL_TEXTURE_2D, tex1);
+・・・処理
+//ふたつめのテクスチャ
+glBindTexture(GL_TEXTURE_2D, tex2);
+・・・処理
+</pre>
+<p>一般に3Dの世界座標上では，座標を(X, Y, Z)で表現します．これに対して，テクスチャの2次元平面上では(s, t)を使うのが一般的です．<br />
+glTexParameter関数におけるGL_TEXTURE_WRAP_Sで，1を超えたテクスチャ座標を設定したときにどのように処理するかを設定します．GL_REPEATの場合は繰り返し入りつけられるので，床のレンガを表現するときなどに使用されます．GL_CLAMPにすると拡大されます．<br />
+GL_TEXTURE_MAG_FILTERでは，拡大縮小時の画像処理についてです．GL_LINEARなので線形補完で画像は拡大縮小され，テクスチャ処理されます．<br />
+4つ目の処理はテクスチャを貼り付けて色を混ぜたりするときの処理でRGBカラーで特殊な処理をしないときはGL_DECALでいいでしょう（たぶん）．<br />
+<br />
+<h3 class="line-header">MIPMAPとは？ </h3>
+<p>MIPMAPレベルとは，何のレベルかと説明すると，あまり正確な描写が必要ではないときには無視しても問題ないのですが，ひとつのポリゴンにテクスチャを貼り付け，それを拡大縮小するとノイズが乗ります．テクスチャの作成元の画像より小さかったりすると内容がつぶれて見えなかったり，大きくなると雑すぎて見づらいことがあります．これに対応するため，MIPMAPという処理方法があります．事前にOpenGLに何種類かの大きさのテクスチャをひとつにテクスチャとして登録しておき，その時々に適切な大きさの画像を貼り付けるという風に使用します．ここではその詳しい説明は省きます．<br />
+<br />
+<h3 class="line-header">ソースコード </h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/GLUTtexture">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/GLUTtexture</a><br />
+本ソースコードを使用したことによる如何なる損害も製作者は責任を負いません．</p>

@@ -1,0 +1,33 @@
+---
+layout: post
+title: "[iPhone SDK] PushNotificationのバグ？"
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>どっかのBBSにも情報があがってたので，書きます．<br />
+<center><img alt="pns_icon_middle.png" src="{{ site.url }}/assets//pns_icon_middle.png" width="138" height="157" /></center><br />
+※バグ再現方法<br />
+・PushNotificationで通知を受けるアプリを作り，Developmentの証明書を使って，通知を受け取る．<br />
+・そして，そのアプリを削除する<br />
+・Distributionの証明書を使って，AdHocビルドでビルドし，実行する<br />
+・アプリケーション起動中にSpringBoard毎クラッシュする<br />
+どうやら，DevelopmentとDistributionの証明書を切り替えて，実機でテストすると，PushNotification対応アプリはクラッシュする模様です．<br />
+んで，偶然発見した対処療法は，<br />
+１．自分で別のプロファイルのPNSアプリを作って，インストールし，PNSを使う<br />
+２．AppStoreで，上と同じようにPNSを使うアプリをインストールし，PNSを使う<br />
+３．iPhoneを丸ごとリストアする<br />
+です．<br />
+２番目の方法は，AppleのBBSにもありましたし，PushNotificationのキャッシュか何かに問題があるのかとも推察されています．本当のところは，なんなんだろう．</p>

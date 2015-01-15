@@ -1,0 +1,99 @@
+---
+layout: post
+title: "[iPhone SDK] Hack UIWebView - How to get a touch event(not completed)"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>ご存じUIWebViewは使い勝手が悪い．<br />
+・はじめに<br />
+stringByEvaluatingJavaScriptFromString:を利用して，Javascriptでだましだまし使えることは使えるが，Javascriptは遅いし，メモリ食いなので，なるべくネイティブでプログラミングしたいという欲求が沸いてくる．<br />
+悪いところ<br />
+・target="_blank"を処理できない<br />
+・クリックイベントを取得できない<br />
+・・・・・エトセトラ<br />
+特にクリックイベントについては，いろいろなところで議論されているが，<a href="http://discussions.apple.com/thread.jspa?messageID=8291598&tstart=0#8291598">http://discussions.apple.com/thread.jspa?messageID=8291598&tstart=0#8291598</a>なかなか，有効な一手がないっぽい．<br />
+そこで，今回は色々使えそうなクリックイベントを横取りするハックを紹介．<br />
+先にexcuseすると・・・・完全ではなくて，現状では拡大縮小がうまくいかないという短所がある．そこをなんとかできれば，うれしいのだが・・・・．現在，対策考え中だが，プライベートメソッドをいじらないとできないっぽい．もし妙案をお持ちの方がいらっしゃったらご連絡ください．<br />
+・解説は後ほど</p>
+<pre>
+#import "SNWebView.h"
+const char* kUIScrollerName = "UIScroller";
+const char* kUIWebDocumentView= "UIWebDocumentView";
+@implementation DummyTapView
+@synthesize uiScroller = uiScroller_;
+@synthesize uiWebDocumentView = uiWebDocumentView_;
+- (UIView*) uiScroller {
+if( self.superview !=nil && uiScroller_ == nil ) {
+NSArray *views = [self.superview subviews];
+for( id view in views ) {
+const char* name = object_getClassName(view);
+if( !strncmp( name, kUIScrollerName, strlen(name) ) ) {
+uiScroller_ = view;
+return uiScroller_;
+}
+}
+}
+return uiScroller_;
+}
+- (UIView*) uiWebDocumentView {
+if( self.superview != nil && uiWebDocumentView_ == nil ) {
+NSArray *views = [self.uiScroller subviews];
+for( id view in views ) {
+const char* name = object_getClassName(view);
+if( !strncmp( name, kUIWebDocumentView, strlen(name) ) ) {
+uiWebDocumentView_ = view;
+return uiWebDocumentView_;
+}
+}
+}
+return uiWebDocumentView_;
+}
+- (id) initWithFrame:(CGRect)frame {
+self = [super initWithFrame:frame];
+self.backgroundColor = [UIColor clearColor];
+return self;
+}
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+[self.uiScroller touchesBegan:touches withEvent:event];
+[self.uiWebDocumentView touchesBegan:touches withEvent:event];
+}
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+[self.uiScroller touchesMoved:touches withEvent:event];
+[self.uiWebDocumentView touchesMoved:touches withEvent:event];
+}
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+[self.uiScroller touchesEnded:touches withEvent:event];
+[self.uiWebDocumentView touchesEnded:touches withEvent:event];
+[self.superview didFinishGesturesInView:self.superview forEvent:event];
+}
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+[self.uiScroller touchesCancelled:touches withEvent:event];
+[self.uiWebDocumentView touchesCancelled:touches withEvent:event];
+}
+@end
+@implementation SNWebView
+- (id)initWithFrame:(CGRect)frame {
+if (self = [super initWithFrame:frame]) {
+// Initialization code
+DummyTapView* view = [[DummyTapView alloc]
+initWithFrame:CGRectMake( 0,44,320,416)];
+[self addSubview:view];
+[view release];
+}
+return self;
+}
+@end
+</pre>

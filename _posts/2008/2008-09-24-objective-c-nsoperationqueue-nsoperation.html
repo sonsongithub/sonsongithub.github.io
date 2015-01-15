@@ -1,0 +1,90 @@
+---
+layout: post
+title: "[Objective-C] NSOperationQueue - NSOperation"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Leopardから提供されたマルチスレッド用のクラス．マルチコア処理向けに提供されたものらしい．Appleのホームページにも以下のように書かれている．noviさんのTwitterでの発言で知ったAPIなのだが，非常に便利で使いやすい．</p>
+<pre>
+アップルのエンジニアの成功の秘訣は、NSOperationを
+使ったこと。 NSOperationは、マルチコア処理のために
+アプリケーションを最適化する、画期的な新しいAPIです
+。NSOperationが計算（演算）のグループをNSOperati
+onQueueに追加し、現在のアーキテクチャをもとに、並
+列処理の演算回数を動的に決定してくれます。複雑なスレ
+ッディングとロッキングのマニュアルコーディングは一切
+不要。プログラムで演算と従属性を指定するだけで、あと
+はCocoaが処理してくれます。
+</pre>
+<p>NSOperationおよびNSOperationQueueは，マルチスレッドのための排他処理や終了処理などを抽象化しており，結構役立つ（そしてiPhoneでも使える）．今まではNSThreadを使ってスレッドをdetachして，処理をするときはNSLockでロックして，終了はフラグを立てて・・・などと普通にスレッド管理をしなければならなかったが，これがあれば，そういう雑用をしなくていいのだ．（iPhoneでマルチスレッドを使うのは，かなり考えないといけない．リソースが相当限られているので，速度低下がひどい）ここでは，UIで使いそうな単純なバックグラウンド処理を管理する機能についてメモを書き留める．<br />
+<b>使い方？</b><br />
+NSOperationのサブクラスSubOperationを定義し，それに- (void) mainを実装する．mainにマルチスレッドで実行したい処理を書く．次にSubOperationのインスタンスをインスタンスメソッドaddOperation:でNSOperationQueueのインスタンスに追加し，実行することになる．<br />
+以下のクラスSubOperationは，targetListにsourceの中身をひとつずつコピーしていくだけの単純なものである．</p>
+<pre>
+@implementation SubOperation
+- (id)initWithSourceList:(NSMutableArray*)source targetList:(NSMutableArray*)target queue:(NSOperationQueue*)qq {
+self = [super init];
+source_ = source;
+target_ = target;
+queue_ = [qq retain];
+return self;
+}
+- (void) dealloc {
+[queue_ release];
+[super dealloc];
+}
+-(void) main {
+NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+for( NSMutableDictionary* sourceDict in source_ ) {
+if ([self isCancelled]) {
+break;
+}
+NSString* title = [sourceDict objectForKey:@"title"];
+NSMutableDictionary * targetDict = [[NSMutableDictionary alloc] init];
+[targetDict setObject:title forKey:@"title"];
+[target_ addObject:targetDict];
+[targetDict release];
+NSLog( @"%@ has been copied", title );
+[NSThread sleepForTimeInterval:0.25];
+}
+NSLog( @"stop" );
+[pool release];
+}
+@end
+</pre>
+<p>- (BOOL)isCanceled;をキャンセルフラグとして使っている．sleepForTimeIntervalは処理が一瞬で終わるための実験用．<br />
+次に実際にマルチスレッドを実行する準備，および実行部分のコード．</p>
+<pre>
+queue_ = [[NSOperationQueue alloc] init];
+source_ = [[NSMutableArray alloc] init];
+target_ = [[NSMutableArray alloc] init];
+// source is initialized here
+SubOperation *op = [[SubOperation alloc] initWithSourceList:source_ targetList:target_ queue:queue_];
+[queue_ addOperation: op];
+[op release];
+</pre>
+<p>これだけで，SubOperationのmainメソッドが実行される．非常に便利だ．<br />
+処理をキャンセルしたい場合は，</p>
+<pre>
+[queue_ cancelAllOperations];
+</pre>
+<p>で登録したすべてのOperationがキャンセルされる．<br />
+キャンセル後，すべてのスレッドが停止したことを確認したい場合は，</p>
+<pre>
+[queue_ cancelAllOperations];
+[queue_ waitUntilAllOperationsAreFinished];
+</pre>
+<p>として，キャンセル後に終了を待つ．</p>

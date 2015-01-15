@@ -1,0 +1,75 @@
+---
+layout: post
+title: "[Ruby] MySQLをRubyで動かす on Cygwin"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- SQL
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Cygwin環境下で，Rubyを動かすのは結構簡単．<br />
+Cygwinのインストールツールでもインストールできるし，ソースからもコンパイルできる．<br />
+このCygwin上のRubyからMySQLを叩くライブラリをインストールしてみた．</p>
+<h3 class="line-header">MySQL/Ruby</h3>
+<p><a target="_blank" href="http://www.tmtm.org/mysql/ruby/">http://www.tmtm.org/mysql/ruby/</a><br />
+ここからダウンロードできる．<br />
+しかし，Cygwinだとmysqlclientがなんたらかんたらとエラーが出る．<br />
+面倒くさいのでバイナリパッケージを探したらあった．<br />
+<a target="_blank" href="http://raa.ruby-lang.org/project/mysql-ruby-win/">http://raa.ruby-lang.org/project/mysql-ruby-win/</a><br />
+ここからダウンロードし，インストールする．<br />
+Rubyでかかれたインストーラもあるけど，手で入れても良い．</p>
+<pre>
+/usr/lib/ruby/1.8/i386-cygwin/・・・Cygwinパス
+</pre>
+<h3 class="line-header">MySQL/Rubyのテストコード</h3>
+<pre>
+#!/usr/bin/ruby
+require "mysql"
+def test_query(dbh)
+res = dbh.query("SELECT * FROM user")
+while row = res.fetch_hash do
+printf "%s, %s
+", row["name"], row["category"]
+end
+printf "%d rows were returned
+", res.num_rows
+res.free
+end
+def main()
+dbh=nil
+begin
+# connect to the MySQL server
+dbh = Mysql.real_connect("127.0.0.1", "root", "", "mysql")
+# get server version string and display it
+puts "Server version: " + dbh.get_server_info
+rescue MysqlError => e
+print "Error code: ", e.errno, "
+"
+print "Error message: ", e.error, "
+"
+ensure
+# disconnect from server
+test_query(dbh)
+dbh.close
+end
+end
+main()
+</pre>
+<p>注意点は，</p>
+<pre>
+dbh = Mysql.real_connect("127.0.0.1", "root", "", "mysql")
+</pre>
+<p>のところで，サーバ名をlocalhostとして設定すると，/tmp/sql.socketがないとか，エラーがでる可能性がある．<br />
+これが動けば問題なしのはず．</p>

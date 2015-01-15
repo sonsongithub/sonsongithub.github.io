@@ -1,0 +1,44 @@
+---
+layout: post
+title: "[Ruby] Rails環境構築 on MacOSX"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Ruby
+- SQL
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>おそらく，Linuxでも同じだろう．<br />
+いや，aptなどが簡単に使える分，Linuxの方が簡単なはず．</p>
+<h3 class="line-header">gemsのインストール</h3>
+<p>まず，Railsは，gems経由でインストールする方が楽なので，gemsをインストールする．<br />
+<a target="_blank" href="http://rubyforge.org/projects/rubygems/">http://rubyforge.org/projects/rubygems/</a></p>
+<pre>
+&gt; sudo ruby ./setup.rb
+</pre>
+<h3 class="line-header">gemsによるRailsのインストール</h3>
+<p>続いて，gemsでrailsをインストールする．<br />
+依存するパッケージについてはすべて，インストールする．</p>
+<pre>
+&gt; gem install rails
+</pre>
+<h3 class="line-header">Railsのテスト</h3>
+<p>ここまでで，raisがちゃんと動いているかをチェックする．<br />
+コマンドで起動すると，デフォルト，ポート3000でWebrickがサーバを起動する．</p>
+<pre>
+&gt; rails Test
+&gt; ./Test/script/server
+</pre>
+<p>実際にアクセスしてみて，ちゃんと動いているかを確認する．<br />
+<a target="_blank" href="http://localhost:3000/">http://localhost:3000/</a></p>

@@ -1,0 +1,69 @@
+---
+layout: post
+title: "[Tips] Terminalツール for MacOSX"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta:
+  _oembed_6fb546eace3ed9c928a9af7bceea4e60: "{{unknown}}"
+  _oembed_9bac436e57a20345b035d3292546becc: "{{unknown}}"
+  _oembed_fffc0b06f389496d274c96f1b6e2044b: "{{unknown}}"
+  _oembed_7c8affe41c8a6368390bee50ed96d9ca: "{{unknown}}"
+  _oembed_d7e3ff71f58b8db5844b440933c2b8ad: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">tcshの設定 </h3>
+<p>.tcshrcファイルで設定する．</p>
+<pre>
+alias ls ls -v
+alias fcd 'source /usr/local/bin/fcd.csh'
+alias finder open ./
+set path=( ${path} /usr/local/bin )
+set dspmbyte=utf8
+</pre>
+<p>こんな感じで設定．<br />
+<br />
+<h3 class="line-header">fcd.csh〜便利ツール </h3>
+<p>Finderで前面にきているウィンドウのパスに移動するスクリプト．<br />
+結構便利．<br />
+http://homepage.mac.com/tkurita/scriptfactory/<br />
+<br />
+<h3 class="line-header">結構便利 openコマンド </h3>
+<pre>
+open [target]
+</pre>
+<p>で，MacOSXネイティブのアプリケーションでtargetのファイルを開くことができる．<br />
+このとき，ファイルはFinder側で関連づけられたアプリケーションで開かれる．<br />
+上記の.tcshrcにあるように，open ./とするとカレントディレクトリをfinderで開くことになる．<br />
+確か-aのスイッチでアプリケーションを指定して開くこともできたはず．<br />
+<br />
+<h3 class="line-header">TeXのスクリプト </h3>
+<p>たいしたこたぁないｗ<br />
+<br />
+<h3 class="line-header">tex2dvi </h3>
+<pre>
+platex ./$1tex
+open ./$1dvi
+</pre>
+<p>
+<h3 class="line-header">tex2pdf </h3>
+<pre>
+platex ./$1tex
+dvips ./$1dvi
+ps2pdf14 ./$1ps
+rm ./$1ps
+open ./$1pdf
+</pre>

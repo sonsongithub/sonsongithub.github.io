@@ -1,0 +1,32 @@
+---
+layout: post
+title: "[Javascript] １行ずつ切り出す"
+categories:
+- blog
+tags:
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>常識的に考えれば，以下のコードで動くはず．</p>
+<pre>
+lines = originalText.split('¥n');
+・・・・
+</pre>
+<p>これが動きまへんがな．なんでやねん．<br />
+どうやら，改行コードがおかしいっぽい．もしかすると，テキストエディタが悪いのか？（容疑者mi）<br />
+んで，調べていくと，以下のような芸当で改行コードを生成できる様子．</p>
+<pre>
+var LF = String.fromCharCode(10); // 改行コード (LF)
+lines = originalText.split( LF );
+・・・・
+</pre>
+<p>にゃるほど・・・・常識？</p>

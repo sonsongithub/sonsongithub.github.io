@@ -1,0 +1,98 @@
+---
+layout: post
+title: "[お勉強] 双方向リングバッファ"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "その他"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>STLにも，今作っているアルゴリズムに使えそうな，便利そうな双方向のリングバッファがない・・．<br />
+とりあえず，エイヤで作ってみた．<br />
+これだと，先頭と最後尾が双方向リストでつながる．</p>
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+typedef struct _Point {
+double	x;
+double	y;
+_Point	*pPrev;
+_Point	*pNext;
+} Point;
+Point *head = NULL;
+int	counter = 0;
+Point* add( Point *curr, double x, double y ) {
+counter++;
+Point *p = (Point*) malloc ( sizeof( Point ) );
+p-&gt;x = x;
+p-&gt;y = y;
+if( curr == NULL ) {
+p-&gt;pPrev = p;
+p-&gt;pNext = p;
+head = p;
+}
+else {
+p-&gt;pPrev = curr;
+p-&gt;pNext = head;
+p-&gt;pPrev-&gt;pNext = p;
+p-&gt;pNext-&gt;pPrev = p;
+}
+return p;
+printf( "%3.1f, %3.1f
+", p-&gt;x, p-&gt;y );
+}
+Point* del( Point *curr ) {
+counter--;
+if( curr-&gt;pPrev == curr || curr-&gt;pNext == curr ) {
+free( curr );
+head = NULL;
+return NULL;
+}
+if( curr == head )
+head = curr-&gt;pNext;
+curr-&gt;pNext-&gt;pPrev = curr-&gt;pPrev;
+curr-&gt;pPrev-&gt;pNext = curr-&gt;pNext;
+Point *next = curr-&gt;pNext;
+free( curr );
+return next;
+}
+int main (int argc, char** argv) {
+Point *curr = NULL;
+for( int i = 0; i &lt; 20; i++ ) {
+curr = add( curr, i, i );
+}
+Point *p = head;
+while( 1 ) {
+if( p-&gt;x &gt; 5 ) {
+p = del( p );
+}
+else{
+p = p-&gt;pNext;
+}
+if ( p == head ) {
+break;
+}
+}
+while( 1 ) {
+printf( "%3.1f,%3.1f
+", p-&gt;x, p-&gt;y );
+p = p-&gt;pNext;
+if ( p == head ) {
+break;
+}
+}
+return 0;
+}
+</pre>

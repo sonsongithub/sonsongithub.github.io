@@ -1,0 +1,22 @@
+---
+layout: post
+title: "[iPhone] addTargetの細かい話"
+categories:
+- blog
+tags:
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>UIControlのメソッド，addTarget:action:forEventsの一つ目の引数は(id)で．<br />
+ファーム1.1.1では，一つ目が(UIPushButton*)とかでも動いたんだが，1.1.2では，ちゃんと(id)にしないと動かない．まぁ，こんなTips，今後はいらないんだが．<br />
+- (void)addTarget:(id)fp8 action:(SEL)fp12 forEvents:(int)fp16;</p>

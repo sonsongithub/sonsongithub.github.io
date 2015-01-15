@@ -1,0 +1,41 @@
+---
+layout: post
+title: "[iPhone SDK] 最適化PNGファイルの動的作成"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p><a href="http://developer.apple.com/iphone/library/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/ApplicationEnvironment/chapter_3_section_8.html#//apple_ref/doc/uid/TP40007072-CH7-SW51">iPhone Application Programming Guide(developer only)</a>にもあるように，PNG画像は圧縮した方がいいらしい．<br />
+XCodeでリソースとして使用するPNG画像は，自動的に圧縮，最適化される．最適化はビルド時にcopypngというコマンドラインツールで自動的に処理される．以下，XCodeの設定項目．デフォルトでPNG画像は圧縮される．<br />
+<center><br />
+<img alt="pngSetting.png" src="{{ site.url }}/assets//pngSetting.png" width="466" height="57" /><br />
+</center><br />
+UIImageは，最適化PNGで作成したものの方が，描画が速いことがわかっている．あらかじめリソースとして使用するPNG画像は問題ないのだが，ネット経由でダウンロードしたJPEG，GIF，PNG画像は，そうではない．そこで，ダウンロードした画像や動的に作成した画像を最適化PNGに変換する必要がある．<br />
+そこで，<a href="http://blog.s21g.com/articles/1116">takiuchi氏</a>が最適化PNGを解析し，それを作成するコードを作ってくれた(すばらしい)．しかもMIT Lisenceで公開，かつ「公開してもいいよ」ということなので，それに基づいてクラスにしてみた．<br />
+たとえば，ダウンロードしてきた画像ファイルには，以下のように使える．</p>
+<pre>
+--->NSData *downloadedData;
+NSData* optimizedPNG = [downloadedData optimizedData];
+UIImage* optimizedImage = [UIImage imageWithData:optimizedPNG];
+</pre>
+<p>他にもQuartzなどでPNGを生成したとき，</p>
+<pre>
+--->UIImage* generatedImage
+NSData* optimizedPNG = [generatedImage optimizedData];
+UIImage* optimizedImage = [UIImage imageWithData:optimizedPNG];
+</pre>
+<p>他の画像フォーマットから最適化PNG生成には，時間がかかるが，極めて素早くレンダリングしたい場合は，最適化PNGファイルにした方がいいと考える．<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/iPhone2.0/OptimizedPNG">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/iPhone2.0/OptimizedPNG</a></p>

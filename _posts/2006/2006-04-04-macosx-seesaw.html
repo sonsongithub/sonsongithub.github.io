@@ -1,0 +1,175 @@
+---
+layout: post
+title: "[MacOSX] SeeSaw改"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">SeeSaw </h3>
+<p>SeeSawは，QuickTimeを利用したDV経由のフレームキャプチャのソースコード．<br />
+DV経由はそのままの場合，YUV422で取得されるので，GL_YCBCR_422_APPLEの拡張を利用し，テクスチャを作成し，OpenGLで表示している．<br />
+ソースコードは，以下のサイトで入手できる．<br />
+<a href="http://www.cse.unsw.edu.au/~danielh/seeSaw/">SeeSaw</a><br />
+<br />
+<h3 class="line-header">とりあえず．Cocoaで使えるようにしてみる </h3>
+<p>オリジナルのソースコードは，構造体でオブジェクト指向っぽく実装している．<br />
+Cocoaのクラスとして，まとめた方が使いやすそうだったので．クラスにまとめてみる．<br />
+以下が，メインのクラス．</p>
+<h3 class="numeric-list">
+<li>CaptureObject.h</li>
+<li>CaptureObject.m</li>
+</h3>
+<p>以下は，NSLog APIを使うために，拡張子を.mに変更した．</p>
+<h3 class="numeric-list">
+<li>vdigGrab.h</li>
+<li>vdigGrab.m</li>
+</h3>
+<p>コンパイルするために，Carbon，QuickTimeフレームワークを追加する．<br />
+<br />
+<h3 class="line-header">クラス </h3>
+<p>tagVideoWindow構造体のメンバと，tagVideoWindow.cの関数をクラスにまとめた．</p>
+<pre>
+@interface CaptureObject : NSObject
+{
+// GLUT
+long        milliSecPerTimer;
+// vdig grab data
+VdigGrab*   pVdg;
+long        milliSecPerFrame;
+Fixed        frameRate;
+long        bytesPerSecond;
+ImageDescriptionHandle
+vdImageDesc;
+// Destination port (GWorld)
+CGrafPtr    dstPort;
+Rect        dstPortBounds;
+Rect        dstDisplayBounds;
+void*        pDstData;
+long        dstDataSize;
+}
+- (id) init;
+- (void) dealloc;
+- (OSErr) videoSetTimerPeriodFromVdig;
+- (OSErr) videoInitOffscreenWidth:(int)width height:(int)height;
+- (void) videoSetDisplayBoundsToCaptureBounds;
+- (void) grabYUVFrameToThisPointor:(unsigned char*)targetAddress;
+- (void) grabRGBFrameToThisPointor:(unsigned char*)targetAddress;
+- (BOOL) onTimer;
+- (float) milliSecPerTimer;
+- (NSSize) getFrameSize;
+@end
+</pre>
+<p>主に必要な機能をピックアップして，実装した．<br />
+カメラ絞りや色合い等を変更するダイアログを利用する場合は，vdigGrab.mのvdgRequestSettingsを編集する．</p>
+<pre>
+OSErr vdgRequestSettings(VdigGrab* pVdg)
+{
+OSErr err;
+// Use the SG Dialog to allow the user to select device and compression settings
+/* 2005 11/14 for delete setting dialog by sonson
+if (err = RequestSGSettings(  pVdg->seqGrab,
+pVdg->sgchanVideo))
+{
+NSLog(@"RequestSGSettings err=%d?n", err);
+goto endFunc;
+}
+*/
+if (err = vdgGetSettings(pVdg))
+{
+NSLog(@"vdgGetSettings err=%d?n", err);
+goto endFunc;
+}
+endFunc:
+return err;
+}
+</pre>
+<p>RequestSGSettings APIでカメラの設定ダイアログでセットする．<br />
+<br />
+<h3 class="line-header">フレームの取得とYUV展開 </h3>
+<p>CaptureObjectクラスの以下のメソッドでピクセルをメモリに取得する．<br />
+targetAddressには，保存先のポインタを入力する．<br />
+ただし，ポインタにはフレームのデータ分だけメモリを確保しておく必要がある．<br />
+今回は画像処理が目的であるため，ピクセル情報をメインメモリへ保存する必要がある．<br />
+この処理は，上のgrabRGBFrameToThisPointorメソッドにある．<br />
+QuickTime経由で取得できる1フレームごとの画像データは，YUV422で圧縮されている．<br />
+このため，QuickTime経由できる画像データは，以下の式に基づいて変換する必要がある．</p>
+<pre>
+Red    = Y           + 1.402*V
+Green  = Y - 0.344*U - 0.714*V
+Blue   = Y + 1.722*U
+</pre>
+<p>ただし，YUV形式の場合は，一般のRGB形式とは以下のように異なる．<br />
+<center><img src="{{ site.url }}/assets//yuv.gif" /></center><br />
+<center><img src="{{ site.url }}/assets//rgb.gif" /></center><br />
+RGBの場合，一般的に，Red-8bit，Green-8bit，Blue-8bitと，各ピクセルごとに24bitのRGBの情報が保存される．<br />
+YUVの場合は，ピクセルを2組ずつにしてピクセルの情報をセクタ毎に保存する．<br />
+このセクタには，二つのピクセルのそれぞれの明度，そして，二つのピクセル共通のY，Uの値が保存される．2ピクセルごとに32bitの情報が保存される．<br />
+このため，640x480の画像で，1行ごとに必要な情報量は，</p>
+<h3 class="numeric-list">
+<li>RGBの場合・・・640x24bit=15,360bit</li>
+<li>YUVの場合・・・640/2x32bit=10,240bit</li>
+</h3>
+<p>となり，1枚の画像に必要な情報量は，</p>
+<h3 class="numeric-list">
+<li>RGBの場合・・・640x480x24bit=7,322,800bit</li>
+<li>YUVの場合・・・640/2x480x32bit=4,915,200bit</li>
+</h3>
+<p>となる．まぁ，YUVに圧縮効果があることが簡単にわかる．<br />
+このため，YUVをRGBに変換する場合は，例えば，以下のように展開する必要がある．</p>
+<pre>
+for( i=0;i&lt;width*height/2;i++){
+u = *(pixel+i*4   )-128;
+y0= *(pixel+i*4+1 );
+v = *(pixel+i*4+2 )-128;
+y1= *(pixel+i*4+3 );
+//
+red   = y0             + 1.402*v;
+green = y0 - 0.344 * u - 0.714*v;
+blue  = y0 + 1.722 * u          ;
+//
+*(targetAddress+i*6  ) = normalizeTable[red+127];
+*(targetAddress+i*6+1) = normalizeTable[green+127]
+*(targetAddress+i*6+2) = normalizeTable[blue+127];
+red   = y1             + 1.402 * v;
+green = y1 - 0.344 * u - 0.714 * v;
+blue  = y1 + 1.722 * u            ;
+//
+*(targetAddress+i*6+3) = normalizeTable[red+127];
+*(targetAddress+i*6+4) = normalizeTable[green+127];
+*(targetAddress+i*6+5) = normalizeTable[blue+127];
+}
+</pre>
+<p>
+<h3 class="line-header">YUVをそのまま利用する </h3>
+<p>ただし，画像処理が目的でなく，かつ単純にOpenGLのテクスチャとして表示する場合は，GL_YCBCR_422_APPLEというApple拡張が用意されているので，簡単に行うことができる．<br />
+それについては，OpenGLテクスチャを生成するときに以下のように行う．</p>
+<pre>
+glTexSubImage2D(pWnd->texEnum,            // GLenum target,
+0,                                                     // GLint level,
+pWnd->dstDisplayBounds.left,         // GLint xoffset
+pWnd->dstDisplayBounds.top,         // GLint yoffset
+pWnd->dstDisplayBounds.right-pWnd->dstDisplayBounds.left,
+// GLsizei width,
+pWnd->dstDisplayBounds.bottom-pWnd->dstDisplayBounds.top,
+//GLsizei height,
+GL_YCBCR_422_APPLE,                    //GL_BGR_EXT,  //GL_BGRA_EXT, // GLenum format,
+GL_UNSIGNED_SHORT_8_8_REV_APPLE,
+//GL_BYTE,  //GL_UNSIGNED_INT_8_8_8_8_REV, //GLenum type
+pData                         //const GLvoid *pixels
+);
+</pre>
+<p>SeeSawModify.zip</p>

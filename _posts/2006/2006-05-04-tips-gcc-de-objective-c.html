@@ -1,0 +1,41 @@
+---
+layout: post
+title: "[Tips] gcc de Objective-C"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Windowsにcygwinをインストールして，さらにgccをインストールした．</p>
+<h3 class="line-header">インスコ</h3>
+<p><img align="center" src="{{ site.url }}/assets//objc-gcc.png" /><br />
+参考リンク<br />
+<a target="_blank" href="http://www.cs.indiana.edu/classes/c304/oop-intro.html">http://www.cs.indiana.edu/classes/c304/oop-intro.html</a></p>
+<h3 class="line-header">ソースコード</h3>
+<pre>
+#import &lt;objc/Object.h&gt;
+int main()
+{
+id obj = [Object alloc];
+[obj init];
+printf("test objc");
+return 0;
+}
+</pre>
+<h3 class="line-header">コンパイル</h3>
+<pre>
+&gt;gcc -o test.exe test.m -lobjc
+&gt;./test.exe
+&gt;test objc
+</pre>

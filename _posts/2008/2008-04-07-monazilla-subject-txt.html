@@ -1,0 +1,44 @@
+---
+layout: post
+title: "[monazilla] subject.txt〜スレッド一覧"
+categories:
+- blog
+tags:
+- monazilla
+- Programming
+status: publish
+type: post
+published: true
+meta:
+  _oembed_b747f2e9f2dbd99c3277b137f233bded: "{{unknown}}"
+  _oembed_79afa1b7b80d441740cde73219aa31cf: "{{unknown}}"
+  _oembed_9fd863057f02548207221cfc59383c09: "{{unknown}}"
+  _oembed_125b16649a07a690a1b023539aaa312e: "{{unknown}}"
+  _oembed_e4c3a34a7088ebeb8d6c204127bffb17: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>subject.txtは，板毎のスレッドのタイトルなどの情報が書き込まれたファイル．</p>
+<pre>
+http://***.2ch.net/***/subject.txt
+</pre>
+<p>でアクセスできる．<br />
+ただし，普通のブラウザでアクセスしてもダウンロードできず，いわゆる人大杉のHTMLが返ってくる．<br />
+ユーザエージェントをmonazillaにしないといけない・・・？だったっけ？（subject.txtはエージェント設定しなくてもよかったっけ？）<br />
+必要なら，ユーザエージェントは，次のようにする．</p>
+<pre>
+"Monazilla/1.00 (hoge/0.00)"
+</pre>
+<p>たとえば，()の中は自分のプログラム中身にする．<br />
+無事にダウンロードできたら，例として以下のようなデータが含まれるsubject.txtが得られる．<br />
+以下は，サンプルの一部を抜粋したもの．</p>
+<pre>
+1203051018.dat<>【マスコミ】朝日新聞、捏造記事を謝罪 (653)
+1203085020.dat<>【医療】国の医療事故調に反対【医学部長病院長会議】 (228)
+</pre>
+<p>フォーマットは，datファイル名と<>とタイトルと括弧で囲まれたレス数と改行となる．<br />
+これを処理して，スレッドに関する情報を取得できるのだった．</p>

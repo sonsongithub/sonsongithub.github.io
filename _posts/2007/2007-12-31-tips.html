@@ -1,0 +1,24 @@
+---
+layout: post
+title: "[Tips] 改行コード：mi(ミミカキエディタ)の盲点"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>miで作ったRubyのスクリプトの挙動がおかしいなと思っていたら，円マークの挙動がおかしい模様．<br />
+どうやら，miエディタは，円マークをデフォルトで，0x00A5で保存する様子．<br />
+以下のところをチェックすると，バックスラッシュの0x005Cで保存するように設定できる．<br />
+ぬうううううううう．<br />
+<img alt="mi_back_slash.png" src="{{ site.url }}/assets//mi_back_slash.png" width="380" height="234" /></p>

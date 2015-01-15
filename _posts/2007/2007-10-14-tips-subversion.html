@@ -1,0 +1,91 @@
+---
+layout: post
+title: "[Tips] Subversionをさくらインターネットで利用する"
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- MacOSX
+- Objective-C
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>使えると聞いて使ってみる．<br />
+ほとんどネットの情報を鵜呑みです．大体の人は，Tracを使いたいようだ．<br />
+とりあえず，私の利用したいsvnの基本機能が動くようにしてみる．<br />
+<strong>※参考リンク</strong><br />
+・<a href="http://nyarla.net/blog/subversion1">http://nyarla.net/blog/subversion1</a><br />
+・<a href="http://www.hazama.nu/t2o2/archives/002700.html">http://www.hazama.nu/t2o2/archives/002700.html<br />
+</a><br />
+・<a href="http://weekbuild.sakura.ne.jp/trac/wiki/TracDoc/SakuraInternet">http://weekbuild.sakura.ne.jp/trac/wiki/TracDoc/SakuraInternet</a><br />
+・<a href="http://bokunomichi.blogspot.com/2007/03/subversionsvnsshsubclipse.html">http://bokunomichi.blogspot.com/2007/03/subversionsvnsshsubclipse.html</a><br />
+<strong>※インストール</strong><br />
+１．swig<br />
+２．apr<br />
+３．apr-util<br />
+４．subversion<br />
+の順にインストールする．<br />
+<a href="http://nyarla.net/blog/subversion1">http://nyarla.net/blog/subversion1</a>を参考にパスを設定して，インストールする．<br />
+・swig</p>
+<pre>
+./configure --prefix=$HOME/local --with-python=/usr/local/bin/python
+</pre>
+<p>・apr</p>
+<pre>
+./configure --prefix=$HOME/local --disable-static
+</pre>
+<p>・apr-util</p>
+<pre>
+./configure --prefix=$HOME/local \
+--with-apr=$HOME/local \
+--with-expat=/usr/local \
+--with-iconv=/usr/local --disable-static
+</pre>
+<p>・subversion</p>
+<pre>
+./configure --prefix=$HOME/local \
+--with-neon=$HOME/local --without-berkeley-db --enable-swig-bindings=perl \
+--with-swig=$HOME/local/bin/swig --with-apr=$HOME/local/bin/apr-1-config \
+--with-apr-util=$HOME/local/bin/apu-1-config --disable-static
+</pre>
+<p>これでインストール完了，サーバ側の.cshrcのpathに，$home/local/binを加えておく．<br />
+<strong>※リポジトリの設定</strong><br />
+これは，ふつうと同じで，サーバ側でsvnadmin createで作成する<br />
+<strong>※sshの鍵で簡単に通信できるようにする</strong><br />
+まず，鍵を作成する．クライアント側でssh-keygenやputtyで作る．<br />
+puttyについては・・・しらね．</p>
+<pre>
+cd
+cd .ssh/
+ssh-keygen -t dsa
+</pre>
+<p>パスワードは空でもおｋ．次にこの鍵ファイルid_dsa.pubをリモート側の~/.ssh/にコピーし，authorized_keysとリネームする．<br />
+さらに，パーミッションを変更しておく．</p>
+<pre>
+chmod 700 .ssh
+chmod 600 .ssh/authorized_keys
+</pre>
+<p>さらにsvn+sshでアクセスするために環境変数を二つセットする．</p>
+<pre>
+export SVN_SSH="ssh -l son-son"
+export SVN_EDITOR="emacs"
+</pre>
+<p>下のモノは，ログ編集用の環境変数．-mをセットしないとき，この環境変数をセットしとかないとエラーが出る．<br />
+<strong>※アクセス方法</strong></p>
+<pre>
+svn list svn+ssh://&lt;hostname&gt;/home/&lt;account&gt;/&lt;repositorypath&gt;
+</pre>
+<p>でアクセスできる．ｳﾏｰｰｰｰｰｰｰ．<br />
+<strong>おまけ</strong><br />
+--usernameでユーザ名を指定してsvnにアクセスできる．</p>

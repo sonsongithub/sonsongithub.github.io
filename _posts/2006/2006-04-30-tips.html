@@ -1,0 +1,89 @@
+---
+layout: post
+title: "[Tips] ビットマップファイルの読み込み"
+categories:
+- blog
+tags:
+- Blog
+- Perl
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">ファイルを読み込み，書き込む</h3>
+<p>サンプルは，ビットマップファイルを読み込み，そのまま，ファイル名を変えて，書き出す．<br />
+以下がそのサンプルコードだ．<br />
+ビットマップファイルの書き込みは，<a href="http://son-son.sakura.ne.jp/mt/blog/2006/04/tips_1.html">ここ</a>にある．</p>
+<pre>
+ReadBitmap("test01.bmp",&pixel,&width,&height);
+WriteBitmap("test02.bmp",pixel, width, height);
+free(pixel);
+</pre>
+<p>
+<h3 class="line-header">読み出し</h3>
+<pre>
+int ReadBitmap(const char*pFilename, unsigned char **pPixel, int *nWidth, int *nHeight){
+int			x,y;
+FILE			*fp;
+unsigned char*		bitdata;
+BitmapHeader		header;
+BitmapInfoHeader	info;
+unsigned char		red,green,blue,dummy;
+if( !( fp = fopen(pFilename, "rb") ))
+return 0;
+if( !ReadHeader(&header,fp) ){
+fclose(fp);
+return 0;
+}
+if( !ReadInfoHeader(&info,fp) ){
+fclose(fp);
+return 0;
+}
+#ifdef __ENDIAN		// Macのときは__ENDIANを定義し，エンディアン変換を行う．
+SwapByteOrderHeaders(&header, &info);
+#endif
+// check header
+if( !CheckHeaders(&header,&info) ){
+fclose(fp);
+return 0;
+}
+// calculate alignment size
+int dataWidth = (header.m_nFilesize - header.m_nOffset)/info.m_nHeight;
+int writeWidth = dataWidth - 3*info.m_nWidth;
+// read pixels
+bitdata = (unsigned char*)malloc(3*info.m_nWidth*info.m_nHeight*sizeof(unsigned char));
+for(y=info.m_nHeight-1;y&gt;=0;y--){
+for(x=0;x&lt;info.m_nWidth;x++){
+fread( &blue, sizeof(unsigned char),1,fp);
+fread( &green, sizeof(unsigned char),1,fp);
+fread( &red, sizeof(unsigned char),1,fp);
+// BGR->RGB
+*(bitdata+3*(x+y*info.m_nWidth)  )  = red;
+*(bitdata+3*(x+y*info.m_nWidth)+1)= green;
+*(bitdata+3*(x+y*info.m_nWidth)+2)= blue;
+}
+for(x=0;x&lt;writeWidth;x++){
+fread( &dummy, sizeof(unsigned char),1,fp);
+}
+}
+// return bitmap data
+*nWidth = info.m_nWidth;
+*nHeight= info.m_nHeight;
+*pPixel = bitdata;
+// file close
+fclose(fp);
+return 1;
+}
+</pre>
+<p>
+<h3 class="line-header">サンプルコード</h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/src/bitmapSrc">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/src/bitmapSrc</a></p>

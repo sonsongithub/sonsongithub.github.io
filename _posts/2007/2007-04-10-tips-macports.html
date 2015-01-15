@@ -1,0 +1,35 @@
+---
+layout: post
+title: "[Tips] MacPortsでMecab"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>まず，インストールする．</p>
+<pre>
+>sudo port install mecab
+>sudo port install mecab-ipadic-utf8
+</pre>
+<p>そして，このままだと，辞書なしで形態素解析してしまうので，<br />
+辞書を設定する．</p>
+<pre>
+sudo emacs /opt/local/etc/mecabrc
+</pre>
+<p>で，</p>
+<pre>
+dicdir = /opt/local/lib/mecab/dic/ipadic-utf8
+</pre>
+<p>という風に辞書のパスを追記しておく．</p>

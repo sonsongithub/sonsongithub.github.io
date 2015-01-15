@@ -1,0 +1,79 @@
+---
+layout: post
+title: OpenCV for iOS
+categories:
+- blog
+tags:
+- Blog
+- OpenCV
+- Programming
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>OpenCV 2.2.0をiOS用にビルドしてみた．</p>
+<p>参考にしたのは，@niwさんのコードと，この<a href="http://www.atinfinity.info/wiki/index.php?OpenCV%2FUsing%20OpenCV%202.2%20on%20iOS%20SDK%204.1">サイト</a>．</p>
+<ul>
+<ol><a href="https://github.com/niw/iphone_opencv_test">https://github.com/niw/iphone_opencv_test</a></ol>
+<ol><a href="http://www.atinfinity.info/wiki/index.php?OpenCV%2FUsing%20OpenCV%202.2%20on%20iOS%20SDK%204.1">http://www.atinfinity.info/wiki/index.php?OpenCV%2FUsing%20OpenCV%202.2%20on%20iOS%20SDK%204.1</a></ol>
+</ul>
+<h2>ビルドの手順</h2>
+<p>上のサイトの手順でビルドすると，simulatorとdeviceのふたつのバイナリがビルドされる．<br />
+つまり，iOSデバイス用と，シミュレータ用だ．</p>
+<p>iOSデバイスは，1年前から，armv6用バイナリだけではなくて，armv7用バイナリもファミリーに加わった．<br />
+このため，上記のビルドでは，うまくリンカがopencvのライブラリをバイナリにリンクしてくれないことがある．</p>
+<p>また，シミュレータ用とデバイス用に分けてライブラリはビルドされるので，これも問題だ．<br />
+このために，Xcodeのプロジェクトに二つもライブラリを読み込まないといけない．これは面倒くさい．<br />
+これについては，lipoツールを使えば，ひとつのファイルにまとめられることはこのエントリで述べた．</p>
+<p>これらを回避するため，ビルドからライブラリの結合までを自動でやるスクリプトを書いた．</p>
+<p><a href="https://github.com/sonsongithub/iOS_OpenCV_build_script">https://github.com/sonsongithub/iOS_OpenCV_build_script</a></p>
+<p>このスクリプトは，armv6/7用のバイナリと，simulator用のバイナリをビルドし，最後にlipoでひとつにまとめて出力するものである．<br />
+ソースコードを一式をダウンロードあるいはチェックアウトし，そのフォルダにOpenCV-2.2.0という名前でソースコードを展開し，opencv_ios_build_script.shを実行すれば，自動的にOpenCVのスタティックライブラリのビルドが実行される．</p>
+<p><center><img src="{{ site.url }}/assets//opencv_ios01.png" /></center></p>
+<p>ちなみに，OpenCVには，cmakeというmakefileを作るようなビルドツールが使われているので，もし，インストールされていなければ，インストールしておく．</p>
+<p>問題がなければ，そのままさらっとビルドが終わるはずだ．</p>
+<p>そうすると，<br />
+<code><br />
+./build/lib/<br />
+./build/include/<br />
+</code></p>
+<p>この二つのパスにスタティックライブラリと，ヘッダファイルがコピーされているはずである．<br />
+これで，OpenCVのスタティックリンクライブラリのビルドは完了である．</p>
+<p>このスクリプトを見ると，完全に@niwさんの焼き直しで，車輪の再発明全開なんですが，ライブラリをARMモードかつ，アーキテクチャ混在でビルドできるので，ちょっと違うということで自分を納得させました．</p>
+<p>次は，実際にXcodeのプロジェクトでOpenCVをリンクして，OpenCVの実装を使ったアプリケーションを作って見る．<br />
+ここで注意しないといけないことを上げておく．<br />
+また，</p>
+<p><a href="https://github.com/sonsongithub/iOS_OpenCV_build_script">https://github.com/sonsongithub/iOS_OpenCV_build_script</a></p>
+<p>ここにも，サンプルプロジェクトをアップロードしておいたので，そちらを参考にしても構わない．<br />
+ただし，何が重要で，何が必要かを考えるためにも，プロジェクトのまんまコピーはお勧めしない．</p>
+<p>それでは，ひとつずついきませう．</p>
+<h2>ライブラリのリンク</h2>
+<p>まずは，先ほどビルドしたファイルをライブラリに追加しよう．<br />
+そして，Accelerate.frameworkもリンクするようにする．どうやら，OpenCVが内部でLAPACKを使っているらしく，それがAccelerate.frameworkに依存するためだ．</p>
+<p><center><img src="{{ site.url }}/assets//opencv_ios04.png" /></center></p>
+<h2>ヘッダファイルのパス</h2>
+<p>次に，OpenCVのヘッダファイルのサーチパスを追加しておく．</p>
+<p><center><img src="{{ site.url }}/assets//opencv_ios03.png" /></center></p>
+<p>これで，</p>
+<p><code><br />
+#include &lt;opencv2/module/hoge.h&gt;<br />
+</code></p>
+<p>のようなインクルードも正しく読み込まれるはず．</p>
+<h2>ターゲットアーキテクチャの設定</h2>
+<p>拙作のビルドであれば．問題ないはずだが，OpenCVをarmv6のみ，などで動かす場合は，"Build Active Architecture Only"のフラグを変更する必要がある．</p>
+<p><center><img src="{{ site.url }}/assets//opencv_ios02.png" /></center></p>
+<h2>リンカフラグの追加</h2>
+<p>最後に，追加リンクを設定しておく．<br />
+C++とzlibをリンクしておく．</p>
+<p><center><img src="{{ site.url }}/assets//opencv_ios05.png" /></center></p>
+<p>これで一連のビルド作業は完了．</p>
+<p>また，OpenCV for iOS関連のことはちょこちょこやっていくかな．</p>

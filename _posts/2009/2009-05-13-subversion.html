@@ -1,0 +1,43 @@
+---
+layout: post
+title: subversion使いが，githubを試してみる．
+categories:
+- blog
+tags:
+- Blog
+- "開発日記"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>「えー？マジSVN？SVNが許されるのは小学生までだよね」<br />
+と，いつもみんなにイジメられるので，試してみた．<br />
+gitとは，ルートリポジトリという概念がないソースコード管理ツール．<br />
+「subversionは，リポジトリ管理者が絶大な権限を持つが，gitはどんどん分家していくので，オープンソースに持ってこい」みたいな思想だと私は理解．<br />
+チェックアウトしたもの自体が，ローカルのリポジトリとなり，さらにそこにみんなでコミットして，元々のリポジトリにマージして・・・・．みたいな，色々なパターンの共同開発ができるらしい．<br />
+んで，１subversionユーザとして，トライしてみた．<br />
+subversionユーザがもっともとまどうのは，gitでできることの豊富さにあると考える．<br />
+とりあえず，まず，チェックアウトして，コーディングして，コミットするというところまでをやってみた．<br />
+githubを使ってみた．セットアップ方法はいろんなところに書いてます．多分．<br />
+<a href="http://blog.katsuma.tv/2009/02/first_github.html">http://blog.katsuma.tv/2009/02/first_github.html</a><br />
+１．svnでいうチェックアウト？</p>
+<pre>
+git clone git://github.com/hoge/hoge.git ./test
+</pre>
+<p>２．svnでいう・・・なんだろう・・・・．ローカルコミットかなぁ．</p>
+<pre>
+git comit
+</pre>
+<p>３．svnでいうコミット？</p>
+<pre>
+git push git@github.com:hoge/hoge.git
+</pre>
+<p>やっぱ，わかりにくい．<br />
+ローカルでコーディングして，まとめてpushのところを確認していきたい．</p>

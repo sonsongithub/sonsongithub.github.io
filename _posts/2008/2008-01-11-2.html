@@ -1,0 +1,100 @@
+---
+layout: post
+title: "[お勉強] プロセスを生成する〜system"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- "お勉強"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>まず，system関数を使ってみる．<br />
+これは，一番簡単かもしれない．<br />
+中身は/bin/sh -c コマンド名でシェル経由でプロセスを生成しているようである．<br />
+まず，外部アプリケーションとなるhogeのhoge.cを以下に示す．</p>
+<pre>
+#include &lt;stdio.h&gt;
+int main( int argc, void**argv ) {
+int i = 0;
+for( i = 0; i &lt; 10; i++ ) {
+printf( "%d sec passed.\n", i );
+sleep( 1 );
+}
+printf( "hoge has finished.\n" );
+return 0;
+}
+</pre>
+<p>たんに1秒間待つ処理を10回繰り返すだけのもの．<br />
+それをsystem関数を使って起動するsystemのsystem.cを以下に示す．</p>
+<pre>
+#include &lt;stdio.h&gt;
+int main( int argc, void**argv ) {
+system( "../hoge/hoge" );
+printf( "system has finished.\n" );
+}
+</pre>
+<p>このsystemを実行するとhogeのプロセスが生成され，実行される．<br />
+実行結果は，以下のようになる．</p>
+<pre>
+$ ./system
+0 sec passed.
+1 sec passed.
+2 sec passed.
+3 sec passed.
+4 sec passed.
+5 sec passed.
+6 sec passed.
+7 sec passed.
+8 sec passed.
+9 sec passed.
+hoge has finished.
+system has finished.
+</pre>
+<p>プロセスは，以下のように見える．</p>
+<pre>
+sonson    8753   0.0  0.0   599616    296 s001  S+   10:53AM   0:00.00 ../hoge/hoge
+sonson    8752   0.0  0.0   591424    284 s001  S+   10:53AM   0:00.00 ../system/system
+</pre>
+<p>system関数は，バックグラウンドで動かさない場合は，親プロセスは，子プロセスが終わるのを待つようである．<br />
+system関数は，ワイルドカードなども使えるらしい．<br />
+並列処理も実は，&で簡単に実現できてしまう．</p>
+<pre>
+#include &lt;stdio.h&gt;
+int main( int argc, void**argv ) {
+system( "../hoge/hoge &" );
+printf( "system has finished.\n" );
+}
+</pre>
+<p>こうやって，バッググラウンドでhogeを起動すると，以下のような実行結果になる．</p>
+<pre>
+$ ./system
+system has finished.
+$ 0 sec passed.
+1 sec passed.
+2 sec passed.
+3 sec passed.
+4 sec passed.
+5 sec passed.
+6 sec passed.
+7 sec passed.
+8 sec passed.
+9 sec passed.
+hoge has finished.
+</pre>
+<p>プロセスは，以下．プロセス番号をつかえまえるために，getcharをしこんで，データを取った．<br />
+状態にS+とSで差がみられる．</p>
+<pre>
+sonson    8797   0.0  0.0   599616    284 s001  S+   10:55AM   0:00.00 ./system
+sonson    8800   0.0  0.0   599616    296 s001  S    10:56AM   0:00.00 ../hoge/hoge
+</pre>
+<p>うーむ．自由度が高いし，使いやすい．</p>

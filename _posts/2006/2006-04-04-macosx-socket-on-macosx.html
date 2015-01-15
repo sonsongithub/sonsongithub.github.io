@@ -1,0 +1,78 @@
+---
+layout: post
+title: "[MacOSX] Socket on MacOSX〜クライアント"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">クライアント側のプログラミング </h3>
+<p>クライアント側は待つ必要はない．<br />
+そのまま，サーバに接続し，それがダメならダメでしたと報告すればいいだけなのだ．<br />
+それでは，待つところまで．</p>
+<pre>
+if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+return;
+struct sockaddr_in server_addr;
+struct hostent* server_host;
+// clear with zero
+bzero((char *)&server_addr, sizeof(server_addr));
+// initialize
+server_addr.sin_family = AF_INET;
+server_addr.sin_port = htons(port);
+// get host information
+server_host = gethostbyname("localhost");
+bcopy((char *)server_host->h_addr, (char *)&server_addr.sin_addr.s_addr, server_host->h_length);
+// try to connetct
+if(connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
+printf("error?n");
+free(server_host);
+</pre>
+<p>これでサーバと接続することができる．<br />
+<br />
+<h3 class="line-header">Cocoa・・・NSFileHandle </h3>
+<p>次にCocoaでサクっとイベントをうけとりたいときには，以下のようにNSFileHandleを初期化する．</p>
+<pre>
+if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+return;
+// make file handle
+NSFileHandle *fileHandle = [[NSFileHandle alloc] initWithFileDescriptor: sockfd];
+struct sockaddr_in server_addr;
+struct hostent* server_host;
+// clear with zero
+bzero((char *)&server_addr, sizeof(server_addr));
+// initialize
+server_addr.sin_family = AF_INET;
+server_addr.sin_port = htons(port);
+// get host information
+server_host = gethostbyname("localhost");
+bcopy((char *)server_host->h_addr, (char *)&server_addr.sin_addr.s_addr, server_host->h_length);
+// try to connetct
+if(connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
+printf("error?n");
+free(server_host);
+// set notification from filehandle
+[[NSNotificationCenter defaultCenter] addObserver: self
+selector: @selector(receiveMessage:)
+name: NSFileHandleReadCompletionNotification
+object: fileHandle];
+// set notify
+[fileHandle readInBackgroundAndNotify];
+</pre>
+<p>これでNSFileHandleを利用して，サーバと通信することができる．<br />
+この場合，データを受け取ったときにreceiveMessageが呼び出されることになる．</p>
+<h3 class="line-header">ソースコード </h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/mac/socket">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/mac/socket</a></p>

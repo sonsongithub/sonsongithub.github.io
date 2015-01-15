@@ -1,0 +1,42 @@
+---
+layout: post
+title: "[Tips] NSStringを文字で区切って，分割する"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- Objective-C
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>詳しい各の設定は，まだ勉強していないが，これで文字列を分割できる．<br />
+下のコードだと，カンマ区切りとなる．<br />
+これで正規表現があれば，完璧なんだが．</p>
+<pre>
+- (NSArray*) search:(NSString*)line {
+NSMutableArray *resultArray = [NSMutableArray array];
+NSCharacterSet* chSet = [NSCharacterSet characterSetWithCharactersInString:@","];
+NSScanner* scanner = [NSScanner scannerWithString:line];
+NSString* scannedPart = nil;
+while(![scanner isAtEnd]) {
+if([scanner scanUpToCharactersFromSet:chSet intoString:&scannedPart]) {
+[resultArray addObject:scannedPart];
+}
+[scanner scanCharactersFromSet:chSet intoString:nil];
+}
+if( [resultArray count] < 1 )
+return nil;
+return resultArray;
+}
+</pre>

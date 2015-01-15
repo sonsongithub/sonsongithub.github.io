@@ -1,0 +1,128 @@
+---
+layout: post
+title: "[OpenGL] リアルタイム・影生成"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">影付けの原理 </h3>
+<p>ここでは行列計算で影をつけてしまいます．この行列に関することはこちらのセクションを参考にしてください．<br />
+影は概念的には下図のように発生することになります．実世界では，光の回折，反射光などがあるので，こんな簡単なものではありません．そういった複雑な要素を実現するためにはレイトレーシングなどの技法を使う必要があります．<br />
+<center><img src="{{ site.url }}/assets//planar_mat.jpg" /></center><br />
+図中の緑色のポリゴンを影をつけたいポリゴンとすると，影であるポリゴンは，下の灰色のポリゴンとなり，そのポリゴンは以下の用に表現することができます．</p>
+<pre>
+// 影をつけたいオブジェクトの描画
+DrawObject();
+// オブジェクトの影の描画
+glPushMatrix();
+glMultiMatrix(shadowMatrix);
+DrawObject();
+glPopMatrix();
+// 床の描画
+DrawFloor();
+</pre>
+<p>このときshadowMatrixはPlanar Projected Matrixです．この行列によって，ポリゴンは平面へ影ポリゴンとして射影されます．しかし，これでそのまま書いてしまうと綺麗に表示されません．<br />
+なぜでしょうか？<br />
+<br />
+<h3 class="line-header">床と影の描画 </h3>
+<p>床と影は同じところに描画されます．影自体が床に射影するようにしているのですから当然です．しかし，これではうまく描画されません．これはOpenGLの使用によります．<br />
+ポリゴンの上にを重ねてポリゴンを描画すると（つまり全く同じ位置に書くと言うこと．奥行きに差があるなら問題はない）どちらのポリゴンが描画されるかはOpenGLでは保証されません．<br />
+解決方法としては，床と影の平面の位置を少しずらすということが考えられますが，これをすると斜めからみたときに影が浮いて見えます．これはいただけませんね．<br />
+もうひとつはポリゴンオフセットを使う方法がありますが，スマートではありません．<br />
+そこで，ステンシルバッファとブレンディングを使います．<br />
+床へ射影したポリゴンのピクセルに対し，ステンシルバッファを書き込み，シーン描画の最後にまとめて影を描画してしまう方法です．これならスマートに描画させることができます．<br />
+<br />
+<h3 class="line-header">コーディング </h3>
+<p>以下は実際のコーディングです．細かいところははっしょってますし，サラっと書いたコードなので汚いです．</p>
+<pre>
+/////////////////////////////////////////////
+//光源の位置の計算と設定
+lightpos[0] = 3*sin(t*0.05);
+lightpos[2] = 6*cos(t*0.05);
+glLightfv(GL_LIGHT0, GL_POSITION, (float*)lightpos);
+</pre>
+<p>影付けなので光が動かないとおもしろくないと．</p>
+<pre>
+/////////////////////////////////////////////
+// Plannar Projected Shadow Matrix
+// 平面射影行列の算出
+projectShadowMatrix(pM,floor_planar,lightpos);
+/////////////////////////////////////////////
+//光源の描画
+glColor3f(0.7,0.0,0.7);
+glPushMatrix();
+glTranslatef(lightpos[0],lightpos[1],lightpos[2]);
+glutSolidSphere(0.2,10,10);
+glPopMatrix();
+/////////////////////////////////////////////
+//ティーポット・オブジェクトの描画
+glColor3f(1,0.5,0.5);
+glDisable(GL_CULL_FACE);
+glutSolidTeapot(3);
+glEnable(GL_CULL_FACE);
+/////////////////////////////////////////////
+//床のステンシルを付ける
+glEnable(GL_STENCIL_TEST);
+glStencilFunc( GL_ALWAYS, 1, ￣0);
+//これから描画するもののステンシル値にすべて１タグをつける
+glStencilOp(GL_KEEP,GL_KEEP ,GL_REPLACE);
+glColor4f(0.7f, 0.4f, 0.0f, 1.0f);
+DrawFloor();
+</pre>
+<p>　まず，影に関係ないティーポットを書きます．そして床を描画しますが，ついでにステンシルバッファを書き込んでおきます．こうしておくと影が床以外に描画されることを防ぐことができます．</p>
+<pre>
+/////////////////////////////////////////////
+//カラー・デプスバッファマスクをセットする
+//これで以下の内容のピクセルの色の値は、書き込まれない。
+glColorMask(0,0,0,0);
+glDepthMask(0);
+/////////////////////////////////////////////
+//床にティーポットの影のステンシルを付ける
+glEnable(GL_STENCIL_TEST);
+glStencilFunc( GL_EQUAL, 1, ￣0);
+//ステンシル値が１のピクセルのステンシル値をインクリメント
+glStencilOp(GL_KEEP,GL_KEEP ,GL_INCR);
+glDisable(GL_DEPTH_TEST);
+glPushMatrix();
+glMultMatrixd(pM);
+glDisable(GL_CULL_FACE);
+glutSolidTeapot(3);
+glEnable(GL_CULL_FACE);
+glPopMatrix();
+glEnable(GL_DEPTH_TEST);
+/////////////////////////////////////////////
+//ビットマスクを解除
+glColorMask(1,1,1,1);
+glDepthMask(1);
+</pre>
+<p>ここが肝心の影の描画です．ステンシル値が１のところだけに影を書き込み，そして書き込まれたところにはステンシル値をインクリメントします．こうすると影のある床にはステンシル２，床のところにはステンシル１，それ以外のところはステンシル０という具合に区別することができます．<br />
+影の描画結果は書き込まれてはいけないので，先にビットマスクをかけて，カラー，デプスバッファともに書き込まれないようにしています．</p>
+<pre>
+/////////////////////////////////////////////
+//影をつける
+glStencilFunc( GL_EQUAL, 2, ￣0 );
+glEnable(GL_BLEND);
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+glColor4f(0.1f, 0.1f, 0.1f, 0.5f);
+glDisable(GL_DEPTH_TEST);
+DrawFloor();
+glEnable(GL_DEPTH_TEST);
+glDisable(GL_BLEND);
+glDisable(GL_STENCIL_TEST);
+</pre>
+<p>最後にステンシル値が２のところだけにブレンドオンにして書き込みます．デプステストをオフにしておくと手前，奥に関わらず描画されるので画面全体に黒が半透明で描画されるわけです．さらにステンシルバッファで描画領域を影だけに絞っているので，影のある床にだけ半透明で黒が描画され，あたかも床が影で薄暗くなっている用に見えます．<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/simple_shadow">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/simple_shadow</a></p>

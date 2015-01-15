@@ -1,0 +1,58 @@
+---
+layout: post
+title: "[Tips] Subversionに挑戦する"
+categories:
+- blog
+tags:
+- Blog
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Subversionのインストールに挑戦した．<br />
+debianの標準パッケージが思ったよりしょぼかったので，一からインストールすることになり，結構手間取った．</p>
+<h3 class="line-header">インストール</h3>
+<p>BerkeleyDB<br />
+Apache Portable Runtime(APR)<br />
+Apache Portable Runtime Utility<br />
+Swig<br />
+ViewVC<br />
+Subversion 1.4.0</p>
+<h3 class="line-header">APRに手間取る</h3>
+<p>APR-utilとSubversionのビルドにAPRのパスを通したりしないといけないので，面倒くさい．<br />
+後，共有ライブラリを利用できるようにしておく．<br />
+APR</p>
+<pre>
+>./configure --enable-shared
+>make
+>sudo make install
+</pre>
+<p>APR-util</p>
+<pre>
+>./configure --enable-shared --with-apr=/usr/local/apr
+>make
+>sudo make install
+</pre>
+<h3 class="line-header">Subversionのビルド</h3>
+<p>まず，標準パッケージをインストールする．</p>
+<pre>
+>make
+>sudo make install
+</pre>
+<p>次に，ViewVC用のライブラリを構築し，インストールする．</p>
+<pre>
+>make swig-py
+>sudo make install-swig-py
+</pre>
+<p>これで，python用のライブラリがインストールされる．<br />
+さらにCGIでも利用できるように，インストールされたライブラリのシンボリックリンクを作成する．<br />
+インストールされるライブラリは，/usr/local/lib/svn-pythonにある．<br />
+これを，後でCGIで使えるように，/usr/lib/python2.3/site-packagesの下にsvnとlibsvnの二つのフォルダのシンボリックリンクを作成する．</p>

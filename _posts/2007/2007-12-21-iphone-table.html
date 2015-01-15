@@ -1,0 +1,26 @@
+---
+layout: post
+title: "[iPhone] Tableを自動スクロールする"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>こうすると，目的の行までアニメーションしてスクロールされる．<br />
+かっこいい．</p>
+<pre>
+id cell = [table_ cellAtRow:10 column:0];
+[table_ scrollAndCenterTableCell:cell animated:YES];
+</pre>

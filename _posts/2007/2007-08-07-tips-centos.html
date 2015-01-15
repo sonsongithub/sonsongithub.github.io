@@ -1,0 +1,47 @@
+---
+layout: post
+title: "[Tips] CentOSでパッケージ管理"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>CentOSでは，yumコマンドでパッケージを管理する．</p>
+<pre>
+/etc/yum.conf
+/etc/yum.repos.d/*
+</pre>
+<p>に設定ファイルがあり，それで，Proxyの設定とか，サーバの設定ができる．<br />
+以下，引数リスト．</p>
+<pre>
+update
+check-update
+upgrade
+remove
+list
+info
+provides
+clean
+makecache
+groupinstall
+groupupdate
+grouplist
+groupremove
+search
+shell
+resolvedep
+localinstall
+localupdate
+deplist
+</pre>

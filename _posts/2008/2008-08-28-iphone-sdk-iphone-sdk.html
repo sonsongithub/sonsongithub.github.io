@@ -1,0 +1,66 @@
+---
+layout: post
+title: "[iPhone SDK] iPhone SDK向けのコードを静的コード解析する"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>相変わらずNDAは解除されない．NDAを続けるメリットがいまいちよくわからない．たとえば，今みたいにSDKに入っているコードから商品の開発計画とかがばれるからだろうか．うーむ．<br />
+<strong>※ここからはSDK一般のお話ですから．あしからず．</strong><br />
+Xcodeに付属のInstrumentsのleaks挙動が怪しい．リークを検出したり，しなかったりする．<br />
+そこで，@takuma104にclangを勧められた．<br />
+clangのMacOSX向けのツールはXcodeのプロジェクトのファイルを全部舐めて解析してくれるらしく，使いやすそうと考えたので，試してみたので報告する．<br />
+・本家サイト<br />
+　<a href="http://clang.llvm.org/index.html">http://clang.llvm.org/index.html</a><br />
+・説明サイト<br />
+　<a href="http://kirika.la.coocan.jp/acts/cocoastudy/200807/clang-static-analyzer.html">http://kirika.la.coocan.jp/acts/cocoastudy/200807/clang-static-analyzer.html</a><br />
+<strong>・インストール（MacOSX10.5.4で試した）</strong><br />
+<a href="http://clang.llvm.org/StaticAnalysis.html">ここ</a>からビルドされたパッケージをダウンロード．ダウンロードしたファイルを解凍し，中のフォルダとファイルをすべて/usr/local/binにコピーする．（/usr/loca/bin/にパスが通っていることを前提）<br />
+<strong>・使ってみた</strong><br />
+コマンドでXcodeのプロジェクトファイルのパスに移動．その位置でツールを使う．</p>
+<pre>
+cd <xcode project foler>
+scan-build xcodebuild
+</xcode></pre>
+<p>とやると，コンパイルが始まり，コードが解析される．<br />
+解析結果は，htmlで書き出され，-oで出力先のパスを設定できる．デフォルトは/tmp．<br />
+<strong>・結果出力</strong><br />
+実際に2tchの解析結果の画像．<br />
+<br />
+<center><br />
+<img alt="clang_result01.png" src="{{ site.url }}/assets//clang_result01.png" width="480" height="377" /><br />
+</center><br />
+を！なんかmemory leakの警告が出てる．早速調べてみる．コードを見せるのはグレー？ブラック？らしいのでリークしたところの処理の概要をソースコードで見せると，</p>
+<pre>
++ (Hoge*) hoge {
+Hoge *obj = [[Hoge alloc] init];
+// initialize
+if( result )
+return obj;
+else
+return nil;
+}
+</pre>
+<p>まぁ，クラスメソッドのインスタンス生成にはautoreleaseを投げとけとか，賛否両論あるでしょうが・・・・．バグがあるよと言われてみると，明確．nilを返すときにobjにretainが残った状態でメソッドが終了してしまうという簡単なメモリリークのバグです．<br />
+これをclangは，4つのパスに分解して，発見してくれました．</p>
+<pre>
+[1] Method returns an object with a +1 retain count (owning reference).
+[2] Taking false branch
+[3] Taking false branch.
+[4] Object allocated on line 141 and stored into 'obj' is no longer referen
+ced after this point and has a retain count of +1 (object leaked).
+</pre>
+<p>なるほど．使える．他にも色々機能があるようです．<br />
+そろそろ，llvm勉強しなければ・・・・．</p>

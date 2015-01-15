@@ -1,0 +1,44 @@
+---
+layout: post
+title: yidev@恵比寿勉強会
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>子育てシフトから脱却しながら，yidevで久々に発表してきました．<br />
+内容は，少し前から公開している<a href="https://github.com/sonsongithub/UZTextView">UZTextView</a>と<a href="https://github.com/sonsongithub/UZMultipleLayeredPopoverController">UZMultipleLayeredPopoverController</a>について発表しました．</p>
+
+<iframe src="http://www.slideshare.net/slideshow/embed_code/33979243?rel=0" width="597" height="486" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px 1px 0; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="https://www.slideshare.net/yoshidayuichi1/presentation-33979243" title="UZTextView, UZMultilayeredPopoverControllerの解説" target="_blank">UZTextView, UZMultilayeredPopoverControllerの解説</a> </strong> from <strong><a href="http://www.slideshare.net/yoshidayuichi1" target="_blank">Yuichi Yoshida</a></strong> </div>
+
+<h2><a href="https://github.com/sonsongithub/UZTextView">UZTextView</a>と<a href="https://github.com/sonsongithub/UZMultipleLayeredPopoverController">UZMultipleLayeredPopoverController</a></h2>
+<p>この<a href="http://sonson.jp/?p=3183">エントリ</a>でも発表していますが，色々な機能がついたテキストビューです．<br />
+<a href="https://github.com/sonsongithub/UZTextView">UZTextView</a>は，@k_katsumiさんのSECoreTextViewほど多機能（そもそもUZTextViewはエディタ機能がない）ではないですが，見通しよくCoreTextを使ったテキスト表示ができるビューです．<br />
+このビューは，2tchのコアのモジュールとして使われており，2ちゃんねる用にアスキーアートをレンダリングするためのコードを入れたりしてサブクラスを作って使っています．<br />
+この<a href="https://github.com/sonsongithub/UZTextView">UZTextView</a>は私が現在も使っているので，定期的にメンテナンスされているとお考えください．</p>
+<p>後は割と評判が良かった，<a href="https://github.com/sonsongithub/UZMultipleLayeredPopoverController">UZMultipleLayeredPopoverController</a>．<br />
+これは，無限にポップオーバー風にビューコントローラを表示できるライブラリです．<br />
+UIViewControllerのmodalViewControllerのように簡単に表示できます．</p>
+<h2>オープンソースにする意味</h2>
+<p>他にもすごいソースコードはゴマンとありますが，趣味で作るようなアプリケーションならば，モジュールをオープンソースにして切り出すと，ソースが疎結合になり，可読性，メンテナンス性があがります．<br />
+おすすめです．<br />
+ただ，やってる内に当初の目的を失うことが多々あるので，注意しないといけません．<br />
+自分のソースコードがスパゲチらないようにオープンソースにするというのも選択肢として，いかがでしょうか．</p>
+<h2>CoreText</h2>
+<p>CoreTextとTextKitのちょっとしたスタックの話をしたのですが，割と好評だったので，次回もうちょっと突っ込んで説明してみるかなぁという気持ちです．<br />
+あんまり期待しないでね．</p>
+<h2>蛇足</h2>
+<p>最後に紹介したら，やたらウケが良かったので再掲．<br />
+<a href="https://itunes.apple.com/jp/app/gif-brewery/id435989461?mt=12&at=11l7gF">GIFBrewery</a>というアプリケーション．動画からGIFアニメーションを楽に作成できます．</p>
+<p><img src="{{ site.url }}/assets//GIFBrewery.png" alt="" width="50%" height="50%" /></p>

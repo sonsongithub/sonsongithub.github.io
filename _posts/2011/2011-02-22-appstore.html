@@ -1,0 +1,30 @@
+---
+layout: post
+title: AppStoreにおけるMethod Swizzlingのリスク
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Twitterで質問されたので，少し書きます．</p>
+<p>Method Swizzlingは，すでに実装されているクラスのメソッドを，自前のメソッドに入れ替えるObjective-Cならではの手法です．</p>
+<p><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4873114721/sonsonpicture-22/ref=nosim/">iOS SDK Hacks</a>でも紹介したMethod Swizzlingですが，これを使っても審査は通ります<br />
+というか，通したことがありますし，これを使っていて現在公開中の中に審査に通っているアプリがあります．</p>
+<p>ただ，たいてい，Method Swizzlingを使いたくなるメソッドは，Private methodだったり，内部的にあまり触れる必要がないUIKitで実装されたViewのsubviewの構造であったりします．<br />
+そのため，OSのバージョンアップ等で使えなくなったり，不要になったりするリスクがあります．（例えば，<a href="http://www.amazon.co.jp/exec/obidos/ASIN/4873114721/sonsonpicture-22/ref=nosim/">iOS SDK Hacks</a>でも紹介したUIWebViewのタッチイベントをswizzlingする手法は，UIGestureなどの登場でUIViewの内部実装が変わったため，使えなくなってしまいました）<br />
+これがリスクになる理由は，Method Swizzlingのコードの例外処理等が不備があったりするとアプリケーションクラッシュしてしまう可能性が高くなるためです．</p>
+<p>というわけで，Method Swizzlingを使うリスクは，多少あります．<br />
+Method Swizzlingをわざわざ使うときは，Private methodやUndocumented API，UIKitのViewの内部構造に触れることが多いので，それに注意してやらないといけないし，また，それらを避けるとMethod Swizzlingの旨味が減ります．<br />
+というわけで，ほどほどがいいですよという結論です．</p>

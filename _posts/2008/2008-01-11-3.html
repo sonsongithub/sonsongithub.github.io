@@ -1,0 +1,131 @@
+---
+layout: post
+title: "[お勉強] daemonを作る"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- "お勉強"
+status: publish
+type: post
+published: true
+meta:
+  _oembed_a27f0e718363a7aea92e6964015964ac: "{{unknown}}"
+  _oembed_e3fa2f1ecc92de4bd44792d18d21919e: "{{unknown}}"
+  _oembed_637db240034951bfbd32c75fed35b8b2: "{{unknown}}"
+  _oembed_893700fc9f2a46d31e6ace2b657fad34: "{{unknown}}"
+  _oembed_149679e7315b7a216a6282c7795468f4: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>こういうことは，モチベーションがあるときにやってしまおう．<br />
+しかし，プロセス生成しかり，プログラミングの知識がないなぁ・・と嘆く．<br />
+まぁ，嘆いているヒマがあれば，コード書けと言われそうだが．あぁ，書くよ．<br />
+んで，プロセス生成をやっているうちに，daemonも作れそうだなぁと思っていたらすごいわかりやすいページがあった．<br />
+んで，これマンマコピって，実行してみた．<br />
+参考リンク：<a href="http://www.enderunix.org/documents/eng/daemon.php">http://www.enderunix.org/documents/eng/daemon.php</a></p>
+<pre>
+/*
+Original source code, here.
+http://www.enderunix.org/documents/eng/daemon.php
+UNIX Daemon Server Programming Sample Program
+Levent Karakas &lt;levent at mektup dot at&gt; May 2001
+*/
+#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;signal.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+// invariables
+#define RUNNING_DIR			"/tmp"
+#define LOCK_FILE			"daemond.lock"
+#define LOG_FILE			"daemond.log"
+#define PID_BUFFER_SIZE		10
+void log_output( char *filename, char *message ) {
+FILE *logfile = fopen( filename, "a" );
+if( !logfile )
+return;
+fprintf( logfile, "%s\n", message );
+fclose( logfile );
+}
+void signal_handler( int sig ) {
+switch( sig ){
+case SIGHUP:
+log_output( LOG_FILE, "hangup signal catched" );
+break;
+case SIGTERM:
+log_output( LOG_FILE, "terminate signal catched" );
+exit(0);
+break;
+}
+}
+void daemonize() {
+int i,lfp;
+char str[PID_BUFFER_SIZE];
+if( getppid() == 1 ) {
+log_output( LOG_FILE, "already a daemon" );
+return;
+}
+i = fork();
+if( i &lt; 0 ){
+log_output( LOG_FILE, "fork error" );
+exit(1);
+}
+if( i &gt; 0 )		// this is a parent process, will exit
+exit(0);
+setsid();				// new process group setup
+for( i = getdtablesize(); i &gt;= 0; --i )
+close(i);
+i = open( "/dev/null", O_RDWR );
+dup( i );
+dup( i );
+// set newly created file permissions
+umask( 027 );
+chdir( RUNNING_DIR );
+// open lock file
+lfp = open( LOCK_FILE, O_RDWR | O_CREAT, 0640 );
+if( lfp &lt; 0 ) {
+log_output( LOG_FILE, "can not open" );
+exit(1);
+}
+if( lockf( lfp, F_TLOCK, 0 ) &lt; 0 ) {
+log_output( LOG_FILE, "can not lock" );
+exit(0);
+}
+// record pid to lockfile
+sprintf( str, "%d\n", getpid() );
+write( lfp, str, strlen(str) );
+//
+signal( SIGCHLD, SIG_IGN );
+signal( SIGTSTP, SIG_IGN );
+signal( SIGTTOU, SIG_IGN );
+signal( SIGTTIN, SIG_IGN );
+// signal handler setup
+signal( SIGHUP, signal_handler);
+signal( SIGTERM, signal_handler);
+}
+int main( int argc, void** argv ){
+daemonize();
+while(1)
+sleep(1);
+}
+</pre>
+<p>な，長い．<br />
+今までのと違って，setsidのと，openの当たりが違う感じ．<br />
+後，プロセス経由で再起動とか，停止に対応するためにsignal_handlerを実装するところが違うか．<br />
+色々調べてみると，カレントディレクトリを変更するのが行儀がいいとか，色々お作法があるらしい．<br />
+だよね，デーモンだからダイレクトにセキュリティに悪影響を及ぼしそうだ．<br />
+これでgccで生成したバイナリは，以下のような感じで起動，停止などなどができる．<br />
+これも元サイト引用だけど．</p>
+<pre>
+./exampled・・・実行
+kill -HUP `cat /tmp/exampled.lock`・・・終了して，再起動
+kill `cat /tmp/exampled.lock`・・・終了
+</pre>
+<p>なんかサーバっぽいもの作ってみるか．あんま意味ないけど．</p>

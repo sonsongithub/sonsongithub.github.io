@@ -1,0 +1,108 @@
+---
+layout: post
+title: "[MacOSX] QuartzComposerを利用してキャプチャ"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">QuartzComposerを利用する利点 </h3>
+<p>QuartzComposerファイルを利用し，そこから，映像ストリームを取得することができる．<br />
+この仕組みの利点は，QuartzComposerでビジュアルプログラミングした結果を利用して，画像処理を行うことができることである．<br />
+例えば，2値化や色相フィルタ，先鋭化フィルタなどをQuartzComposer内で組み立て，それをプログラムから読み出し，より詳しい画像処理を行うといったことができる．以下は，そのイメージ図である．<br />
+<center><img src="{{ site.url }}/assets//qc_flowchart.gif" /></center><br />
+<br />
+<h3 class="line-header">処理の流れ </h3>
+<p>準備から始まる，一連のQuartzComposerからのフレーム取得流れは以下のようになる．</p>
+<h3 class="numeric-list">
+<li>NSOpenGLPixelBuffer，つまりOpenGLピクセルバッファをテクスチャターゲットとして作成する．</li>
+</h3>
+<p>これがQuartzComposerのレンダリング結果が返されるものとなる．</p>
+<h3 class="numeric-list">
+<li>NSOpenGLContext，つまりレンダリングコンテキストを作成する</li>
+</h3>
+<p>これがQuartzComposer用のレンダリングコンテキストとなる．</p>
+<h3 class="numeric-list">
+<li>レンダリングコンテキストの描画先をピクセルバッファにセットする．</li>
+<li>renderAtTimeでQuartzComposerに描画命令を出す</li>
+<li>glReadPixelsでピクセルバッファから読み出す</li>
+</h3>
+<p>
+<h3 class="line-header">ピクセルバッファ・レンダリングコンテキストの作成 </h3>
+<p>ピクセルバッファの作成は，以下のコードで行う．</p>
+<pre>
+_pixelBuffer = [[NSOpenGLPixelBuffer alloc]
+initWithTextureTarget:GL_TEXTURE_RECTANGLE_EXT
+textureInternalFormat:GL_RGBA
+textureMaxMipMapLevel:0
+pixelsWide:width
+pixelsHigh:height];
+</pre>
+<p>レンダリングコンテキストは，一般のコンテキストと同じ手順で作成する．</p>
+<pre>
+[_openGLContext setPixelBuffer:_pixelBuffer
+cubeMapFace:0
+mipMapLevel:0
+currentVirtualScreen:[_openGLContext currentVirtualScreen]];
+</pre>
+<p>これでピクセルバッファを描画先にセットする．<br />
+これで，描画はピクセルバッファに行われる．<br />
+<br />
+<h3 class="line-header">QuartzComposerファイルを開いて初期化 </h3>
+<pre>
+_renderer = [[QCRenderer alloc]
+initWithOpenGLContext:_openGLContext
+pixelFormat:format
+file:fileName];
+</pre>
+<p>以下の初期化メソッドで，QuartzComposerファイルを開いて初期化する．<br />
+2つめの引数には，先に作成したOpenGLのコンテキストを代入する．<br />
+<br />
+<h3 class="line-header">メモリの確保 </h3>
+<p>ピクセルバッファのためのメモリを確保する．<br />
+Appleのサンプルでは，以下のように確保している．</p>
+<pre>
+_scratchBufferRowBytes = (width * 4 + 63) & ~63;
+_scratchBufferPtr = valloc(height * _scratchBufferRowBytes);
+</pre>
+<p>コードとコメントアウトを見ると，横幅のメモリのバイト数が，64の倍数になるように確保するようだ．<br />
+なぜか，vallocを使っている．mallocじゃだめなのかなぁ・・・．以下がAppleのサンプルのコメント．</p>
+<pre>
+Create a scratch buffer used to downloads the pixels from the OpenGL pixel buffer.
+For optimal performances the buffer is paged-aligned and the rowbytes is a multiple of 64 bytes
+</pre>
+<p>マヂでそうなの・・・？<br />
+でもvallocを使う理由にはなってない気がする．<br />
+<br />
+<h3 class="line-header">QuartzComposerからフレームを取得する </h3>
+<pre>
+//Render a frame from the composition at the specified time
+if(![_renderer renderAtTime:time arguments:nil])
+return nil;
+//Read pixels back from the OpenGL pixel buffer in ARGB 32 bits format
+//For extra safety, we save / restore the OpenGL states we change
+glGetIntegerv(GL_PACK_ROW_LENGTH, &save);
+glPixelStorei(GL_PACK_ROW_LENGTH, _scratchBufferRowBytes / 4);
+glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, _scratchBufferPtr);
+glPixelStorei(GL_PACK_ROW_LENGTH, save);
+</pre>
+<p>
+<h3 class="line-header">参考サンプル </h3>
+<h3 class="numeric-list">
+<li><a href="http://developer.apple.com/samplecode/QuartzComposerTexture/QuartzComposerTexture.html">QuartzComposerTexture</a></li>
+<li><a href="http://developer.apple.com/samplecode/QuartzComposerOffline/QuartzComposerOffline.html">QuartzComposerOffline</a></li>
+</h3>
+<p>QuartzComposerTextureは，QuartzComposerファイルのストリームから直接OpenGLのテクスチャを作成している．また，QuartzComposerOfflineは，読み取った画像フレームをBitmapImageRepに放り込んで．TIFFの書き出しAPIを利用し，画像ファイルとして，10フレームを書き出すサンプルである．</p>

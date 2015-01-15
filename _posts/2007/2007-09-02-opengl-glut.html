@@ -1,0 +1,32 @@
+---
+layout: post
+title: "[OpenGL] GLUTのコンストラクタをGNUの__attribute__で実装する"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>GLUTは，OSのAPIをまんまラップしているので，アプリケーションの起動時のタイミングや，終了時のタイミングを総じて捕まえて，初期化や，終了時の処理を実装するのが面倒くさい．<br />
+そこで，GNUに限ってだが，__attribute__を使って，擬似的なアプリケーション全体のconstructorと，destructorを呼び出して，擬似的にそれを実現する．</p>
+<pre>
+__attribute__((constructor)) void foo1( void ) {
+printf( "__attribute__ constructor is called\n" );
+}
+__attribute__((destructor)) void foo2( void ) {
+printf( "__attribute__ destructor is called\n" );
+}
+</pre>
+<p>こうすると，mainが呼び出される前，（多分）共有のライブラリがロードされた後に，foo1が実行される．<br />
+また，共有のライブラリがアンロードされる寸前にfoo2が実行される．<br />
+※最近，なんかのソースコードを読んでいて知ったんだが，これ知ってりゃ，楽なところいっぱいあったなぁ・・・．</p>

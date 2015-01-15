@@ -1,0 +1,48 @@
+---
+layout: post
+title: iOS Info.plistの情報をコードから読み込む
+categories:
+- blog
+tags:
+- App Store
+- Blog
+- iPhone
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>前のエントリで，svn，gitのリビジョンやビルド番号をInfo.plistに自動的に書き込む方法を紹介しました．<br />
+それだけでは，アプリケーションでそれを利用できないので，Info.plistの情報を読み込む方法を紹介します．<br />
+<code><br />
+NSString *key = @"CFBundleSubversionRevision";<br />
+NSString *value = [[[self mainBundle] localizedInfoDictionary] objectForKey:key];<br />
+</code><br />
+これだけです．簡単ですねー．<br />
+一応保険ののために，ローカライズデータがない場合にも対応するため，こうするのもいいでしょう．</p>
+<pre>
+<code>
+if ([[[self mainBundle] localizedInfoDictionary] objectForKey:key])
+    return [[[self mainBundle] localizedInfoDictionary] objectForKey:key];
+return [[[self mainBundle] infoDictionary] objectForKey:key];
+</code>
+</pre>
+<p>んで，これだと使いにくいので，カテゴリでクラスメソッドとして実装しておけば使いやすいです．</p>
+<pre>
+<code>@implementation NSBundle(category)
++ (id)infoValueFromMainBundleForKey:(NSString*)key {
+    if ([[[self mainBundle] localizedInfoDictionary] objectForKey:key])
+        return [[[self mainBundle] localizedInfoDictionary] objectForKey:key];
+    return [[[self mainBundle] infoDictionary] objectForKey:key];
+}
+@end</code>
+</pre>
+<p></p>

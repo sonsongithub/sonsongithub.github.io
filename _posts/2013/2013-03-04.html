@@ -1,0 +1,34 @@
+---
+layout: post
+title: __attribute__((deprecated))でリファクタリングをはかどらせる
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>コーディングが進んでくると，顕在化してくるのが過去の汚いコードです．</p>
+<p>定期的なリファクタリングでこれを除去していくしかないのかといつもあきらめていますが，それをはかどらせるツールを見つけたのでメモ．</p>
+<pre><code>void hoge(int bar);
+</code></pre>
+<p>のようなメソッドを，</p>
+<pre><code>void hoge(int bar, void **context);
+</code></pre>
+<p>のように変更したくなったときなど，定数名を変更したり，メソッドの仕様を変更することはママあります．<br />
+名前の変更くらいならリファクタリング一発で終了なんですが，多少なりともロジックに手を入れた場合は，<br />
+一括変更は思わぬバグを生むかもしれません．（実際）<br />
+そこで，gccやllvmのattributeを使ってdeprecated警告を出すようにしてみます．</p>
+<pre><code>void hoge(int bar) __attribute__((deprecated("Use hogeWithContext.")));
+void hogeWithContext(int bar, void **context);
+</code></pre>
+<p>こうすると，コンパイル時にコンパイラが警告を出してくれます．便利です．コメントは省略することもできます．</p>

@@ -1,0 +1,65 @@
+---
+layout: post
+title: svnやgitのリビジョン，ビルド番号をplistに自動的に埋め込む
+categories:
+- blog
+tags:
+- Blog
+- iPhone
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>iOSなどのコードを書いているときにアプリケーションの情報ビューなどにソースコードのリビジョンやビルド番号を表示したくなることは多々あると思います．<br />
+こうすれば配布したアプリケーションと開発中のソースコードのひも付けを簡単に行えるような気がします．</p>
+<p>しかし，いちいちリビジョンをコマンドやツールで調べて，コピペして・・・・とか，ビルド番号を自分でカウントするとか・・・・非効率的過ぎてありえません．</p>
+<p>これをスクリプトで自動化しましょう．<br />
+リビジョン番号は，Info.plistに書き込むことにします．このInfo.plistへの書き込みは，PlistBuddyというツールを使います．</p>
+<p>まずsubversionの場合です．<br />
+subversionのリビジョンは，svnversionというツールで表示できます．<br />
+この実行結果を変数にいれ，PlistBuddyを使ってその変数の値をplistに書き込むようにします．<br />
+ソースコードは，以下のような感じになります．<br />
+いくつかXcodeのマクロを使っています．<br />
+下の3行はビルド回数をカウントして保存するスクリプトです．</p>
+<pre>
+<code>
+svn update .
+revisionNumber=$(svnversion -n)
+/usr/libexec/PlistBuddy -c &quot;Set :CFBundleSubversionRevision $revisionNumber&quot; &quot;$INFOPLIST_FILE&quot;
+buildNumber=$(/usr/libexec/PlistBuddy -c &quot;Print CFBundleVersion&quot; &quot;$INFOPLIST_FILE&quot;)
+buildNumber=$(($buildNumber + 1))
+/usr/libexec/PlistBuddy -c &quot;Set :CFBundleVersion $buildNumber&quot; &quot;$INFOPLIST_FILE&quot;
+
+</code>
+</pre>
+<p>このソースをXcodeのbuild phaseのところで，Add scriptを選んで，スクリプトのところに貼り付けます．<br />
+これで完了です．<br />
+もし，Info.plistにそのエレメントがないとエラーが出たりするので，先に手でエレメントを追加しておいてください．</p>
+<p><center><img src="{{ site.url }}/assets//add_script.jpg" alt="null" /></center></p>
+<p>便利です．次にgitのリビジョンも同様にやってみましょう．<br />
+gitのリビジョンは，</p>
+<pre><code>git show --format=&#039;%h&#039; -s</code></pre>
+<p>のツールで表示できます．フルリビジョン識別子を使う場合は，%Hにします．</p>
+<p>これを同様にXcode用にポートすると，</p>
+<pre>
+<code>
+git_revision=$(git show --format=&#039;%h&#039; -s)
+buildNumber=$(/usr/libexec/PlistBuddy -c &quot;Print CFBundleVersion&quot; &quot;$INFOPLIST_FILE&quot;)
+buildNumber=$(($buildNumber + 1))
+/usr/libexec/PlistBuddy -c &quot;Set :CFBundleVersion $buildNumber&quot; &quot;$INFOPLIST_FILE&quot;
+/usr/libexec/PlistBuddy -c &quot;Set :CFBundleGitRevision $git_revision&quot; &quot;$INFOPLIST_FILE&quot;
+
+</code>
+</pre>
+<p>これでgitのリビジョンにも対応できました．便利です．</p>

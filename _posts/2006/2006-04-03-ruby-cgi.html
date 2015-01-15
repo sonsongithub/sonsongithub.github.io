@@ -1,0 +1,123 @@
+---
+layout: post
+title: "[Ruby] CGI"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Ruby
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>RubyをCGIで動かしてみようと思った．<br />
+MacOSX環境下でPHPは，デフォルトでサクっと動くから，Rubyも・・と思っていたら・・・・動かない．<br />
+apache用のモジュールのインストールから始める．<br />
+<br />
+<h3 class="line-header">Rubyのアップデート </h3>
+<p>mod_rubyは，[[modruby.net>http://modruby.net/ja/]]で配布されている．<br />
+しかし！DeveloperToolsでは，Rubyのソースコードがインストールされないのだ．<br />
+というわけで，Rubyの最新版のインストールから行っていくことになる．<br />
+MacOSX Tiger 10.4.5では，Rubyは，1.8.2がインストールされる．<br />
+2006/03/09現在，Rubyの最新バージョンは，1.8.4である．<br />
+そこで，ソースコードを[[Ruby本家>http://www.ruby-lang.org/ja/]]からダウンロードして，インストールする．インストールは，ファイルを解凍して，以下の手順．超簡単．</p>
+<pre>
+>cd ruby-1.8.4
+>./configure --with-default-kcode=euc --prefix=/usr --enable-shared
+>make
+>sudo make install
+</pre>
+<p>configureのスイッチは，他のWebから抜粋．どこに書いてあったかは・・・忘れました．<br />
+これで，rubyのインストールが完成するが，このインストールの場合，rubyが二重に存在してしまう．<br />
+上記の方法でインストールすると，rubyは，/usr/local/binにインストールされる．デフォルトのrubyは，/usr/binにある．そこで，デフォルトのrubyをリネームし，/usr/local/bin/rubyのシンボリックリンクを/usr/bin/に張ることにする．</p>
+<pre>
+>sudo mv /usr/bin/ruby /usr/bin/ruby.1.8.2
+>sudo ln -s /usr/local/bin/ruby /usr/bin/ruby
+</pre>
+<p>とする．ここで，versionを確認する．</p>
+<pre>
+>ruby --version
+ruby 1.8.4 (2005-12-24) [powerpc-darwin8.5.0]
+</pre>
+<p>以下のようになっていれば，Rubyのバージョンアップ完成だ．<br />
+<br />
+<h3 class="line-header">eruby，mod_rubyのインストール </h3>
+<p>erubyとは，HTMLにかかれたRubyを実行するためのモジュール．<br />
+こいつも，mod_rubyのインストールの前にインストールしておく．<br />
+[[modruby.net>http://modruby.net/ja/]]からerubyとmod_rubyをダウンロードし，インストールする．<br />
+先にerubyをインストール．</p>
+<pre>
+>cd eruby-1.0.5
+>./configure.rb --enable-shared --with-charset=EUC_JP --prefix=/usr
+>make
+>sudo make install
+</pre>
+<p>次にmod_rubyをインストール</p>
+<pre>
+>cd mod_ruby-1.2.5
+>./configure.rb --with-apxs=/usr/sbin/apxs --enable-eruby ?
+--with-eruby-includes=/usr/include ?
+--with-eruby-libraries=/usr/lib
+>make
+>sudo make install
+</pre>
+<p>これでApacheで動かせる環境が整う．<br />
+<br />
+<h3 class="line-header">Apacheを設定 </h3>
+<p>httpd.confを編集し，Rubyのモジュールを読み込むように設定する．</p>
+<pre>
+LoadModule ruby_module libexec/httpd/mod_ruby.so
+AddModule mod_ruby.c
+</pre>
+<p>以上，2行をloadModuleが並んでいるあたりに書き足す．<br />
+次にCGIを実行できるように自分のフォルダパスを設定する．</p>
+<pre>
+<Directory "/Users/yourname/Sites/cgi/">
+AddHandler cgi-script cgi
+Options Indexes MultiViews ExecCGI
+AllowOverride None
+Order deny,allow
+Deny from all
+Allow from 127.0.0.1
+
+</pre>
+<p>以下の記述を追加し，モジュール設定をする．</p>
+<pre>
+<ifmodule mod_ruby.c>
+RubyRequire apache/ruby-run
+<Files *.rbx>
+SetHandler ruby-object
+RubyHandler Apache::RubyRun.instance
+
+</ifmodule></pre>
+<pre>
+RubyRequire auto-reload
+
+</pre>
+<p>以下の記述がコメントアウトされているが，コメントアウトを解除する．</p>
+<pre>
+AddHandler cgi-script .cgi
+</pre>
+<p>ここまで編集したら，以下のコマンドでApacheを再起動する．</p>
+<pre>
+>sudo apachectl restart
+</pre>
+<p>
+<h3 class="line-header">確認 </h3>
+<p>/Users/yourname/Sites/cgi/にbasic.cgiをファイルを作成し，</p>
+<pre>
+#!/usr/local/bin/ruby
+print "Content-type: text/html?n?n"
+print "<html><body>","Ruby CGI動作","</body></html>"
+</pre>
+<p>以上のように記述し，ブラウザで，http://127.0.0.1/~yourname/cgi/basic.cgiにアクセすると，<br />
+Ruby CGI動作と表示されるはず．インストール完了である．<br />
+basic.cgiは，文字コードと改行コードに気をつけよう．</p>

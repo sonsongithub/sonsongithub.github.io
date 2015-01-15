@@ -1,0 +1,30 @@
+---
+layout: post
+title: "[iPhone SDK] Xcodeがデバッグ時にソースコードを参照してくれない"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>Xcodeでは当然，ブレークポイントで止めて，ソースコードと変数を見ながらデバッグできる．<br />
+はずである．<br />
+<center><br />
+<img src="{{ site.url }}/assets//034115af803ba33071eab2c673bc8acb.png" /><br />
+</center><br />
+それが動かない事態が発生．実行中にデバッグしても，ソースコードで追跡できない・・・．これは不便．しかも常に追跡できていない様ではない．これはなんなんだ・・・．<br />
+<strong>・答え<br />
+実行ファイルやソースコードのパスに日本語なんかが含まれているとうまくいかないことがある．（つまりうまく動作することもある）<br />
+</strong><br />
+注意しましょう．僕はこれの理由がなかなか見つけられず，Xcodeを再インストールまでしましたよ・・・・．トホホ．</p>

@@ -1,0 +1,84 @@
+---
+layout: post
+title: "[OpenGL] Cocoa テクスチャ生成 for MacOSX"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">CocoaでTexture </h3>
+<p>Cocoa Browserでオブジェクトを見ていたときにNSImageRepなるものを発見．<br />
+まぁ，これをなんとか使えないかなぁと調べているとNSBitmapImageRepというクラスがありました．このクラスを使うと画像ファイルがいとも簡単に読み込めてしまうのです．<br />
+<br />
+<h3 class="line-header">NSGLTextureクラス </h3>
+<p>NSBitmapImageRepから派生させてNSGLTextureを作りました．<br />
+NSBitmapImageRepは，ファイル名を指定するとインスタンスを作成し，その中に画像ファイルのビットデータを保持するクラスメソッドを持ちます．</p>
+<pre>
++(NSBitmapImageRep*)imageRepWithContentsOfFile:(NSString*)
+</pre>
+<p>これがあるのでファイル読み込みのメソッドの追加はしなくていいかと思ったのですが，バンドルファイルを読み込みたいので，以下のクラスメソッドを追加しました．</p>
+<pre>
++(NSBitmapImageRep*)imageRepWithContentsOfBundleFile:(NSString*)
+</pre>
+<p>こいつは，バンドルファイル名を入力すると，バンドルファイルのフルパスを取得して，その画像を開いてくれるというわけです．このTipsは備忘録もかねているので，いかに記述．</p>
+<pre>
+NSBundle* mainBundle;
+NSString* fileName;
+id returnSelf;
+// get bundle object
+mainBundle = [NSBundle mainBundle];
+// Get images from bundle resource
+fileName = [mainBundle pathForImageResource:name];
+returnSelf = [super imageRepWithContentsOfFile:fileName];
+// return instance pointor
+return returnSelf;
+</pre>
+<p>なんと便利な・・・うう．まぁ用はNSBundleによる処理をimageRepWith〜にラップしているんです．これでプロジェクトに挿入したファイルをさくっと取り出せるわけです．<br />
+<br />
+<h3 class="line-header">テクスチャの読み込み </h3>
+<p>ここが一番肝心．の割にやっぱりすんなりいきます．　特筆するならGIFの読み込みだけ気をつければいい感じでした．しかし，その読み込んだファイルがどんなフォーマットのなのかということはNSBitmapImageRepには保存されていないのです．このクラスは読み込んでしまうとさっさとビットデータを作成してしまい，ファイルのデータは高さ，幅，画素あたりのバイト数などくらいしかありません．<br />
+というわけで，バイト数がその要と言うことになります．<br />
+それぞれのデータは以下のメッセージで読めます．</p>
+<pre>
+[self pixelsHigh];
+[self pixelsWide];
+unsigned char* file_data = [self bitmapData];
+</pre>
+<p>これで画像のデータは採集できます．そして画像自体のビットデータは，これで読めます．</p>
+<pre>
+[self bitmapData];
+</pre>
+<p>これでビットデータのポインタがもらえます．戻り値は(BYTE*)なっていました．BYTE型が，signedなのかunsignedなのかわからなかったのですが，とりあえず，unsigned char*で受けました．コンパイラから警告受けていないので同じでしょう（＾＾；たぶん．<br />
+BMP，JPEG，PNG形式はそのまま読み込めます．24bitカラーしかない？のでそのまま受け取り，<br />
+glTexImage2DにGL_RGBで渡しました．<br />
+くせ者はTIFFとGIFです．まずこいつら複数のレイヤーまたはフレームを持ちます．めんどうくさいのでこの場合は無視します．TIFFの方は24bitカラー＋Alpha 8bitなのでglTexImage2DにGL_RGBAで渡しましてやればさっくりいくのですが，GIFはそう簡単にはいきません．<br />
+GIF自体は，すでにNSBitmapImageRepによってカラーパレットから色を抜き出したかたちでビットデータを提供されるのですが，bitPerPixelが8bitってだけじゃ，いったいどんなデータかわからないっすよ．というわけで何種類かGIFを用意し，試しました．</p>
+<h3 class="numeric-list">
+<li>グレイスケール・非透明・・・8bit</li>
+<li>グレイスケール・透明・・・16bit</li>
+<li>256色・非透明・・・24bit</li>
+<li>256色・透明・・・32bit</li>
+</h3>
+<p>ま，これでOKというわけです．<br />
+GIFだけみたいに書きましたけど，考えればBMPファイルにもいろいろありますよね．<br />
+ってことは，この上の記述はどのファイルにも共通ってことなのでしょう．というわけで調べた見たのが以下です．</p>
+<h3 class="numeric-list">
+<li>24bitカラー・・・24bit</li>
+<li>24bitカラー＋透明またはアルファ・・・32bit</li>
+</h3>
+<p>ちょっといい加減かなぁ．ま，百聞は一見に如かず．<br />
+サンプルをダウンロードしてみてください．<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/mac/texture">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/mac/texture</a></p>

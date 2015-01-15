@@ -1,0 +1,46 @@
+---
+layout: post
+title: "[iPhone SDK] How to get raw pixel from UIImage"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK(English)
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>You can extract raw pixel info from UIImage with Quartz 2D APIs.<br />
+By follwing code, you can access CGImage pointer from UIImage.</p>
+<pre>
+UIImage* source = [UIImage imageNamed:@"image.png"];
+CGImageRef inputImage = [source CGImage];
+</pre>
+<p>And, CGImageGetDataProvider and CFDataGetBytePtr enable to access raw pixel value (such as RGBA), bytes per pixel and bytes per row of the raw bitmap image.</p>
+<pre>
+CFDataRef inputData = CGDataProviderCopyData(CGImageGetDataProvider(inputImageRef));
+unsigned char *pixelData = (unsigned char *) CFDataGetBytePtr(inputData);
+int length = CFDataGetLength(inputData);
+size_t width = CGImageGetWidth(inputImageRef);
+size_t height = CGImageGetHeight(inputImageRef);
+size_t bitsPerComponent = CGImageGetBitsPerComponent(inputImageRef);
+size_t bitsPerPixel = CGImageGetBitsPerPixel(inputImageRef);
+size_t bytesPerRow = CGImageGetBytesPerRow(inputImageRef);
+CGColorSpaceRef colorspace = CGImageGetColorSpace(inputImageRef);
+CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(inputImageRef);
+for (int index = 0; index < length; index += 4 ) {
+unsigned char red   = *(pixelData + index);
+unsigned char green = *(pixelData + index + 1);
+unsigned char blue  = *(pixelData + index + 2);
+unsigned char alpha = *(pixelData + index + 3);
+}
+</pre>
+<p>Color component alignment may be RGBA?</p>

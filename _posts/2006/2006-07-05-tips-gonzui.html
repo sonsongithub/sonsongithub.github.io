@@ -1,0 +1,50 @@
+---
+layout: post
+title: "[Tips] gonzui - インストール"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h3 class="line-header">ソースコード検索</h3>
+<p>プログラミングを続けていると，溜まりに溜まるソースコード．<br />
+フォルダ分けはある程度やっていても，だんだん整理することができなくなってくる．<br />
+そこで，友達におそわったgonzuiをインストールしてみる．</p>
+<h3 class="line-header">環境</h3>
+<p>VMWare上のDebianにインストールしてみる．</p>
+<h3 class="line-header">インストール</h3>
+<p>必要なモノは，<br />
+（１）Rubyと，Rubyの開発用のヘッダファイル<br />
+（２）BerkeleyDB<br />
+（３）BerkeleyDB-Rubyインタフェース<br />
+の３つ．<br />
+とにかく，apt-getでインストールしまくる．</p>
+<pre>
+sudo apt-get install libbdb4.2
+sudo apt-get install ruby1.8-develop
+sudo apt-get install libbdb4.2-ruby1.8
+</pre>
+<p>ここで注意しないといけないのが，マニュアルでBDB/Rubyライブラリをインストールしてしまうと，パスの関係で<br />
+なんかおかしくなる．（実際には，gonzuiのmakeファイルが作れない．BDB/Rubyがないと怒られる．）<br />
+例えば，優先順位の高いPATHにbdb42とかが入っているときがある．<br />
+ちゃんとどこにbdbライブラリがあるかを確認しておく．<br />
+んでもってダウンロードしてきたgonzuiをビルドする．</p>
+<h3 class="line-header">gonzuiのインストール</h3>
+<p>gonzuiをインストールする．<br />
+まず，configureで，makefileを作成する．<br />
+ここで，bdbがないと怒られたときは，bdbのライブラリをうまくconfigureが探せない場合がある．<br />
+このときは，makefileの中の3069行目当たりのLIB="bdb"の名前を変更して対応する．<br />
+例えば，手動あるいはapt-getでインストールされたbdbがbdb42という名前ならば，LIB="bdb42"という風にconfigureファイルを修正する．<br />
+後は悩む必要なし．<br />
+のはず．</p>

@@ -1,0 +1,29 @@
+---
+layout: post
+title: "[Tips] MySQL/Rubyライブラリの注意点"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h3 class="line-header">接続不可？</h3>
+<p>MacOSX上で，MySQL/Rubyを使ったときのエラー？</p>
+<pre>
+dbh = Mysql.real_connect("localhost", "root", "", "mysql")
+→結果
+&lt; Connection error: Can't connect to local MySQL server through socket '/tmp/mysql.sock
+</pre>
+<p>と，上記のようにサーバ名をlocalhostとして設定すると，/tmp/sql.socketがないとか，エラーがでる可能性がある．<br />
+このときは，LOCALHOSTあるいは127.0.0.1などとして，ホストに接続するようにする．<br />
+偶然発見した．なんじゃそりゃ．</p>

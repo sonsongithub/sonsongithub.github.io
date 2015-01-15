@@ -1,0 +1,82 @@
+---
+layout: post
+title: "[OpenGL] GLUT"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">GLUTとは？ </h3>
+<p>GLUTとは＜openGL Utility Toolkit＞の略でその名のとおり，便利なツールです．GLUTでソースをかけば，GLUTが用意されている環境ならば初期化から描画コードまでほぼ同じソースでコンパイル，実行することができます．<br />
+GLUTを使用するにはまずGLUTをダウンロードする必要があります．linkからダウンロードしてください．ソースファイルもいっしょにダウンロードすると様々なサンプルがついてきます．試してみてください．MacOSXではGLUTはデフォルトで用意されていますが，WindowsではGLUTは標準ライブラリではありません．もし，GLUTを利用したアプリケーションを配布するならば，"glut32.dll"ファイルを同梱しなければなりません．<br />
+まず，GLUTをインストールします．といっても簡単でGLUTのホームページからバイナリ版をダウンロードし，解凍します．その中からglut32.libをコンパイラのライブラリフォルダへ，ヘッダをヘッダフォルダのglフォルダにコピーします．またglut32.dllはシステムフォルダ，"system32"へコピーしておきます．これらのインストール先はパスさえ通せばどこでもよいのですが，上記の場所がわかりやすいと思います．Visual C++ならば下記のようになります．</p>
+<pre>
+"glut.h"は"C:￥Program Files￥Microsoft Visual Studio￥VC98￥Include￥GL"へコピー．
+"glut32.lib"は"C:￥Program Files￥Microsoft Visual Studio￥VC98￥Lib"へコピー．
+"glut32.dll"は，"C:￥WINNT￥system32"へコピー．
+</pre>
+<p>
+<h3 class="line-header">メイン・サンプル </h3>
+<p>GLUT自体はいたって簡単です．今までWindowsでも，MacOSXでも長ったらしい初期化コードを書きましたが，GLUTならばこれで終わりです．</p>
+<pre>
+int main(int argc, char** argv){
+//GLUT初期化
+glutInit(&argc, argv);
+//GLUTピクセルフォーマット
+glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
+//ウィンドウの初期化と作成
+glutInitWindowSize (WIDTH,HEIGHT);
+glutInitWindowPosition (100, 100);
+glutCreateWindow ("Simple GLUT");
+//メインループ
+glutMainLoop();
+return 0;
+}
+</pre>
+<p>GLUTならば，これだけのAPIでOpenGLのウィンドウが作成できます．便利でしょ．各APIに関しても簡単だと思います．glutInitでアプリケーションを登録，起動します．次にglutInitDisplayでピクセルフォーマットを自動設定し，glutInitWindow〜でウィンドウの場所とサイズを指定します．そして最後に，glutCreateWindowで引数の名前のついたウィンドウを作成します．<br />
+<br />
+<h3 class="line-header">GLUT API概要 </h3>
+<p>GLUTは，OS固有のプログラミングを吸収してくれます．簡単な概念図は下のようになります．（実際はOpenGLもOS-APIをコールしています．）<br />
+<center><img src="{{ site.url }}/assets//glut_hie.jpg" /></center><br />
+つまりGLUTを通してOS固有のプログラミングをしていることになります．GLUTがどの環境でも動作する理由はこのOS固有のプログラミングをGLUTライブラリが吸収してくれているからです．実際のGLUTのソースを見るとわかりますが，Windows版GLUTの中身はWindowsSDKプログラミングとなっていますし，MacOSXではCarbonで書かれています．<br />
+<br />
+<h3 class="line-header">描画コード </h3>
+<p>GLUTではマウスイベント，OSアイドリング，リサイズ時などのOSからの呼び出しが必要な処理は，GLUTに関数を登録することでそれらを処理します．<br />
+実際にはGLUTに対して，関数のポインタを与えていることになり，このGLUTにイベント処理を行う関数を登録することをCallBack registrationと呼びます．<br />
+例えばglutMouseFuncは，マウスクリック，アップなどのイベントが起こったときにどの関数を呼び出すかをGLUTに登録するものです．他にはglutIdleFuncや，glutDisplayFuncなどがあります．</p>
+<pre>
+//各処理関数の登録
+glutDisplayFunc(display);
+glutReshapeFunc(resize);
+</pre>
+<p>この例では再描画命令が出たときに呼び出される関数をvoid display(void)，リサイズ命令が出たときに呼び出される関数にvoid resize(int x,int y)を設定しています．　当然，登録する関数はGLUTが指定する形式の関数でなければいけません．<br />
+glutMouseFuncでは，戻り値がvoid，引数にint型を４つ持つ関数でなければいけません．詳しいことは赤本，緑本などを参考にしてください．ネット上では日本語訳サイトもあります．<br />
+<br />
+<h3 class="line-header">コールバックの登録〜Callback Registration </h3>
+<p>最後にOpenGLを開放します．開放はViewクラスのデストラクタに行わせます．</p>
+<pre>
+// OpenGLの開放
+wglMakeCurrent(NULL,NULL);
+wglDeleteContext(hRC);
+delete cDC;
+</pre>
+<p>このコードをViewクラスのデストラクタに書き足すことになります．<br />
+確実なコーディングを行うならば，確保できているか確認するために，hRCとcDCがNULLでないかをチェックしてから開放した方がいいでしょう．<br />
+<br />
+<h3 class="line-header">ソースコード </h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/glut">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/glut</a><br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/simple_glut">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/simple_glut</a></p>

@@ -1,0 +1,51 @@
+---
+layout: post
+title: "やってらんねぇ，再インスコ．MacPorts，ｲｯﾃﾖｼ"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>MacPortsが不調になり，portsとXcodeの再インストールを繰り返していると，Xcodeがインストールできなくなる．<br />
+どうやらパッケージャがおかしなった模様．<br />
+エラーはこちら．</p>
+<pre>
+Error extracting archive.
+pkgExtractor exited with error 1 while processing package '/Volumes/Xcode Tools/Packages/DevSDK.pkg'
+Install failed: “/”内のいくつかのファイルをインストールできませんでした。ソフトウェアの製造元に問い合わせてください。
+IFDInstallController 728790 state = 7
+Displaying 'Install Failed' UI.
+</pre>
+<p>いったい・・・なんなんだ．<br />
+結局，Leopardからフルパッケージで再インストール・・・．頼むわ・・．<br />
+というわけで，丸５日ほど，開発が止まっております．<br />
+ハァ．<br />
+※2tch<br />
+いろいろなところから反響をいただいております．<br />
+メールとか，ありがとうございます．＞各位<br />
+現在の致命的？かつ解決策のないバグは，NSStringの文字コード変換がタコというところです．<br />
+方向では，ニュー速＋，デジカメ板とか，いくつかで文字化けしているみたいです．<br />
+文字コード変換については・・・・．どうすんだろう．<br />
+誰か解決方法教えて．<br />
+※2tch実装済み<br />
+・お気に入り追加機能<br />
+・お気に入りファイル読み込み<br />
+・お気に入りをメールアプリみたいに一覧テーブルからジェスチャで削除<br />
+※リリースまでにやること<br />
+・お気に入り閲覧ビュー（なぜかまだ作っていない）<br />
+・お気に入りファイル書き出しのバグ取り<br />
+・全体的に安定性<br />
+というわけで，ダウンロードのマルチスレッド化以外は，だいたいできています．<br />
+ダウンロードのマルチスレッド化は・・・あんまりモチベーションないです．<br />
+とりあえず，次のリリース以後は，安定性や速度の向上を目指すと思います．</p>

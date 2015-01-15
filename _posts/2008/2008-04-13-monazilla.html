@@ -1,0 +1,72 @@
+---
+layout: post
+title: "[monazilla] 板のローカル設定〜SETTING.TXT"
+categories:
+- blog
+tags:
+- Review
+- "ゲーム"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>2chの各板毎に存在する，名前を入力しなかったときのデフォルトの名前などの設定を読み込むこともできる．<br />
+URLは，http://***.2ch.net/***/SETTING.TXT．<br />
+アクセスするときは，ユーザエージェントをMonazilla/1.00 (hoge/1.00)にセットしておく．<br />
+ダウンロードしたファイルは，設定項目名=値になっている．詳しい項目の説明は<a href="http://kobe.cool.ne.jp/r_030/2ch_jikken/SETTING.htm">こちら</a>．<br />
+以下，サンプル</p>
+<pre>
+qa@qaWRGWJ.pwJh6
+BBS_TITLE=初心者の質問＠2ch掲示板
+BBS_TITLE_PICTURE=http://img.2ch.net/img/qa_a.gif
+・・・・
+</pre>
+<p>このSETTING.TXTを使ってデフォルトの名前などを取得する．<br />
+試しに，需要はないだろうけど，SETTTING.TXTを読むObjective-Cのコードをば．</p>
+<pre>
+- (id) initWithServerName:(NSString*) server boardName:(NSString*) board {
+serverName_ = [[NSString stringWithString:server] retain];
+boardName_ = [[NSString stringWithString:board] retain];
+attributes_ = [[NSMutableDictionary dictionary] retain];
+NSString* urlString = [NSString stringWithFormat:@"http://%@.2ch.net/%@/SETTING.TXT", serverName_, boardName_];
+NSURL* url = [NSURL URLWithString:urlString];
+NSMutableURLRequest* req = [NSMutableURLRequest requestWithURL: url];
+[req setValue:@"Monazilla/1.00 (iphone/1.00)" forHTTPHeaderField: @"User-Agent"];
+NSHTTPURLResponse* resp;
+NSError* error;
+NSData *data = [NSURLConnection sendSynchronousRequest: req
+returningResponse: &resp
+error: &error];
+NSString *str = [[[NSString alloc] initWithData:data encoding:NSShiftJISStringEncoding] autorelease];
+[self extractAttributes:str];
+}
+- (void) extractAttributes:(NSString*) str {
+int i;
+NSArray* lines = [str componentsSeparatedByString:@"\n"];
+[attributes_ removeAllObjects];
+[attributes_ setObject:[lines objectAtIndex:0] forKey:@"server"];
+for( i = 1; i &lt; [lines count]; i++ ) {
+NSString* line = [lines objectAtIndex:i];
+id elements = [line componentsSeparatedByString:@"="];
+if( [elements count] == 2 )
+[attributes_ setObject:[elements objectAtIndex:1] forKey:[elements objectAtIndex:0]];
+}
+id keys = [attributes_ allKeys];
+for( i = 0; i &lt; [keys count]; i++ ) {
+NSLog( @"%@ - %@", [keys objectAtIndex:i], [attributes_ objectForKey:[keys objectAtIndex:i]] );
+}
+}
+- (void) dealloc {
+[attributes_ release];
+[serverName_ release];
+[boardName_ release];
+[super dealloc];
+}
+</pre>

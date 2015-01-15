@@ -1,0 +1,31 @@
+---
+layout: post
+title: "[iPhone SDK] iPhone FW, SDK2.2のバグ一時まとめ"
+categories:
+- blog
+tags:
+- App Store
+- Blog
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>・PhotoLibraryに写真を正しく保存できない<br />
+　→hideHereでもこの症状発生<br />
+　→なんかぼけたり，モスキートノイズが出たりする．<br />
+　→<a href="http://fladdict.net/blog/2008/11/iphoneosbug.html">fladdictの中の人</a>も報告．ひどい．<br />
+・PhotoLibraryの挙動が怪しい<br />
+　→hideHereでもこの症状発生<br />
+　→iPhotoから同期でインストールした写真にまたに開くのに失敗する写真がある．<br />
+　→理由は謎・・・．安定して再現しないから対処できない．<br />
+・突然 Xcodeからアプリを転送できなくなる<br />
+　→0x0000001とかいう電源を入れ直せとのメッセージが出るパターン<br />
+　→私は結局iPhoneを復元したら治った<br />
+・後なんか，テキストフィールドをクリックしたときのルーペの挙動が怪しいとか？</p>

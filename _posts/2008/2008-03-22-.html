@@ -1,0 +1,39 @@
+---
+layout: post
+title: "[お勉強] 改行を見つけたい"
+categories:
+- blog
+tags:
+- Programming
+- Ruby
+status: draft
+type: post
+published: false
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>こないだの開発合宿での話題．<br />
+ダウンロードしてきたテキストデータから改行コードを見つけて，数を数える方法．<br />
+これを<どう書く.org>とかで聞くと深い話が聞けるのかもしれないが，とりあえず二つの方法で試してみたところあんまり差が出なかった．<br />
+条件は，テキストデータは，100kbくらいで改行数が700くらい．改行コードは￥n限定．<br />
+一つ目の手法は，単純，if文でやる．</p>
+<pre>
+for( i = 0; i < length; i++ ) {
+if( *p++ == '\n' )
+newline++;
+}
+</pre>
+<p>二つ目の手法は，256個配列を用意してそれをインクリメント．</p>
+<pre>
+long long code[256];
+memset( code, 0, sizeof(code) );
+for( i = 0; i < length; i++ ) {
+coe[*p++]++;
+}
+</pre>
+<p>測定結果．</p>

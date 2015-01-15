@@ -1,0 +1,47 @@
+---
+layout: post
+title: "バイナリダンパーを作ってみる～1回目"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>ちょっとずつ，作ってみようと思う．<br />
+今日の学習内容．<br />
+１．Windowsのmmap<br />
+この3つがキーAPIらしい．<br />
+CreateFile,CreateFileMapping,MapViewOfFile<br />
+例えば，./text.bmpを開く場合，</p>
+<pre>
+_hf = CreateFile(
+"./test.bmp",
+GENERIC_READ|GENERIC_WRITE,
+0,
+NULL,
+OPEN_EXISTING,
+FILE_ATTRIBUTE_NORMAL,
+NULL
+);
+_fileSizeLow = GetFileSize ( _hf, &_fileSizeHigh ) ;
+_hm = CreateFileMapping(
+_hf,
+NULL,
+PAGE_READWRITE,
+0,
+0,
+NULL
+);
+_pFile = (LPBYTE) MapViewOfFile( _hm, FILE_MAP_WRITE, 0, 0, 0 );
+</pre>
+<p>a</p>

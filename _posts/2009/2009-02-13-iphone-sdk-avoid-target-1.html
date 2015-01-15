@@ -1,0 +1,40 @@
+---
+layout: post
+title: '[iPhone SDK] Avoid target="_blank" problem'
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK(English)
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>これは，@norio_nomura氏のハック．<br />
+すばらしいハックです．<br />
+実は，UIWebViewのバックグラウンドでは，クリックされたりすることで，新しいウィンドウが生成される前に，UIWebViewWebViewDelegateというデリゲートオブジェクトに対して，webView:createWebViewWithRequest:というメソッドがコールされる．実は，UIWebViewが新しいウィンドウを開くtarget="_blank"のときにナビゲーションがうまくいかないのは，このメソッドが実装されていないためなのである．<br />
+このメソッドを，新しいウィンドウを自分自身に指定するようなメソッドをCで実装し，Objective-Cの動的結合を利用して，無理矢理，UIWebViewWebViewDelegateにねじ込む．</p>
+<pre>
+static id webViewcreateWebViewWithRequestIMP(id self, SEL _cmd, id sender, id request) {
+return [sender retain];
+}
++ (void)installNewWindowDelegateHook {
+Class klass = objc_getClass( "UIWebViewWebViewDelegate" );
+if( klass == nil )
+return;  // unfortunately, UIWebViewWebViewDelegate has gone...
+class_addMethod( klass,
+@selector(webView:createWebViewWithRequest:),
+(IMP)webViewcreateWebViewWithRequestIMP,
+"@@:@@" );
+}
+</pre>
+<p>これで完成なのだ！！！<br />
+@norio_nomuraさん，ありがとうございました．</p>

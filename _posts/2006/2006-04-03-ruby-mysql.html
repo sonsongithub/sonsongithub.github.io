@@ -1,0 +1,143 @@
+---
+layout: post
+title: "[Ruby] MySQLをRubyで試す"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Ruby
+status: publish
+type: post
+published: true
+meta:
+  _oembed_83ec1b504d956c2b549307c4f4f92e0f: "{{unknown}}"
+  _oembed_5d50835417c7a34bcbcd2688f831dfc4: "{{unknown}}"
+  _oembed_d9a609729f41417439018d8442307c82: "{{unknown}}"
+  _oembed_fe16d218bc9f08e9738a1f8b5b275b6a: "{{unknown}}"
+  _oembed_9b54c1998768002ea8adaab9ab787643: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>XMLをやってみたけど，なんだか遅い．<br />
+結局データベースをやらなきゃいかんのか．つーことで，MySQLにトライする．<br />
+<br />
+<h3 class="line-header">MySQLをインストール </h3>
+<p>うほほー．MacOSXにはなんとパッケージが用意されている．<br />
+http://dev.mysql.com/downloads/index.html<br />
+別に，ソースからmakeしてもいいのだが，パッケージでインストールする．楽だし．<br />
+インストールパスは，/usr/local/で，mysql-XXXXXXXXXXX-powerpcフォルダにインストールされる．<br />
+んで，/usr/local/mysqlが，このフォルダのシンボリックリンクになる．<br />
+<br />
+<h3 class="line-header">初期設定 </h3>
+<p>MySQLの中のrootユーザでMySQLにログインし，パスワードを設定する．</p>
+<pre>
+※注意
+>←シェル
+msql>←MySQL
+</pre>
+<pre>
+>mysqladmin -u root
+mysql>set password for root=password('your-passwd');
+mysql>flush privileges;
+</pre>
+<p>これでrootにパスワードが設定される．flush privilieges;は実行しないと，変更が更新されない．</p>
+<pre>
+mysql>quit
+>mysqladmin -u root -p
+</pre>
+<p>で，パスワードを入力して，ログインできる．-pのスイッチをつけないとパスワードを聞かれないので，ログインできない．<br />
+root以外のユーザを作成する．</p>
+<pre>
+>mysqladmin -u root -p
+mysql>use mysql;
+mysql> grant all on *.* to username@localhost identified by 'yourpassword';
+mysql>flush privileges;←いらないかも
+mysql>quit
+</pre>
+<p>usernameとyourpasswordに所望の値を入力．<br />
+use mysqlのコマンドは，mysqlというデータベースを使用することを意味する．<br />
+mysqlデータベースはユーザ管理などのためのデータベースなのである．<br />
+<br />
+<h3 class="line-header">匿名ユーザを削除する </h3>
+<pre>
+mysql>mysql -u root -p
+mysql>use mysql
+mysql>delete from user where User='';
+</pre>
+<p>
+<h3 class="line-header">試す </h3>
+<p>show databases;で現在あるデータベースの一覧を見ることができる．</p>
+<pre>
+mysql>show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
++--------------------+
+1 row in set (0.00 sec)
+</pre>
+<p>testというデータベースを作ってみる．</p>
+<pre>
+mysql> create database test;
+Query OK, 1 row affected (0.00 sec)
+</pre>
+<p>んで，確認すると，</p>
+<pre>
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| test               |
++--------------------+
+2 rows in set (0.00 sec)
+</pre>
+<p>
+<h3 class="line-header">ちょっとデータベースを作ってみる． </h3>
+<p>まず，作成したデータベースを利用するようにするため，mysqlを起動後，特定のデータベースを今から使用することを，useコマンドで指定する．</p>
+<pre>
+mysql> use test;
+Database changed
+</pre>
+<p>これで，testデータベースをこれから使用することになる．<br />
+ここで，データの要となるデータテーブルを作成する．<br />
+テストとして，名前と年齢をデータとして持つ，データテーブルHumanを作成してみる．</p>
+<pre>
+mysql> create table human (name char(50), age int);
+Query OK, 0 rows affected (0.36 sec)
+</pre>
+<p>これで，完成．テーブルは，show tables;で確認する．</p>
+<pre>
+mysql>show tables;
++----------------+
+| Tables_in_test |
++----------------+
+| human          |
++----------------+
+1 row in set (0.00 sec)
+</pre>
+<p>humanテーブルが完成．<br />
+このテーブルにデータを入れてみる．</p>
+<pre>
+mysql> insert into human values ('hoge',20);
+Query OK, 1 row affected (0.25 sec)
+mysql> insert into human values ('hogehoge',27);
+Query OK, 1 row affected (0.00 sec)
+</pre>
+<p>これでデータが二つ挿入．確認すると，</p>
+<pre>
+mysql> select * from human;
++----------+------+
+| name     | age  |
++----------+------+
+| hoge     |   20 |
+| hogehoge |   27 |
++----------+------+
+2 rows in set (0.00 sec)
+</pre>
+<p>こんなもんだ．</p>

@@ -1,0 +1,115 @@
+---
+layout: post
+title: "[iPhone] Hack UIWebView〜コンパイル２"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>続いて，UIWebViewをハックしていきます．<br />
+HMDTさんと同じようなことができるような実装をしてみました．<br />
+※参考リンク<br />
+・<a href="http://hmdt.jp/safari/myfirst/progress.html">HMDT：プログレスバーを表示する</a><br />
+<strong>・コンパイル</strong><br />
+まず，WebViewをさわるので，WebView.hをincludeします．<br />
+しかし，ちょっといじらないとコンパイルできません．</p>
+<pre>
+diff -t ./include.backup112/WebKit/WebFrame.h ./include/WebKit/WebFrame.h
+7c7
+&lt; #import "NSObject.h"
+---
+&gt; //#import "NSObject.h"
+Only in ./include/WebKit: WebFrame.h~
+diff -t ./include.backup112/WebKit/WebView.h ./include/WebKit/WebView.h
+7c7
+&lt; #import "WAKView.h"
+---
+&gt; #import &lt;WebCore/WAKView.h&gt; //#import "WAKView.h"
+Only in ./include/WebKit: WebView.h~
+</pre>
+<p>というように，引っかかってくるエラーに対応します．<br />
+さらに，以下のエラーにも対応します．</p>
+<pre>
+diff -t ./include.backup112/WebCore/WAKResponder.h ./include/WebCore/WAKResponder.h
+7c7
+&lt; #import "NSObject.h"
+---
+&gt; //#import "NSObject.h"
+Only in ./include/WebCore: WAKResponder.h~
+</pre>
+<p>修正するファイルは，以下となります．<br />
+・WebKit/WebView.h<br />
+・WebKit/WebFrame.h<br />
+・WebCore/WAKResponder.h<br />
+さらに，ある構造体の定義ができていないので，適当にどこかで宣言して補います．<br />
+（WebCore/CDStructures.hをそのまま使いたいのだが，ちょっとエラーが多すぎて，対応するのがめんどいので場当たりで対応しました．）</p>
+<pre>
+struct _WKViewContext {
+void *drawCallback;
+void *drawUserInfo;
+void *eventCallback;
+void *eventUserInfo;
+void *notificationCallback;
+void *notificationUserInfo;
+void *layoutCallback;
+void *layoutUserInfo;
+void *responderCallback;
+void *responderUserInfo;
+void *hitTestCallback;
+void *hitTestUserInfo;
+void *willRemoveSubviewCallback;
+};
+</pre>
+<p><strong>・ソースコード</strong><br />
+まず，いくつかのデリゲートメッセージを利用するため，とりあえず，全部Delegateをセット．</p>
+<pre>
+// set delegate
+id webView = [uiWebView_ webView];
+[webView setResourceLoadDelegate:self];
+[webView setDownloadDelegate:self];
+[webView setFrameLoadDelegate:self];
+</pre>
+<p>以下，デリゲートメソッド．<br />
+HMDTさんのサイトまんまですが・・・．引用です．<br />
+didStartProvisionalLoadForFrameで，インジケータをスタートさせて，リソースのロード終了メッセージのタイミングでインジケータをストップするかを判断するように実装しています．</p>
+<pre>
+- (void)webView:(WebView*)sender didStartProvisionalLoadForFrame:(WebFrame*)frame {
+if (frame == [sender mainFrame]) {
+resourceCount_ = 0;
+resourceCompletedCount_ = 0;
+resourceFailedCount_ = 0;
+[UIApp setStatusBarShowsProgress:YES];
+}
+}
+- (id)webView:(WebView*)sender identifierForInitialRequest:(NSURLRequest*)request fromDataSource:(WebDataSource*)dataSource {
+NSNumber*number;
+number = [NSNumber numberWithInt:resourceCount_++];
+return number;
+}
+- (void)webView:(WebView*)sender resource:(id)identifier didFailLoadingWithError:(NSError*)error fromDataSource:(WebDataSource*)dataSource {
+resourceFailedCount_++;
+[self controlSyndicator];
+}
+- (void)webView:(WebView*)sender resource:(id)identifier didFinishLoadingFromDataSource:(WebDataSource*)dataSource {
+resourceCompletedCount_++;
+[self controlSyndicator];
+}
+- (void) controlSyndicator {
+int  downloadedCount = resourceCompletedCount_ + resourceFailedCount_;
+if( downloadedCount == resourceCount_ ) {
+[UIApp setStatusBarShowsProgress:NO];
+}
+}
+</pre>

@@ -1,0 +1,42 @@
+---
+layout: post
+title: "[Tips] MacPortsでApacheをインストール"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>・インスコの動機<br />
+MacOSXにはデフォでApacheが入っとるんだが，色々設定が違う．<br />
+んでもって，今回からは，MacPortsで入れられるものは，portsで入れて<br />
+しまおうということで，apacheもMacPortsでインスコする．<br />
+・インスコ<br />
+説明不要．</p>
+<pre>
+sudo port install apache2
+</pre>
+<p>これでサクっと入る．<br />
+・構成</p>
+<pre>
+/opt/local/apahce2・・・本体
+/private/etc/httpd・・・設定
+</pre>
+<p>とりあえず，設定が離れたところにあるのがいやなのでシンボリックリンクで，</p>
+<pre>
+/private/etc/httpd -&gt; /opt/local/apache2/conf
+</pre>
+<p>って修正してしまう．<br />
+これでおｋ．</p>

@@ -1,0 +1,71 @@
+---
+layout: post
+title: "[お勉強] プロセスを生成する〜fork"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- "お勉強"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>次は，forkとexecvを使ってやってみる．</p>
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;     /* pid_t */
+int main(int argc, char *argv[]) {
+pid_t child_pid ;
+if( (child_pid=fork()) == 0 ) {
+char *argv[4];
+char *environ[] = { NULL };
+printf("child:  pid-&gt;%d, ppid-&gt;%d\n", getpid(), getppid() );
+execve( "../hoge/hoge", argv, environ );
+perror( "execve" );
+_exit( 1 );
+}
+else if( child_pid &gt; 0 ) {
+printf("parent: pid-&gt;%d, ppid-&gt;%d, child pid-&gt;%d\n",getpid(), getppid(),child_pid );
+}
+else {
+perror("fork");
+}
+printf( "fork01 has finished.\n" );
+return 0;
+}
+</pre>
+<p>親プロセスの方にはforkの戻り値は−１，子プロセスには戻り値０となり，if文が分岐する仕組み．<br />
+なるほどね，ifに入るとすでにプロセスは分岐しているというわけだ・・・．なるほど．<br />
+これを実行し，<a href="http://son-son.sakura.ne.jp/programming/_system.html">前回と同じようにhoge</a>の実行プロセスを起動してみる．<br />
+実行結果およびプロセスは，以下のようになる．</p>
+<pre>
+$ ./fork01
+parent: pid->9243, ppid->8614, child pid->9246
+fork01 has finished.
+child:  pid->9246, ppid->9243
+$ 0 sec passed.
+1 sec passed.
+2 sec passed.
+3 sec passed.
+4 sec passed.
+5 sec passed.
+6 sec passed.
+7 sec passed.
+8 sec passed.
+9 sec passed.
+hoge has finished.
+</pre>
+<pre>
+sonson    9243   0.0  0.0   599616    284 s001  S+    1:26PM   0:00.00 ./fork01
+sonson    9246   0.0  0.0   599616    292 s001  S     1:26PM   0:00.00 (hoge)
+</pre>
+<p>なぜか，プロセス名が括弧付きになっている．なぜだろう・・・．</p>

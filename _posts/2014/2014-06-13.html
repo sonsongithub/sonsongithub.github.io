@@ -1,0 +1,58 @@
+---
+layout: post
+title: "書評：UIKit徹底解説 iOSユーザーインターフェイスの開発"
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _wpcom_is_markdown: '1'
+  _edit_last: '1'
+  _wpas_done_all: '1'
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>献本御礼．</p>
+<p>宣伝＆書評エントリ．</p>
+<p>iOSのUIを実装するためのコードに焦点を当てた，初級から中級向けの本．<br />
+簡単なところは全部飛ばして書いてるのかなと読み始めると，割りと細かいところまで書いてあったりして，初心の頃に雑に理解してあったポイントを復習する意味でいいかもしれない．</p>
+<p>私がザクっと読んだところは，以下の三つ．</p>
+<ol>
+<li>画面遷移</li>
+<li>フォント管理</li>
+<li>コンテナビュー</li>
+</ol>
+<h4>画面遷移</h4>
+<p>画面遷移では，ビューコントローラに依存しないオリジナルの遷移アニメーションの設計が載っている．<br />
+この辺は，コードの再利用性やビューコントローラの実装がぐちゃぐちゃになることを避けるためにも是非，理解しておきたいところ．</p>
+<h4>フォント</h4>
+<p>フォントは割りと解説されてないところなので，本書中でも重要なところであると思う．<br />
+NSAttributedStringは，すでにNSStringにとって替わるクラスだ．<br />
+事実，NSStringのインスタンスを使って直接Quartzでレンダリングするメソッドはすべてdeprecatedになっている．これからは属性付きのテキストがデフォルトになってくるだろう．<br />
+プログラマはこの当たりを抑えておいておく必要がある．</p>
+<h4>コンテナビュー</h4>
+<p>後は，コンテナビューについて．<br />
+コンテナビューは，実は大地雷地帯で突っ込んだ実装すると，すぐに挙動が大変なことになる．<br />
+その点で，本書がマインスイーパの一助になると思う．<br />
+まぁ，でも，コンテナビュー・・・・を・・・使うことはお勧めしない・・・・って言ったら怒られるかな．</p>
+<div class="amazlet-box" style="margin-bottom:0px;">
+<div class="amazlet-image" style="float:left;margin:0px 12px 1px 0px;"><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4844336088/sonsonpicture-22/ref=nosim/" name="amazletlink" target="_blank"><img src="{{ site.url }}/assets//510e%2BqvIkFL._SL160_.jpg" alt="UIKit徹底解説 iOSユーザーインターフェイスの開発" style="border: none;" /></a></div>
+<div class="amazlet-info" style="line-height:120%; margin-bottom: 10px">
+<div class="amazlet-name" style="margin-bottom:10px;line-height:120%"><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4844336088/sonsonpicture-22/ref=nosim/" name="amazletlink" target="_blank">UIKit徹底解説 iOSユーザーインターフェイスの開発</a>
+<div class="amazlet-powered-date" style="font-size:80%;margin-top:5px;line-height:120%">posted with <a href="http://www.amazlet.com/" title="amazlet" target="_blank">amazlet</a> at 14.06.13</div>
+</div>
+<div class="amazlet-detail">西方 夏子 <br />インプレスジャパン <br />売り上げランキング: 590</div>
+<div class="amazlet-sub-info" style="float: left;">
+<div class="amazlet-link" style="margin-top: 5px"><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4844336088/sonsonpicture-22/ref=nosim/" name="amazletlink" target="_blank">Amazon.co.jpで詳細を見る</a></div>
+</div>
+</div>
+<div class="amazlet-footer" style="clear: left"></div>
+</div>
+<p></p>

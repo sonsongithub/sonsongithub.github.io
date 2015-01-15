@@ -1,0 +1,47 @@
+---
+layout: post
+title: TestFlightのすゝめ
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>今更感も否めないが，<a href="http://testflightapp.com">TestFlight</a>について書いてみたい．</p>
+<p>みなさんは，<a href="http://testflightapp.com">TestFlight</a>をご存知だろうか．iOSデバイス向けのアプリケーションテストサービスである．<br />
+iOSなどのモバイル系のネイティブの開発の大変さは，テストにある．</p>
+<p>その理由は，</p>
+<p>１．配布できるユーザが限られること．<br />
+２．AdHocビルドが煩雑であり，配布が難しいこと．<br />
+３．クラッシュログなどを回収し難いこと．</p>
+<p>が上げられる．</p>
+<p>残念ながら，１に関しては，改善の仕様がない．Appleの署名を通さなければ，アプリケーションのインストールはできない．<br />
+まさか，テストユーザにjailbreakを強要するわけにもいかない．<br />
+2点目も嫌な問題だ．配布を簡単にできないし，証明書をいちいちユーザに配るのは非常に面倒くさい．<br />
+3点目は絶望的だ．ネットワークを通じて，多数のテストユーザに配布すると，クラッシュログ等の回収は不可能に近い．</p>
+<p>これらの署名の問題以外をなんとかしてくれるのが，TestFlightサービスだ．<br />
+しかも無料である．</p>
+<p><center><a href="http://sonson.jp/wp/wp-content/uploads/2012/01/tf03.png"><img src="{{ site.url }}/assets//tf02.png" alt="" title="tf03" width="458" height="364" class="aligncenter size-full wp-image-2186" /></a><br />アプリをインストールできるテスターの調整</center></p>
+<p><center><a href="http://sonson.jp/wp/wp-content/uploads/2012/01/tf01.png"><img src="{{ site.url }}/assets//tf01.png" alt="" title="tf01" width="320" height="480" class="aligncenter size-full wp-image-2184" /></a><br />Webアプリの画面インストールできるテストアプリがリスト表示される</center></p>
+<p>テストユーザは，TestFlightにiOSデバイスと自分のメールアドレスを登録する．<br />
+ユーザは，TestFlightのWebアプリケーションを立ち上げると，自分がテスターになっているアプリケーションの最新のテストバイナリを常に確認し，インストールできる．<br />
+開発者は，テストユーザにメールで，自分のアプリケーションのテスターになってほしいとリクエストを投げる．<br />
+そうすると，開発者にはユーザのUDIDが見えるようになり，そのUDIDをAppleに登録し，証明書を作成し，アプリケーションをビルドする．</p>
+<p><center><a href="http://sonson.jp/wp/wp-content/uploads/2012/01/tf03.png"><img src="{{ site.url }}/assets//tf03.png" alt="" title="tf03" width="458" height="364" class="aligncenter size-full wp-image-2186" /></a><br />クラッシュログ確認</center></p>
+<p><center><a href="http://sonson.jp/wp/wp-content/uploads/2012/01/tf04.png"><img src="{{ site.url }}/assets//tf04.png" alt="" title="tf04" width="568" height="65" class="aligncenter size-full wp-image-2187" /></a><br />アプリケーションの状態</center></p>
+<p>開発者が，アプリケーションをTestFlightに登録すると，ユーザに通知が届き，ユーザはTestFlight Webアプリケーションを使ってアプリケーションをインストールできるようになる．<br />
+開発者が，TestFlight SDKをリンクし，自分のTestFlightから降り出されたIDをアプリケーションに埋め込んでおけば，アプリケーションのクラッシュログ等が，自動的にTestFlightに集計され，Web上で確認できるようになる．</p>
+<p>しかも，クラッシュの回数やログはWebサイトで簡単にどこからでも見られるのだ．</p>
+<p>クラッシュログの回収やバイナリの公開の手軽さはもはやさっさとAppleにこのサービスを買収してもらいたいくらいのレベルである．</p>
+<p>開発諸氏にかなりお勧めの<a href="http://testflightapp.com">サービス</a>だ．</p>

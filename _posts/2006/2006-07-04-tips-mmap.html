@@ -1,0 +1,72 @@
+---
+layout: post
+title: "[Tips] mmap"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h3 class="line-header">mmap</h3>
+<p>ファイルをそのまんま，メモリにマッピングするAPI．<br />
+のようだ．<br />
+つまり，freadやらfscanfだと，seekやらなんやらしてバイトデータを読み取っていたところをまんま直接扱えるわけだ．<br />
+ｳﾏｰｰｰ．<br />
+下のサンプルは，mapfileを開き，そこにsonを書き込むというものだ，</p>
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;sys/mman.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;string.h&gt;
+int main( int argc, void **args)
+{
+char *data;
+int fd;
+int map_length=100;
+// open target file
+fd = open("mapfile", O_RDWR);
+// mapping the file into memory
+data = (char*)mmap((caddr_t)0, map_length, PROT_WRITE|PROT_READ, MAP_SHARED, fd, 0);
+// display buffer before editing
+printf("%s",data);
+// edit
+memcpy(data,"son",3);
+// display buffer after editing
+printf("%s",data);
+// sync memory and file
+msync(data, map_length,MS_SYNC );
+// unmapping
+if(munmap(data,  map_length))
+printf("unmapping is failed.
+");
+return 0;
+}
+</pre>
+<h3 class="line-header">流れ？</h3>
+<p>やっぱり，便利なところは，ポインタでそのままファイルを扱えることか．<br />
+でも，これって元のファイルより容量の大きいデータを書き込むとどうなるんだ		ろう．<br />
+とおもって，やってみたら，Segmentation Faultで落ちた．<br />
+・・・・．また，調べてみよう．<br />
+とりあえず，流れは，<br />
+（１）mmapで開く．<br />
+（２）ポインタで処理する．<br />
+（３）msyncで，アプリケーションで処理した結果を元のファイルに反映する．<br />
+（４）munmapでメモリを解放する．<br />
+こんなもんか．<br />
+でも，これめちゃ便利だよなぁ．<br />
+昔作ったLightWaveの読み込みライブラリのファイル読み取り部分，もっと簡単に作れたのに・・・・．<br />
+やはり，無知は罪だ．</p>

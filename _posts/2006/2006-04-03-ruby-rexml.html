@@ -1,0 +1,80 @@
+---
+layout: post
+title: "[Ruby] REXML"
+categories:
+- blog
+tags:
+- Blog
+- Programming
+- Ruby
+- SQL
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>RubyのXMLパーサ，REXMLを使ってみる．<br />
+<br />
+<h3 class="line-header">参考リンク </h3>
+<h3 class="numeric-list">
+<li>[[REXML>http://www.germane-software.com/software/rexml/]]</li>
+<li>[[私家版REXML APIリファレンス>http://www.cozmixng.org/~kou/ruby/rexml/reference]]</li>
+</h3>
+<p>などなど．<br />
+<br />
+<h3 class="line-header">まず開く </h3>
+<p>例のXMLをこのサイトのRSSから引用．</p>
+<pre>
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://purl.org/rss/1.0/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xml:lang="ja">
+<channel rdf:about="http://son-son.sakura.ne.jp/index.php?RecentChanges">
+<title>PukiWiki - sonson@Picture&amp;Software</title>
+<link />http://son-son.sakura.ne.jp/index.php?RecentChanges
+<description>PukiWiki RecentChanges</description>
+<items>
+<rdf:seq>
+<rdf:li rdf:resource="http://son-son.sakura.ne.jp/index.php?BLOG%2F2006-03-22%2FBLOG%A5%D7%A5%E9%A5%B0%A5%A4%A5%F3%B2%FE%C2%A4%A5%C6%A5%B9%A5%C8" />
+</rdf:seq>
+</items>
+</channel>
+<item rdf:about="http://son-son.sakura.ne.jp/index.php?BLOG%2F2006-03-22%2FBLOG%A5%D7%A5%E9%A5%B0%A5%A4%A5%F3%B2%FE%C2%A4%A5%C6%A5%B9%A5%C8">
+<title>BLOG/2006-03-22/BLOGプラグイン改造テスト</title>
+<link />http://son-son.sakura.ne.jp/index.php?BLOG%2F2006-03-22%2FBLOG%A5%D7%A5%E9%A5%B0%A5%A4%A5%F3%B2%FE%C2%A4%A5%C6%A5%B9%A5%C8
+<dc:date>2006-03-22T11:44:28+09:00</dc:date>
+<dc:identifier>http://son-son.sakura.ne.jp/index.php?BLOG%2F2006-03-22%2FBLOG%A5%D7%A5%E9%A5%B0%A5%A4%A5%F3%B2%FE%C2%A4%A5%C6%A5%B9%A5%C8</dc:identifier>
+</item>
+<item rdf:about="hoge・・・・">
+・・・・・・・・
+</item>
+</rdf:rdf>
+</pre>
+<p>これを簡単に示すと，</p>
+<pre>
+（１）rdf:RDF
+（２）channel
+（３）title
+（３）link
+（３）description
+（３）items
+（２）item
+（３）title
+（３）link
+（３）dc:date
+（３）dc:identifier
+（２）item
+（３）title
+（３）link
+（３）dc:date
+（３）dc:identifier
+（２）・・・・・
+</pre>
+<pre>
+※カッコ内は階層番号
+</pre>
+<p>という風な階層構造になる．</p>

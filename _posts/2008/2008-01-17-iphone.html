@@ -1,0 +1,38 @@
+---
+layout: post
+title: "[iPhone] 開発環境のヘッダをEricaさまのモノに変えてみた"
+categories:
+- blog
+tags:
+- Blog
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>色々，iPhoneのプログラミングをしていると，どうやら自分のヘッダ環境が古いことに気づく．<br />
+そこで，iPhoneハックの神，<a href="http://ericasadun.com/ftp/Misc/">Erica Sadunさんのヘッダ</a>を使用してみる．<br />
+今までの私の開発環境はMacPortsの開発環境＋ToolChain v05の組み合わせであった．<br />
+Toolchainがインストールされる/usr/local/arm-apple-darwin以下に新しいincludeをインストールする．<br />
+今までのincludeは，/usr/local/arm-apple-darwin/includeであり，/usr/local/arm-apple-darwin/include/includeは，そのシンボリックリンクとする．<br />
+Erica氏のヘッダファイルは，基本的なファイルが含まれていない．<br />
+このため，従来のiphone-dev等からインストールしたヘッダファイルに含まれるファイルをいくつか利用しないといけない．上書き確認等は，非常にだるいので，昔のファイルをコピーしてそこに上書きする．</p>
+<pre>
+/usr/local/arm-apple-darwin/headers-112・・・・・新しいもの
+/usr/local/arm-apple-darwin/include・・・・・・・・今までのもの
+</pre>
+<p>今までのやつをバックアップを撮って，headers-112の中身をそこに上書きする．</p>
+<pre>
+cp -nR /usr/local/arm-apple-darwin/include /usr/local/arm-apple-darwin/include.old
+cp /usr/local/arm-apple-darwin/headers-112/* /usr/local/arm-apple-darwin/include/
+</pre>
+<p>これでおｋ．<br />
+OpenGLESとか，今までのものだとダメなものも直しておく．</p>

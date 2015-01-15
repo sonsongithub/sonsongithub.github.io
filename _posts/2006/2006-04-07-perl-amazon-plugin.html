@@ -1,0 +1,159 @@
+---
+layout: post
+title: "[Perl] Amazon Plugin 開発(1)"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h3 class="line-header">開発中</h3>
+<p>現在，開発中のプラグイン．<br />
+バージョン 1.00<br />
+<a href="http://son-son.sakura.ne.jp/archive/mt-amazon.pl">mt-amazon.pl</a><br />
+<br />
+<h3 class="line-header">ソースコード</h3>
+<pre>#
+# sonson@Picture&Software
+#
+# Amazon Plugin for MovableType
+# 2006/04/05 version 1.00
+#
+# sonson, all rights reserved.
+#
+use LWP::UserAgent;
+use HTTP::Request;
+use HTTP::Response;
+# AmazonID
+my $accessKeyID = "XXXXXXXXXXXXXXXXXXXX";		# AamzonWebServicesのAccessKeyID
+my $associateID = "XXXXXXXXXXXXX";			# AmazonアフィリエイトのアソシエイトID
+# エラーメッセージ
+my $errorMsg = "[Amazon Plugin] ";
+my $errorMsgInput = "$errorMsg入力URLが間違っている可能性があります．";
+my $errorMsgNetworkError = "Amazonに接続できませんでした．";
+my $errorMsgXML = "Amazonから商品情報XMLを取得できませんでした．";
+my $AMAZON_HTML =&lt;&lt;'__EOF__';
+&lt;div class="amazon"&gt;
+test
+&lt;/div&gt;
+__EOF__
+MT::Template::Context-&gt;add_global_filter(
+amazon =&gt; sub {
+my ($str, $arg, $ctx) = @_;
+$str =~ s/[amazon:(.+)]/makeAmazonTag($1)/ge if $arg && $str =~ /[amazon:http://(.+)]/;
+return $str;
+}
+);
+# URLを分割して，ASINコードを切り出す．
+sub getASINCode{
+my $url = shift;
+my @a = split(///, $url);
+my $i=0;
+my $asinPos=0;
+# ASINの次のブロックにISBNあるいはASINコードがある
+for($i=0;$i&lt;@a;$i++){
+if( @a[$i] =~ /^ASIN$/ ){
+$asinPos = $i+1;
+last;
+}
+}
+#一回も引っかからなかったらエラー
+if( $asinPos==0 ){
+return NULL;
+}
+# コードが10桁かを確認
+if( @a[$asinPos] =~ /^.{10}$/ ){
+return @a[$asinPos];
+}
+else{
+return NULL;
+}
+}
+# ASINコードでAMAZONにアクセスして，結果をXMLで取得する．
+sub getXML{
+my $asinCode = shift;
+# AmazonアクセスURLを生成
+my $amazonURL = "http://webservices.amazon.co.jp/onca/xml";
+$amazonURL .= "?Service=AWSECommerceService";
+$amazonURL .= "&SubscriptionId=";
+$amazonURL .= $accessKeyID;
+$amazonURL .= "&AssociateTag=";
+$amazonURL .= $associateID;
+$amazonURL .= "&Operation=ItemLookup";
+$amazonURL .= "&ResponseGroup=Small,Images";
+$amazonURL .= "&ItemId=";
+$amazonURL .= $asinCode;
+my $proxy = new LWP::UserAgent;
+my $req = HTTP::Request-&gt;new('GET' =&gt; $amazonURL);
+my $res = $proxy-&gt;request($req);
+# レスポンスをチェック
+if ($res-&gt;is_success) {
+return $res-&gt;content;
+}else {
+return NULL;
+}
+}
+# エラーの結果が返っていないかをチェック
+sub checkXML{
+my $lines = shift;
+my $searchHeader = "&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;ItemLookupResponse xmlns="http://webservices.amazon.com/AWSECommerceService/";
+if($lines =~ /$searchHeader/ ){
+return true;
+}
+else{
+return false;
+}
+}
+# XMLから，詳細ページへのリンク，タイトル，画像のURLを抽出し，
+# タグを生成して，文字列として返す．
+sub makeHtmlTag{
+my $result_str = shift;
+my $result = "&lt;center&gt;
+";
+if($result_str =~ /&lt;DetailPageURL&gt;(.*)&lt;/DetailPageURL&gt;/ ){
+my $item_url = $1;
+$result .= "	&lt;a href="$item_url"target="_blank"&gt;
+";
+}
+$result_str =~ s/&lt;ImageSets&gt;(.*)&lt;/ImageSets&gt;//;
+if($result_str =~ /&lt;MediumImage&gt;&lt;URL&gt;(.*)&lt;/URL&gt;.*&lt;/MediumImage&gt;/ ){
+$result .= "		&lt;img src="$1"&gt;&lt;br/&gt;";
+}
+if($result_str =~ /&lt;Title&gt;(.*)&lt;/Title&gt;/ ){
+$result .= $1;
+}
+$result .= "
+&lt;/a&gt;
+&lt;/center&gt;
+";
+return $result;
+}
+# 入力されたURLから，HTMLタグか，エラー結果を返す．
+sub makeAmazonTag{
+my $url = shift;
+my $code = getASINCode($url);
+if( $code eq NULL ){
+return $errorMsgInput;
+}
+my $result_str = getXML($code);
+if( $result_str eq NULL ){
+return $errorMsgNetworkError;
+}
+if( !checkXML($result_str) ){
+return $errorMsgXML;
+}
+return makeHtmlTag($result_str);
+}
+1;
+__END__
+</pre>

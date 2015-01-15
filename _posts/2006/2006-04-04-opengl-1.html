@@ -1,0 +1,47 @@
+---
+layout: post
+title: "[OpenGL] オフスクリーンレンダリング"
+categories:
+- blog
+tags:
+- Blog
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">オフスクリーンレンダリングとは？ </h3>
+<p>OpenGLで描画したデータは，すべてピクセルとして，画面に表示されます．その一連の作業のことをレンダリングと呼ぶそうです．一般的な現在のコンピュータはだいたい3次元の描画をするためのビデオカードがついています．従来は3次元の行列変換や光源処理などをCPUが行っていたのですが，今はそれをビデオカードのGPU(Graphic Processing Unit)が肩代わりしてくれます．たとえば，Geforce，Radeonなんかに積まれているCPUがそれです．<br />
+こういった外部のビデオカードにおけるハードの高速処理のことをハードウェアアクセラレーションと呼びます．CPUは，3次元行列変換などの処理をしなくてよいため，高速な3次元の描画が可能となっているのです． 下の図は，一般的なハードウェアアクセラレーションにおける描画フローです．<br />
+<center><img src="{{ site.url }}/assets//offscreen02.jpg" /></center><br />
+VRAMへ書き込まれたデータは画面へ転送され，人の目に映るわけです．オフスクリーンレンダリングはその名の通り，オフスクリーン，つまり画面に書き込まない描画処理のことを指します． そのフローは以下の図のようになります．<br />
+<center><img src="{{ site.url }}/assets//offscreen01.jpg" /></center><br />
+図からもわかるように当然，この処理には一切GPUは使用されていません．このときはハードウェアアクセラレーションの恩恵をうけることはできないのです．さらに画面にも表示されません．メインのメモリに描画結果が書き込まれるだけとなります．このオフスクリーンレンダリングはテクスチャを動的に作成するときや，画面に描画結果を表示せずに処理したいときに用いることができます．<br />
+<br />
+<h3 class="line-header">オフスクリーンレンダリングの準備 </h3>
+<p>まともにメモリとOSのAPIを使用するので，OSによって処理方法が異なります．<br />
+<br />
+<h3 class="line-header">Windows - WIN32API </h3>
+<p>Windowsでは，デバイス独立型のビットマップ，DIBを作成し，それを描画先としてピクセルフォーマットと，レンダリングコンテキストを作成します．いつもならウィンドウに付属のデバイスコンテキストにピクセルフォーマットを設定しますが，オフスクリーンの時は，独自に作ったDIBをレンダリングコンテキストと結びつけます． 下に公開しているサンプルでは独自にオフスクリーンバッファを処理するクラスを作っていますが，別にそうする必要はありません．サンプルではDIBに描画した結果をウィンドウのデバイスコンテキストにコピーして描画しています．またウィンドウのサイズに合わせてオフスクリーンバッファのサイズを調整していないのでウィンドウのサイズを変更すると描画結果が拡大縮小されるので汚くなっています．<br />
+<br />
+<h3 class="line-header">MacOSX - Cocoa </h3>
+<p>MacOSXのCocoaの場合は，Windowsより遙かにわかりやすくプログラミングできます．反面，スクリーンバッファのメモリ管理を自分でやらないといけないので面倒くさいところもありますが．ピクセルフォーマット時にオフスクリーンサポートのフラグをたてておき，setOffScreenメッセージをコンテキストオブジェクトに送って，描画先の大きさとメモリを指定します．その後はいつも通りに描画するだけです．こっちのサンプルは，Windowsのサンプルとは違い，毎度オフスクリーンバッファを作り直しているので，常にリサイズされた描画結果が得られますが，めちゃくちゃ重いです．<br />
+<br />
+<h3 class="line-header">glReadPixelsのフロー </h3>
+<p>下の図の流れがglReadPixelsの流れです．glReadPixelsはVRAMに書き込まれたデータをメモリ上へ取得するAPIです．それゆえ，VRAMに書き込まれないと各ピクセルのデータを取得できないので，オフスクリーンバッファを用いて描画するときにはglReadPixelsは使用できません．<br />
+<center><img src="{{ site.url }}/assets//offscreen03.jpg" /></center><br />
+glReadPixelsはそのまま画面に書き込んでもいいときにはハードウェアアクセラレーションが使用できるので，当然描画速度はかなり速くなります．反面，一旦書き込んでからメモリに読み出すのでその辺がオーバーヘッドになる可能性はあります．まぁ，オフスクリーンレンダリングと使い分けるシーンは画面に描画してもいいか悪いかといったところでしょうか．<br />
+<br />
+<h3 class="line-header">ソースコード </h3>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/win_offscreen_rendering">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/win_offscreen_rendering</a><br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/mac_offscreen_rendering">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/mac_offscreen_rendering</a><br />
+本ソースコードを使用したことによる如何なる損害も製作者は責任を負いません．</p>

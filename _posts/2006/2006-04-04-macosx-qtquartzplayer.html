@@ -1,0 +1,39 @@
+---
+layout: post
+title: "[MacOSX] QTQuartzPlayer改"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- Programming
+status: publish
+type: post
+published: true
+meta:
+  _oembed_ac674dc08a6a6698b61deadbd9f986d7: "{{unknown}}"
+  _oembed_dd6f02b82934deafd6960a216c1b86e3: "{{unknown}}"
+  _oembed_4d7f11ab83aee05b53e70aeeefeba04e: "{{unknown}}"
+  _oembed_60006d00a879310b49e856ba17e6ea20: "{{unknown}}"
+  _oembed_6b2d61bfb94d2acf1ae3993440ed1da9: "{{unknown}}"
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">とりあえず動かしてみる． </h3>
+<p>http://developer.apple.com/samplecode/QTQuartzPlayer/QTQuartzPlayer.html<br />
+ここからダウンロード．<br />
+挙動は，どうやらmovファイルか，DV系のカメラのストリームをOpenGLのテクスチャに<br />
+流し込んでいるらしい．<br />
+<a href="http://developer.apple.com/documentation/GraphicsImaging/Conceptual/CoreVideo/CVProg_Concepts/chapter_2_section_4.html">参考文献：Core Video Buffer Management</a><br />
+ここを見ると，カメラからきたフレームは，OpenGLテクスチャとなって生成された場合，すでにVRAM側に転送された後の様子．<br />
+画像処理をしようと思うと，メインメモリにないとできない．<br />
+どうにか，これをメインメモリに持って来れないものか・・・．<br />
+予想するにCoreVideoでカメラのストリームをメインメモリに流すようにしてやればできるはずだ．<br />
+・・・・．どうやってやるんだろう・・・．<br />
+とりあえず，QTQuartzPlayerのソースコードをいじって，カメラの画像がすぐ表示されるようにして，不要な部分を削除してみた．<br />
+CaptureCocoa.zip</p>

@@ -1,0 +1,50 @@
+---
+layout: post
+title: "[iPhone SDK] How to get a touch event from UIWebView"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>・Over view<br />
+UIScroller is a subview of UIWebView. UIWebDocumentView is a subview of UIScroller.<br />
+Unfortunately, these classes are private and undocumented. And we have to peek a touch event from this UIWebDocumentView. However, we can't use these classes via Apple SDK and find any information from documents with SDK.<br />
+You can't peek any click events to UIWebView because touchesXXXX:withEvent: method, private class UIWebDocumentview's method, can't be overrided.<br />
+Therefore, we peek touch event to UIWebDocumentView by replacing instance method with method-swizzling.<br />
+・method swizzling<br />
+Method swizzling enables to replace instance method with the other one very easily. You can do that with the methods in "objc/objc-runtime.h". Detail of method swizzling is illustrated <a href="http://www.cocoadev.com/index.pl?MethodSwizzling">here</a>.<br />
+・UICWebView</p>
+<pre>
+@implementation UIView (__TapHook)
+- (void)__replacedTouchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+[self __replacedTouchesBegan:touches withEvent:event];
+if( [self.superview.superview isMemberOfClass:[UICWebView class]] ) {
+[(UICWebView*)self.superview.superview hookedTouchesBegan:touches withEvent:event];
+}
+}
+@end
++ (void)installHook {
+Class klass = objc_getClass( "UIWebDocumentView" );
+// replace touch began event
+method_exchangeImplementations(
+class_getInstanceMethod(klass, @selector(touchesBegan:withEvent:)),
+class_getInstanceMethod(klass, @selector(__replacedTouchesBegan:withEvent:)) );
+}
+</pre>
+<p>By this code, when an instance of UIWebDocumentView is called "touchesBegan:withEvent:", "__replacedTouchesBegan:withEvent:" is called instead of it.<br />
+And, when "__replacedTouchesBegan:withEvent:" called, "touchesBegan:withEvent:" is called.<br />
+Above, when UICWebView is clicked, "hookedTouchesBegan:withEvent" is called. You can do something on "hookedTouchesBegan:withEvent" when UIWebView clicked.<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/trunk/iPhone2.0/UICWebView">http://code.google.com/p/sonson-code/source/browse/trunk/iPhone2.0/UICWebView</a><br />
+Thank you for helping me to write a nice code, @Psychs, @norio.</p>

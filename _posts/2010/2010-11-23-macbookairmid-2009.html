@@ -1,0 +1,74 @@
+---
+layout: post
+title: MacBookAir(Mid 2009)が逝かれてしまった
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>突如，MacBookAirでアプリがクラッシュするようになった．<br />
+以下のアプリは起動すらしない．<br />
+・Papers<br />
+・Numbers<br />
+・Keynote<br />
+・Pages<br />
+・QuickTime7<br />
+以下ログ抜粋．<br />
+Process:         QuickTime Player 7 [5768]<br />
+Path:            /Applications/Utilities/QuickTime Player 7.app/Contents/MacOS/QuickTime Player 7<br />
+Identifier:      com.apple.quicktimeplayer<br />
+Version:         7.6.6 (7.6.6)<br />
+Build Info:      QuickTimePlayer-17090000~1<br />
+Code Type:       X86 (Native)<br />
+Parent Process:  launchd [144]<br />
+Date/Time:       2010-11-22 17:58:16.692 +0900<br />
+OS Version:      Mac OS X 10.6.5 (10H574)<br />
+Report Version:  6<br />
+Interval Since Last Report:          120647 sec<br />
+Crashes Since Last Report:           39<br />
+Per-App Crashes Since Last Report:   2<br />
+Anonymous UUID:                      23F91B46-B804-48F0-A587-4371A348BDF2<br />
+Exception Type:  EXC_BAD_ACCESS (SIGBUS)<br />
+Exception Codes: KERN_PROTECTION_FAILURE at 0x0000000000000096<br />
+Crashed Thread:  0  Dispatch queue: com.apple.main-thread<br />
+Thread 0 Crashed:  Dispatch queue: com.apple.main-thread<br />
+0   com.apple.QuickTime           	0x9425cd8c SetTimeBaseRate_priv + 12<br />
+1   com.apple.QuickTime           	0x9424f40b QTGetWallClockTimeBase_priv + 109<br />
+2   com.apple.QuickTime           	0x9424f344 AssureThreadTopLevelIdleManagerExists + 45<br />
+3   com.apple.QuickTime           	0x9424f271 QTGetTimeUntilNextTask_priv + 60<br />
+4   com.apple.QuickTime           	0x9424f229 QTGetTimeUntilNextTask + 29<br />
+5   com.apple.QTKit               	0x9982bfb1 +[QTMovie_QuickTime idleAllMovies:] + 457<br />
+6   com.apple.Foundation          	0x900549b0 __NSFireTimer + 141<br />
+7   com.apple.CoreFoundation      	0x9808cadb __CFRunLoopRun + 8059<br />
+8   com.apple.CoreFoundation      	0x9808a464 CFRunLoopRunSpecific + 452<br />
+9   com.apple.CoreFoundation      	0x9808a291 CFRunLoopRunInMode + 97<br />
+10  com.apple.HIToolbox           	0x95b4ff9c RunCurrentEventLoopInMode + 392<br />
+11  com.apple.HIToolbox           	0x95b4fc8d ReceiveNextEventCommon + 158<br />
+12  com.apple.HIToolbox           	0x95b4fbd6 BlockUntilNextEventMatchingListInMode + 81<br />
+13  com.apple.AppKit              	0x938fb78d _DPSNextEvent + 847<br />
+14  com.apple.AppKit              	0x938fafce -[NSApplication nextEventMatchingMask:untilDate:inMode:dequeue:] + 156<br />
+15  com.apple.quicktimeplayer     	0x00003a1c -[QTPApplication nextEventMatchingMask:untilDate:inMode:dequeue:] + 71<br />
+16  com.apple.AppKit              	0x938bd247 -[NSApplication run] + 821<br />
+17  com.apple.AppKit              	0x938b52d9 NSApplicationMain + 574<br />
+18  com.apple.quicktimeplayer     	0x00002495 start + 53<br />
+なんか，QuickTimeのコンポーネントが悪さしてるっぽい．<br />
+Google先生に聞いてみても，みんなお手上げ状態・・・・・・<br />
+思いつく原因はこれらしかない．<br />
+・4.2用のiTunesのベータ版<br />
+・4.2用の10.6.5<br />
+ほぼ同環境のiMac27では発症しておらず，上記のソフトウェアもインストールしていないので，容疑者はこいつらが濃厚．<br />
+でも，対処がわからない・・・・・<br />
+結局，悩んでも仕方がないので，再インストール．<br />
+正直な話，どこまでタイムマシンで戻せばいいのかすら，わからないので，再インストール．<br />
+みなさま，お気をつけて．</p>

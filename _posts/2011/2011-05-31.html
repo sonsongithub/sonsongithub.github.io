@@ -1,0 +1,41 @@
+---
+layout: post
+title: "タッチパネルの精度"
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>今，Titaniumを試そうと，借りてきたAndroid端末と，iPhone4でコーディングしている．<br />
+二つの端末を使っていると，明らかにタッチパネルの精度というか，「この場所を押した」という感覚を再現する精度に違いがある．</p>
+<p>タッチパネルの精度は，おそらく二通りの評価軸があると考える．</p>
+<p>１．客観精度<br />
+ひとつの指のような誘電体（静電容量方式を前提として）で，特定の面積でパネルを押したときに，実際の押した物体の接触領域の中心の推定精度</p>
+<p>２．主観精度<br />
+ユーザがこの場所を押した！と思った場所を再現できる精度．これは多分に主観が入り込むため，ROCの運用が肝であると考える（ある人は正しいと思っても，ある人には正しいと思えないことがある）．</p>
+<p>いやぁ，２については，AppleのOSの作り込みだろうなぁと，ぼんやり思っていたら，１について，すでに実験していた人がいた．</p>
+<p>本家engadgetにあった．</p>
+<p><a href="http://www.engadget.com/2010/01/09/moto-gives-straight-advice-on-smartphone-touchscreen-quality/">http://www.engadget.com/2010/01/09/moto-gives-straight-advice-on-smartphone-touchscreen-quality/</a></p>
+<p>〜図 Engadgetより抜粋〜<br />
+<img src="{{ site.url }}/assets//24mar10ob6525cwee-1269426601.jpg" alt="null" /></p>
+<p>上図には，パネルで斜線をひいたときに，デバイスにどのようにセンシングされるかをチェックしたものである．<br />
+中には，直線にすらなっていない酷い精度のものもある．</p>
+<p>図から読み取れるようにiPhoneの精度の高さが光る．<br />
+iPhoneはかなり他のデバイスと比較してもタッチパネルの客観精度が高いようだ．やはり，もっとも最初から，スタイラスを嘲笑し，破棄し，研究開発してきた強みがあるということなのだろうか．<br />
+vimeoのビデオで最後に解説員が，デバイス．駆動電圧？，ドライバ，OS様々な要因があるって言ってるけど（英語間違ってたらごめん），実際どうなんだろう．</p>
+<p>〜ビデオ Engadgetより抜粋〜<br />
+<iframe src="http://player.vimeo.com/video/8569827?title=0&amp;byline=0&amp;portrait=0" width="400" height="300" frameborder="0"></iframe>
+<p><a href="http://vimeo.com/8569827">DIY Touchscreen Analysis</a> from <a href="http://vimeo.com/motodevelopment">MOTO Development Group</a> on <a href="http://vimeo.com">Vimeo</a>.</p>
+<p>客観評価については，わからないけど，タッチの精度に根本的な差があることはわかった．</p>

@@ -1,0 +1,40 @@
+---
+layout: post
+title: "[iPhone SDK] UIImage，CGImageの小技"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>UIImage，CGImageにはいくつか小技がある模様．<br />
+<b>UIImageの引き延ばし</b><br />
+ボタン，ビューなどの背景に画像をセットするとき，そのまま拡大されるとかっこ悪い．AppleがiPhone上で提供しているボタンなどは，すべて四方の隅をそのままに中央のピクセル値を繰り返して拡大するように引き延ばされている．この引き延ばしのセットもAPIが用意されている．</p>
+<pre>
+UIImage *stretched = [original stretchableImageWithLeftCapWidth:5 topCapHeight:5];
+</pre>
+<p>一つ目と二つ目の引数が四方の隅のサイズ．これで生成したUIImageをUIImageViewにセットして使用したり，drawInRectなどのUIImageのメソッドでサイズを大きくして描画するとちゃんと引き延ばされて描画される．<br />
+<b>UIImageのリサイズ</b><br />
+UIImageは以下のAPIで一発でリサイズできる．これはprivateメソッドっぽいので使えなくなる可能性はありますね．便利なんだが・・・・．</p>
+<pre>
+UIImage *resized = [image _imageScaledToSize:CGSizeMake( new_width, new_height ) interpolationQuality:quality];
+</pre>
+<p><b>CGImageの切り出し（怪しい）</b><br />
+CGImageは，以下のAPIで好きな領域を切り出すことができる．</p>
+<pre>
+CGImageRef clipped = CGImageCreateWithImageInRect ( image, rectROI );
+</pre>
+<p><s>ただし，これで切り出してできたCGImageRefはちょっと怪しい．このAPIで得られたCGImageをピクセル処理をしたところ変な値が出てきたりした（バグの内容はよくある1行あたりのbyte alignのバグに見えた）．確認のため，直接バッファを別に作ってピクセルの値を読み出して切り出しを行ったところうまくいったので，過信しない方がいいと私は考えている．</s><br />
+※コメントで指摘がありました．間違っていました．<br />
+このAPIはサブイメージを作成し，元の画像にはretainを送るだけで，バッファの切り出しをしないようです．ちゃんとマニュアルに明記されていました．</p>

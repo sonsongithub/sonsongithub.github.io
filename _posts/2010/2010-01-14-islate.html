@@ -1,0 +1,26 @@
+---
+layout: post
+title: iSlateなのか，OS4.0なのか，両方なのかしらないが．
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>このところ，今まで見逃されていたUndocumented APIがAppStoreのレビューで指摘されるようになってきた．<br />
+11月あたりからレビュアーがツールを使っているっぽいことがまことしやかに囁かれている．<br />
+そのツールが使われ始めたとされる後でも通っていたUndocumented APIがここのところ全滅状態（アップルが安直なバイナリサーチでUndocumeted APIを探索しているとすると，動的にメソッドを呼び出すようなコードだとバイナリサーチにヒットしない気がするんだけど・・・・．どうなんだろう）．<br />
+カメラAPI周りが3.1前に相当レビューでテコ入れされたことから，これは次期バージョンとの互換性を視野に入れたUndocumented APIの整理であると私は考える．<br />
+当然，Undocumented APIには，deprecatedもクソもないので，切られるなら次期バージョンでばっさり切られるに決まっている．なので，アプリケーションの動作を保証していくために，削除されそうなAPIを今の時点からバッサバッサと切っていると予想する．<br />
+OS4.0は，また色々なところでAPIデザインが変わるかもしれない・・・・．</p>

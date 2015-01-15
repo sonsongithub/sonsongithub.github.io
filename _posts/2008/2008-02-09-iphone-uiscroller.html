@@ -1,0 +1,38 @@
+---
+layout: post
+title: "[iPhone] UIScrollerはどれくらいsmooth？"
+categories:
+- blog
+tags:
+- Review
+- "本"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>UIScrollerは，ドラッグが終わった後，指で弾いたみたいにスクロールに余韻が残るflick操作が実装されている．<br />
+このflickのスクロール量を予想できないかと調べてみた．<br />
+結論から言うと，まだずれてる．<br />
+マウスドラッグが終わった後，scrollerWillStartSmoothScrollingが呼ばれるので，そのタイミングで予想量を出してみた．<br />
+scrollDecelerationFactorを等比とした無限等比級数として，flickのスクロール量を算出しています．<br />
+scrollerDidEndSmoothScrollingが呼ばれたときがflickのスクロールが終わったときなので，そのときのポジションを表示．<br />
+それがどれくらいあっているかというと・・・・・．<br />
+4〜５ピクセルずれてる・・・・・．くそう．<br />
+以下参考コード．</p>
+<pre>
+- (void)scrollerWillStartSmoothScrolling:(UIScroller*)scroller {
+float x = [self offset].x + (int)(_velocity.width / ( 1 - _scrollDecelerationFactor ) );
+float y = [self offset].y + (int)(_velocity.height / ( 1 - _scrollDecelerationFactor ) );
+NSLog( @"scrollerWillStartSmoothScrolling predict stop position - now (%f,%f)", x, y );
+}
+- (void)scrollerDidEndSmoothScrolling:(UIScroller*)scroller {
+NSLog( @"scrollerDidEndSmoothScrolling - now (%f,%f)", [self offset].x, [self offset].y );
+}
+</pre>

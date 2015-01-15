@@ -1,0 +1,73 @@
+---
+layout: post
+title: PowerMacG4(AGP Graphics)静音＆電源強化計画
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>前のWikiから原稿を救出．内容は変わってません．</p>
+<h3 class="line-header">はじめに</h3>
+<p>現状，内部にいくつかパーツを追加し，さらにCPUも出荷時と比較し，4倍近いクロックのCPUを備え付けていることから，初期装備の200W電源では，電源供給に不安が残る．<br />
+ネットサーフィンして情報を集めると，PowerMacG4 AGP Graphics（通称Sawtooth，以下Sawtooth）は，ATX電源を流用できるらしいことがわかった．そこで，電源および内部のファンも同時に静音化をはかり，Sawtoothの抜本的な改造をはかることにする．<br />
+ここでは，それに関するノウハウ，情報をまとめる．<br />
+これは保証が受けられない改造です．改造は自己責任で行ってください．</p>
+<h3 class="line-header">情報</h3>
+<p>まず，情報源を以下にまとめる．<br />
+spirica : コラム : PowerMacG4 (AGP) 水冷＆超静音化:http://www.spirica.jp/develop/oth005/<br />
+PowerMacG4 QuickSilver を静音化する:http://saitama-audio.com/PowerMacG4QS/PMG4QS_FAN.html<br />
+Yosemiteの電源をATXのものに換装:http://homepage3.nifty.com/anikikobo/hardware/yosemite_ps.html<br />
+亀屋:B&Wに３００W静音電源搭載:http://homepage2.nifty.com/kameya-z/BWATX.html<br />
+Power Mac G4のスピードアップと静粛化の改造:http://www.santa-music.com/saibouge_g4.html<br />
+煩悩市場:http://www.hicat.ne.jp/home/suezou/<br />
+MYSTIC ROOM (JAPANESE):http://www.bekkoame.ne.jp/~t-imai/mainj.html<br />
+PowerMacintoshG4/静音化作戦-電源ユニット:http://www.inohome.net/kuma/g4/pw_unitch/index.html<br />
+おさるのパソコン遊び参考資料その2:http://www.geocities.jp/osaru3220/pc-data2.htm#01<br />
+まとめると・・・・・<br />
+・一般のATX電源が使えるようである．<br />
+・Sawtoothと呼ばれる当初のクロックが350MHzなどの初期PowerMacG4だけが20ピンをそのまま流用でき，それ以外は．マザーボード側が22ピンのため，そこに電源を供給する改造が必要がある．<br />
+・配線の改造も，線のカットだけで事足りるようである．<br />
+・ファンがどうやら，初期装備はうるさいようだ．<br />
+・筐体背面のカバーとコンセントが干渉する可能性がある．</p>
+<h3 class="line-header">購入した物品</h3>
+<div align="center">
+<img alt="pp500.jpg" src="{{ site.url }}/assets//PP500.jpg" width="200" height="126" /><img alt="cutCable02.jpg" src="{{ site.url }}/assets//cutCable02.jpg" />
+</div>
+<p>・MVKの500W電源(PP-500)<br />
+・Scytheの12cmファン(SA1225FDB12L)<br />
+・ATXの20ピン延長ケーブル</p>
+<h3 class="line-header">電源ケーブルの加工</h3>
+<p>一般のATX電源ソケットとMacのソケットは異なる．<br />
+8番ピンと18番ピンが異なるので，ここをカットする．<br />
+もし，配線が間違っていて怖い場合で，テスタで各ケーブルの電圧をチェックする場合は，緑色の14番ピンと黒の13番ピンを短絡させて，電源をONにする．</p>
+<div align="center">
+<img alt="cutCable01.jpg" src="{{ site.url }}/assets//cutCable01.jpg" /><img alt="cutCable03.jpg" src="{{ site.url }}/assets//cutCable03.jpg" />
+</div>
+<h3>電源の取り付け</h3>
+<p>電源自体の取り付けは，コンセントコネクタがケースと干渉するため，若干けずる．<br />
+削り方が汚いのはご愛敬．</p>
+<div align="center">
+<img alt="powerSocket.jpg" src="{{ site.url }}/assets//powerSocket.jpg" />
+</div>
+<h3>廃熱</h3>
+<p>電源の選び方がかなり難しいようだ．<br />
+外のケースを削られなければならなかった．<br />
+さらに電源の吸気ファンがケースの外側に向かっているので廃熱にもしかすると問題が発生する可能性がある．<br />
+熱暴走の可能性を捨てきれないので，注意が必要である．<br />
+初期装備の同じ，吸気，排気ファンを持つを電源にした方がよかったかもしれない．</p>
+<h3>静音化</h3>
+<p>確かに静かになった．<br />
+でも，うるさいことには変わりない．<br />
+徹底的に静音化するには，やはり水冷式などを選ぶ必要があるのかもしれない．<br />
+また，同時に取り替えた12cmファンをもっと上質のものにするといいのかもしれない．</p>

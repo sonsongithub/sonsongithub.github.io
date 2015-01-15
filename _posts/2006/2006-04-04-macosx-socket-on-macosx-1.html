@@ -1,0 +1,177 @@
+---
+layout: post
+title: "[MacOSX] Socket on MacOSX〜サーバ"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">BSDを使ったSocketでの通信 </h3>
+<p>というのが，MacOSXではできるらしい．<br />
+まぁ，中身がBSDなんだから，当たり前っていえば当たり前なんだが．<br />
+まず，先に参考文献<br />
+・<a href="http://www.macdevcenter.com/pub/a/mac/2002/12/26/cocoa.html">http://www.macdevcenter.com/pub/a/mac/2002/12/26/cocoa.html</a><br />
+・<a href="http://yudoufu.velvet.jp/sock.html">http://yudoufu.velvet.jp/sock.html</a><br />
+・<a href="http://yudoufu.velvet.jp/sock.html">http://www.cocoadev.com/index.pl?SocketClasses</a><br />
+どうやら，NSFileHandleを使うのがよさそうだ．<br />
+<br />
+<h3 class="line-header">サーバー実装 </h3>
+<p>NSFileHandleとSocket APIをカプセル化する前に，とりあえず，単純なCで実装してみる．<br />
+サーバーでの処理は，(1)ソケット作成→(2)クライアントのアクセスを待つ→(3)クライアントと接続→(4)通信の流れになる．</p>
+<pre>
+void main(void){
+NSFileHandle pFileHandle;
+int nConnection;
+int nSocket;
+int result=0;
+struct sockaddr_in addr;
+// ソケット作成
+nSockfd = socket(AF_INET, SOCK_STREAM, 0);
+// 構造体初期化
+memset( &addr, 0, sizeof( addr ) );
+addr.sin_family = AF_INET;
+addr.sin_addr.s_addr = htonl(INADDR_ANY);
+addr.sin_port = htons(5001);
+// ソケットをバインド
+result = bind(nSockfd, (struct sockaddr *)&addr, sizeof(addr));
+if ( result < 0) {
+[NSException raise: @"SockBindingException" format: @"Can't bind socket: %s", strerror(errno)];
+[NSApp terminate:self];
+}
+result = listen(nSockfd, 1);
+if ( result < 0) {
+[NSException raise: @"SockListeningException" format: @"Can't listen socket: %s", strerror(errno)];
+[ self close ];
+[NSApp terminate:self];
+}
+</pre>
+<p>ソケットを作って，クライアントからのアクセスを待つ．<br />
+このサンプルは，5001ポートを使ってアクセスする．<br />
+一応，Cocoaでの実装を前提としているので，NSApp等が残っている・・・・・．<br />
+exitに書き換えましょう・・・．<br />
+listenでクライアントからのアクセスを待っている間は，プログラムは止まってしまう．<br />
+acceptで，通信が開かれる．<br />
+戻り値がその接続先になる．</p>
+<pre>
+nConnection = accept(nSockfd, (struct sockaddr *)NULL, NULL);
+if ( nConnection < 0) {
+[NSException raise: @"SockAcceptException" format: @"Can't accept socket: %s", strerror(errno)];
+[ self close ];
+[NSApp terminate:self];
+}
+pFileHandle = [[NSFileHandle alloc] initWithFileDescriptor: nConnection];
+NSData *data = [pFileHandle availableData];
+[pFileHandle writeData: data];
+}
+</pre>
+<p>nConnectionの値でNSFileHandleを初期化する．<br />
+そして，クライアントから受け付けているデータを，availableDataメッセージで取得する．</p>
+<pre>
+[pFileHandle writeData: data];
+</pre>
+<p>writeDataで，クライアント側にデータを投げることができる．<br />
+<br />
+<h3 class="line-header">動作確認 </h3>
+<p>ターミナルでtelnetを起動して，localhost内で通信する．</p>
+<pre>
+>telnet localhost 5001
+>Trying ::1...
+>telnet: connect to address ::1: Connection refused
+>Trying 127.0.0.1...
+>Connected to localhost.
+>Escape character is '^]'.
+</pre>
+<p>ここで，なんか文字を入力すると，</p>
+<pre>
+>hello
+>hello
+</pre>
+<p>サーバー側から入力した文字が帰ってくる．はず．<br />
+<br />
+<h3 class="line-header">reuse？ </h3>
+<p>ここで，おそらく問題発生？<br />
+このままだと，プログラムを終了した後，すぐに起動すると，reuseエラーが出てしまう．<br />
+これは，ポートの開放が終わってないため？らしい．<br />
+以下のコードをbindを実行する前に記述しておく．</p>
+<pre>
+// reuse用の設定
+int on=1;
+setsockopt(m_nSockfd, SOL_SOCKET, SO_REUSEADDR, (char * ) & on, sizeof (on));
+</pre>
+<p>参考文献<br />
+・<a href="http://mikilab.doshisha.ac.jp/dia/research/report/2002/0408/005/report20020408005.html">http://mikilab.doshisha.ac.jp/dia/research/report/2002/0408/005/report20020408005.html</a><br />
+<br />
+<h3 class="line-header">カプセル化！ </h3>
+<p>んで，こいつをカプセル化してみる．<br />
+Socketを制御するものは，NSObjectを継承して作成してみた．</p>
+<pre>
+@interface NSSocketServer : NSObject
+{
+NSFileHandle		*m_pFileHandle;
+int					m_nSockfd;
+int					m_nConnection;
+}
+// overwride
+- (id)   init;
+- (void) close;
+// outlet action
+- (IBAction)startServer:(id)sender;
+// other method
+- (void) stopUntilAccept;
+- (void) initializeFileHandle;
+- (void) dealloc;
+- (void) sendMessage;
+- (void) receiveMessage:(NSNotification*)notification;
+@end
+</pre>
+<p>後は，いちいち説明するのも面倒なので，詳しくはソースコードを見てください．<br />
+<br />
+<h3 class="line-header">Notification </h3>
+<p>Cocoa上で実装すると，NSFileHandleのNotificationが使えたりするので，非常に便利である．<br />
+その辺をちょっと説明してみる．</p>
+<pre>
+[[NSNotificationCenter defaultCenter] addObserver: self
+selector: @selector(receiveMessage:)
+name: NSFileHandleReadCompletionNotification
+object: m_pFileHandle];
+[m_pFileHandle readInBackgroundAndNotify];
+</pre>
+<p>こいつで，NSNotificationCenterに，NSFileHandleがデータの読み取りが終わったことを通知してもらう．このNotificationのselectorの実装は決まっている．readInBackgroundAndNotifyは，バックグラウンドでNofiticationを送るように設定するメッセージである．この通知は一度通知されると二度と通知されないので，readInBackgroundAndNotifyを通知の度にNSFileHandleに送る必要がある．</p>
+<pre>
+- (void)receiveMessage: (NSNotification*)notification;
+</pre>
+<p>この関数を実装してデータを読み取る．</p>
+<pre>
+- (void)receiveMessage: (NSNotification*)notification {
+// check error
+NSNumber *pUNIXError = [ NSNumber numberWithInt:0 ];
+pUNIXError = [[notification userInfo] objectForKey:@"NSFileHandleError"];
+if( ![ pUNIXError intValue ] ){
+NSData *data;
+data = [[notification userInfo] objectForKey:NSFileHandleNotificationDataItem];
+NSString *string = [[NSString alloc] initWithData: data encoding: NSASCIIStringEncoding];
+NSLog(string);
+[m_pFileHandle readInBackgroundAndNotify];
+}
+else{
+close(m_nSockfd);
+close(m_nConnection);
+[m_pFileHandle release ];
+}
+}
+</pre>
+<p>安全のために，NSFileHandleErrorでNotification時のエラーを取得することができる．これで成功を一応，確認しておき，データの読み取りに移行させることができる．<br />
+<a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/mac/socket">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/mac/socket</a></p>

@@ -1,0 +1,40 @@
+---
+layout: post
+title: "[Tips] MacOSXでOpenCVをソースからインストール"
+categories:
+- blog
+tags:
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>macportsとかって結局なんかエラーが出るとアドホックに解決しにくい．<br />
+というわけで，MacOSXにひさびさにOpenCVを手で入れた．<br />
+１．libpng，libjpeg，libtiffをインストール<br />
+・<a href="http://www.libpng.org/pub/png/libpng.html">http://www.libpng.org/pub/png/libpng.html</a><br />
+・<a href="http://www.ijg.org/">http://www.ijg.org/</a><br />
+・<a href="http://www.libtiff.org/">http://www.libtiff.org/</a><br />
+※libjpeg<br />
+苦労した・・・・．libjpegのヘッダとライブラリファイルはmake installでコピーされないため，手でコピーする．<br />
+jpeglib.h<br />
+jerror.h<br />
+jconfig.h<br />
+jmorecfg.h<br />
+を/usr/local/includeに，<br />
+jpeglib.a<br />
+を/usr/local/libにコピーする．<br />
+２．OpenCVをインストール</p>
+<pre>
+./configure
+make
+make install
+</pre>
+<p>で終了．</p>

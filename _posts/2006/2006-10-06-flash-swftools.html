@@ -1,0 +1,50 @@
+---
+layout: post
+title: "[Flash] swftools"
+categories:
+- blog
+tags:
+- Blog
+- Perl
+- Programming
+- Tips
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h3 class="line-header">SWFを生成するツール</h3>
+<p>基本的に，SWFファイルは，Flash version.Xシリーズで作成するものだ．<br />
+Flashのフォーマットが公開されているため，いくつかのサードパーティの作成ツールが開発されている．<br />
+そのうちのひとつがswftoolsである．<br />
+<a target="_blank" href="http://www.swftools.org">http://www.swftools.org</a><br />
+これがかなりくせ者．コンパイルがなかなか通らない．</p>
+<h3 class="line-header">ビルド方法</h3>
+<p>普通である．<br />
+ただし，フルビルドには，以下のパッケージ？をインストールする必要がある．</p>
+<h3 class="numeric-list">
+<li>freetype:http://www.freetype.org</li>
+<li>t1lib:ftp://sunsite.unc.edu/pub/linux/libs/graphics/t1lib-1.3.1.tar.gz</li>
+<li>jpeglib:http://www.ijg.org/files/jpegsrc.v6b.tar.gz</li>
+<li>avifile library:http://avifile.sourceforge.net</li>
+</h3>
+<p>まずは，これらをソースコードからすべてインストールする．<br />
+そして，以下の「おまじない」で，swftoolsをインストール．</p>
+<pre>
+./configure
+make
+sudo make install
+</pre>
+<p>これでできるはずなのに・・・・．<br />
+./configureのログを見るに，libjpegのヘッダファイルと，ライブラリファイルを見つけられていない様子．<br />
+なにやら，jpegsrc.v6b.tar.gzのインストールがうまくいってない様子だ．<br />
+そこで，debianを使っているので，apt-getでlibjpeg62-devをインストールしてみる．<br />
+そうすると./configureでちゃんとjpeg2swfのmakefileの設定が完了．<br />
+おかしなぁ・・・．libjpeg.hもlibjpeg.aもちゃんと入れたのに・・・・・・．<br />
+わけわからん．</p>

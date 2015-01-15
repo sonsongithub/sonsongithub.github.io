@@ -1,0 +1,158 @@
+---
+layout: post
+title: "[OpenGL] VisualBasic"
+categories:
+- blog
+tags:
+- Blog
+- MacOSX
+- OpenGL
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>
+<h3 class="line-header">はじめに </h3>
+<p>VisualBasicでOpenGLプログラミングをするにはタイプライブラリが必要です．さらにアプリケーションとして配布するときにはこのタイプライブラリを同梱する必要があります．<br />
+筆者はVisualBasic6.0を使用していますが，OpenGLのタイプライブラリはこれに含まれていました．<br />
+それと私自身あまりVisualBasicに詳しくないので細かいことには触れません．（触れられませんw）<br />
+まず，新規作成で新しいプロジェクトを選択，標準EXEを作成します．できあがったプロジェクトのFirm1に対してコーディングしていきます．<br />
+<br />
+<h3 class="line-header">初期化 </h3>
+<p>　<br />
+レンダリングコンテキストを保持する変数はグローバル変数として宣言します．<br />
+初期化，リサイズ，描画，破棄を処理するために，FormにInitialize，Resize，Unload，Paintを追加します．まずForm_Initializeに初期化処理をコーディングします．</p>
+<pre>
+Private Sub Form_Initialize()
+'初期化作業
+'GLウィンドウの作成
+If CreateGLWindow = False Then
+Call KillGLWindow
+End
+End If
+'OpenGLの命令設定
+Call InitGL
+End Sub
+</pre>
+<p>これが初期化初期化処理になります．<br />
+まずCreateGLWindowでピクセルフォーマットを設定し，レンダリングコンテキストを作成しています．CreateGLWindowの中身は以下のようになっています．</p>
+<pre>
+Public Function CreateGLWindow() As Boolean
+Dim PixelFormat As GLuint
+Dim pfd As PIXELFORMATDESCRIPTOR    'ピクセルフォーマット構造体
+With pfd
+.cColorBits = 16    'カラーバッファ16ビット
+.cDepthBits = 16    'デプスバッファ16ビット
+.dwFlags =
+PFD_DRAW_TO_WINDOW Or PFD_SUPPORT_OPENGL Or PFD_DOUBLEBUFFER
+'ウィンドウスタイル
+.iLayerType = PFD_MAIN_PLANE
+.iPixelType = PFD_TYPE_RGBA
+'カラータイプ
+.nVersion = 1       'OpenGLのバージョン
+End With
+mainForm.ScaleMode = vbPixels
+PixelFormat = ChoosePixelFormat(mainForm.hDC, pfd)
+If PixelFormat = 0 Then         'ピクセルフォーマットの選定に失敗
+Call KillGLWindow           'ウィンドウ破棄
+MsgBox "ピクセルフォーマット選択失敗", vbExclamation, "警告"
+CreateGLWindow = False      '戻り値
+Exit Function
+End If
+If SetPixelFormat(mainForm.hDC, PixelFormat, pfd) = 0 Then
+'ピクセルフォーマットの設定に失敗
+Call KillGLWindow                       'ウィンドウ破棄
+MsgBox "ピクセルフォーマット設定失敗", vbExclamation, "警告"
+CreateGLWindow = False                  '戻り値
+Exit Function
+End If
+hRC = wglCreateContext(mainForm.hDC)
+If (hRC = 0) Then                'レンダリングコンテキストの作成に失敗
+Call KillGLWindow            'ウィンドウ破棄
+MsgBox "レンダリングコンテキスト作成失敗", vbExclamation, "警告"
+CreateGLWindow = False       '戻り値
+Exit Function
+End If
+'レンダリングコンテキストをカレントコンテキストに設定
+If wglMakeCurrent(mainForm.hDC, hRC) = 0 Then
+Call KillGLWindow
+MsgBox "コンテキストの設定失敗", vbExclamation, "警告"
+CreateGLWindow = False
+Exit Function
+End If
+'初期化成功
+CreateGLWindow = True
+End Function
+</pre>
+<p>処理の流れは，やはり他のC/C++と同じでピクセルフォーマット構造体に設定値を書き込み，それをもとにレンダリングコンテキストを作成，そして，デバイスコンテキストにFormが持つレンダリングコンテキストを結び付けます．<br />
+InitGLでは，glClearColorなどのOpenGLの初期化コマンドを実行しています．<br />
+<br />
+<h3 class="line-header">リサイズ </h3>
+<p>リサイズ処理はウィンドウが作成されたときに必ず呼び出されます．<br />
+リサイズ処理では，Viewportの設定，射影変換の設定を行います．</p>
+<pre>
+Height = mainForm.ScaleHeight
+If Height = 0 Then
+Height = 1
+End If
+'ビューポートの設定
+glViewport 0, 0, mainForm.ScaleWidth, Height
+glMatrixMode mmProjection   'プロジェクションマトリクスモードへ移行
+glLoadIdentity              'プロジェクションマトリクスを単位行列にリセット
+'ウィンドウのアスペクト比を算出し、アスペクト比を代入する
+gluPerspective 45#, mainForm.ScaleWidth / Height, 0.1, 100#
+glMatrixMode mmModelView    'モデルビューモードへ移行
+glLoadIdentity
+'リサイズ時に再描画
+Call DrawGLScene
+SwapBuffers mainForm.hDC
+</pre>
+<p>まず初めにウィンドウの高さが０になるとDevide By Zeroエラーがでるので，その回避処理を行っています．次にViewportを設定し，射影変換を行い，描画コードであるDrawGLSceneを呼び出し再描画を行っています．<br />
+<br />
+<h3 class="line-header">描画コード </h3>
+<p>描画コードは，別にDrawGLScene内に記述し，Form_Paintから呼び出す形式になっています．実際の描画コードはこのようになっています．</p>
+<pre>
+Public Function DrawGLScene()
+'描画関数
+'描画コードはここに記述します
+'カラーバッファとデプスバッファのクリア
+glClear clrColorBufferBit Or clrDepthBufferBit
+glLoadIdentity
+gluLookAt 0, 0, 4, 0, 0, 0, 0, 1, 0
+'四角形の描画コード
+glBegin bmTriangles
+glColor3f 1, 0, 0
+glVertex3f 0#, 1#, 0#
+glColor3f 0, 1, 0
+glVertex3f -1#, 0#, 0#
+glColor3f 0, 0, 1
+glVertex3f 1#, 0#, 0#
+glEnd
+End Function
+</pre>
+<p>
+<h3 class="line-header">OpenGLの解放 </h3>
+<p>OpeGLの開放はForm_Unloadで行います．Form_Unload内でKillGLWindowを呼び出し，OpenGLの開放を行っています．</p>
+<pre>
+Public Sub KillGLWindow()
+'OpenGLで使用したレンダリングコンテキストの破棄
+If hRC Then                      'レンダリングコンテキストの有無の確認
+If wglMakeCurrent(0, 0) = 0 Then   'レンダリングコンテキストの確認
+MsgBox "コンテキスト破棄失敗", vbInformation, "警告"
+End If
+If wglDeleteContext(hRC) = 0 Then  'レンダリングコンテキストの破棄
+MsgBox "レンダリングコンテキスト破棄失敗", vbInformation, "警告"
+End If
+hRC = 0
+End If
+End Sub
+</pre>
+<p><a href="http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/simple_vb">http://code.google.com/p/sonson-code/source/browse/#svn/trunk/gl/simple_vb</a></p>

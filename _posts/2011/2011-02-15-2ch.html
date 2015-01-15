@@ -1,0 +1,28 @@
+---
+layout: post
+title: 2chの冒険の書？
+categories:
+- blog
+tags:
+- Blog
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _wp_old_slug: ''
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>２ちゃんねるの書き込みの仕様が変わった模様．<br />
+「冒険の書」と呼ばれるシステムで，Cookieで端末を識別するっぽい．</p>
+<p>１．最初に書き込むと，HAL=FOXdayo<-すごい長い文字列->がCookieで渡される．</p>
+<p>２．そして，レスポンスのHTMLに，「冒険の書を作成中です」と返される．</p>
+<p>３．受け取ったCookie〜HAL=FOXdayo<-すごい長い文字列->をヘッダにセットして，書き込む</p>
+<p>４．おｋ</p>
+<p>のようだ．</p>
+<p>とりあえず，2tch v4.5.6でAppStoreにコミットしたけど，ちゃんと動くかね？</p>

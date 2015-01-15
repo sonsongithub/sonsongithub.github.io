@@ -1,0 +1,30 @@
+---
+layout: post
+title: "[iPhone SDK] -ObjCと-all_loadの意味"
+categories:
+- blog
+tags:
+- Blog
+- iPhone SDK
+- Programming
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<p>この<a href="http://son-son.sakura.ne.jp/programming/iphone_sdk_8.html">エントリ</a>でオプションで指定した-ObjCと-all_loadの意味を調べてみた．<br />
+リンカldのmanから抜粋．直訳すると，<br />
+-all_load<br />
+Loads all members of static archive libraries.<br />
+直訳すると「スタティックライブラリのメンバをすべてロードする」<br />
+-ObjC<br />
+Loads all members of static archive libraries that implement an Objective-C class or category.<br />
+直訳すると「Objective-Cのクラスやカテゴリで実装したスタティックライブラリのメンバをすべてロードする」<br />
+これらのオプションを指定せずに，ライブラリをリンクすると，ロードされないメソッドやら，変数が出てくると言うことだろうか．メンバの意味がちょっとわからない．<br />
+んで，このエントリでテストしてみたThree20のライブラリを，これらのオプションなしで実行してみたら，Three20で実装されているメソッドが，ロードされておらず，selector not foundの例外でアプリケーションが落ちた．どうやら，そういうことらしい．</p>

@@ -1,0 +1,47 @@
+---
+layout: post
+title: "[Tips] MySQL on Cygwin"
+categories:
+- blog
+tags:
+- Blog
+- "徒然"
+status: publish
+type: post
+published: true
+meta: {}
+author:
+  login: sonson
+  email: yoshida.yuichi@gmail.com
+  display_name: sonson
+  first_name: ''
+  last_name: ''
+---
+<h3 class="line-header">Cygwin上でMySQLを使うには</h3>
+<p>Windows環境でRubyを使おうと思うと，Cygwinが便利だ．<br />
+そこで，Cygwin上でMySQLをインストールしようと思ったのだが，予想以上にコンパイル，ビルドが面倒くさそうだ．<br />
+色々，手を入れないと動かない様子．</p>
+<h3 class="line-header">MySQLをインストールする</h3>
+<p>そこで，Windows向けに配布されているバイナリをCygwinで利用することを考える．<br />
+私は，WindowsのフォルダとCygwinのフォルダが混ざるのが嫌いなので，Cygwinはルートフォルダの下に入れてある．<br />
+このため，Windows，Program FilesフォルダをCygwinからみることはできない．（セキュリティ上，こっちの方がいいかとも思う．）</p>
+<h3 class="line-header">ZIPパッケージはダメだぁ</h3>
+<p>Cygwinは，自分のルートフォルダ以下のパスはみられるので，このCygwinをインストールしたフォルダ内にMySQLをインストールしてみる．<br />
+MySQLは，Windowsでバイナリでインストーラ付き，バイナリ，ソースのそれぞれの形式で配布されている．<br />
+インストーラ嫌いな私はまずパッケージZIPで圧縮されたものをとりあえず，展開し，Cygwin上の</p>
+<pre>
+/usr/local/mysql・・・Cygwin上のパス
+</pre>
+<p>にインストールしてみた．<br />
+結論から言うと，mysqld-ntのデーモン（WindowsXPでいうサービス？）がうまく動かないためにMySQLが自動起動しない．<br />
+WindowsXPのscコマンドを使って，色々試してみたのが，全然うまくいかない．<br />
+mysqldコマンドを使うとうまくいくのだが，デーモンが全然ダメ．<br />
+ここで，もしかすると，my.iniとかいう設定ファイルが問題なのかと思い当たったのだが，これもダメ・・・・・・・・．<br />
+そこで，インストーラでインストールしてみることにした．</p>
+<h3 class="line-header">MySQLインストーラ</h3>
+<p>インストーラを使って，インストールする．<br />
+インストール方法は，custumでインストールし，インストール先を上と同様のパスにする．<br />
+これで・・・・・．OK!<br />
+いけた．<br />
+これでCygwin上でMySQLを動かすことができた．<br />
+要はインストールパスということか．</p>
