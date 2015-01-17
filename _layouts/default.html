@@ -11,7 +11,18 @@
       <div class="wrap">
       {{ content }}
       </div>
-
+      <center>
+        <div id="ad"></div>
+        <script type="text/javascript">
+          if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
+            document.getElementById("ad").innerHTML = '<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?t=sonsonpicture-22&o=9&p=42&l=ur1&category=kindle&banner=0R7TW3AKKEHTJ2HHBER2&f=ifr" width="234" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>';
+          }
+          else {
+            document.getElementById("ad").innerHTML = '<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?t=sonsonpicture-22&o=9&p=48&l=ur1&category=kindle&banner=03GGW4CJEY0AMVN6NF82&f=ifr" width="728" height="90" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>';
+          }
+        </script>
+      </center>
+<!--
       <center>
         <div>
           <br/>
@@ -30,6 +41,7 @@
           <script type="text/javascript" src="http://ir-jp.amazon-adsystem.com/s/ads.js"></script>
         </div>
       </center>
+-->
 <!--
       <script type="text/javascript">
         if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
