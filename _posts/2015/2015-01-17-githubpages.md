@@ -47,9 +47,9 @@ Aレコードで直接，IPで変更するのがいいみたいですが．
 www.yourdomain.com -> (hoge.github.ioのIP)
 
 私は，APEX ALIASというのを変更して，対応しました．
-ムームードメインとかだと，APEX ALIASを設定できないので，今回Gehirn DNSというサービスにDNSサーバを移行して，設定しました．
+ムームードメインとかだと，APEX ALIASを設定できないので，今回[Gehirn](https://cp.gehirn.jp/) DNSというサービスにDNSサーバを移行して，設定しました．
 Gehirnは，２ドメインまでなら，無料で使えるDNSのサービスです．
-無料で使えるDNSはいろいろあると思います．他には，![DOZEN](https://dozens.jp)というのもあるそうです．
+無料で使えるDNSはいろいろあると思います．他には，[DOZEN](https://dozens.jp)というのもあるそうです．
 
 DNS側の設定が完了すれば，後は，githubのリポジトリにCNAMEとうファイルを置くだけです．
 これは，````hoge.github.io````リポジトリのルートにCNAMEというファイルを置きます．
