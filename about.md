@@ -30,6 +30,7 @@ permalink: /about/
 7. 安倍満、吉田悠一：高速かつメモリ消費量の少ない局所特徴量．MIRU2011 インタラクティブセッション賞
 
 ###講演等
+1. 徹底討論「大学教員から見た『企業と大学の蜜月な関係』とは？」, 第2回Webインテリジェンスとインタラクション研究会
 1. エンジニアサポート新年会 2013 CROSS – セミナーセッション スマートフォンCROSS [link](http://response.jp/article/2013/01/25/189662.html)
 2. 「るるぶ」とスマホアプリが連動、画像認識で観光情報に直リンク ２次元バーコード不要、画像をキーにクラウドで照合, 日本経済新聞電子版, [link](http://www.nikkei.com/article/DGXNZO43531600Z00C12A7000000/)
 3. 【shibuya meets tech 3】実世界とデータを結ぶ！画像処理技術×スマホのこれから, [ATND](http://atnd.org/events/29219)(Closed), [解説記事](http://gihyo.jp/news/report/01/shibuya_mt/0003)
