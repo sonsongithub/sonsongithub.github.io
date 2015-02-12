@@ -2,7 +2,7 @@
 layout: page
 categories:
 - blog
-title: NSURLComponentsとNSURLQueryItem
+title: 便利クラス - NSURLComponentsとNSURLQueryItem
 ---
 
 先日気付いてしまった．
