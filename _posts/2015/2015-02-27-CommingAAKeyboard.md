@@ -1,7 +1,7 @@
 ---
 layout: page
 categories:
- * blog
+- blog
 title: AAキーボード公開
 ---
 
