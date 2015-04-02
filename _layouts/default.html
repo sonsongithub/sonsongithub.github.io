@@ -12,15 +12,16 @@
       {{ content }}
       </div>
       <center>
-        <div id="ad"></div>
-        <script type="text/javascript">
-          if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
-            document.getElementById("ad").innerHTML = "<iframe src=\"//banners.itunes.apple.com/banner.html?partnerId=&aId=11l7gF&bt=genre&t=genre_matrix_black&ft=topfreeapplications&st=apps&s=36&p=27&c=jp&l=ja-JP&w=300&h=250\" frameborder=0 style=\"overflow-x:hidden;overflow-y:hidden;width:300px;height:250px;border:0px\"></iframe>";
-          }
-          else {
-            document.getElementById("ad").innerHTML = "<iframe src=\"//banners.itunes.apple.com/banner.html?partnerId=&aId=11l7gF&bt=genre&t=genre_matrix_black&ft=topfreeapplications&st=apps&s=36&p=27&c=jp&l=ja-JP&w=728&h=90\" frameborder=0 style=\"overflow-x:hidden;overflow-y:hidden;width:728px;height:90px;border:0px\"></iframe>"
-          }
-        </script>
+      <table>
+        <tr>
+          <th width="180px"><center><a href="https://itunes.apple.com/jp/app/2tch/id305982914?l=ja" target="_blank"><object data="{{ site.baseurl }}/assets/2tch.svg" type="image/svg+xml" width="64px"></object></a></center></th>
+          <th width="180px"><center><a href="https://itunes.apple.com/jp/app/aakibodo/id964182815?mt=8" target="_blank"><img src="{{ site.baseurl }}/assets/aakeyboard.png" alt="Responsive across devices" class="img-responsive" width="64px"></a></center></th>
+        </tr>
+        <tr style="font-size:small;">
+          <td><center>iOS用2ちゃんねるビューア</center></td>
+          <td><center>iOS用AAキーボード</center></td>
+        </tr>
+        </table>
       </center>
     </div>
     {% include footer.html %}
