@@ -16,22 +16,26 @@ title: Swift 2 (& LLDB) シンポジウムで発表してきた
 私は，[reddift](https://github.com/sonsongithub/reddift)という，[reddit.com](https://www.reddit.com)のAPIラッパーをちょこちょこ勉強がてら作っています．
 このソースコードは，swiftjpでもらったフィードバックを多分に生かしながら，新しいパラダイムを覚えるたびに方向転換するという非常に効率の悪いコーディングスタイルで作っています．
 その甲斐あってか，[reddit](https://www.reddit.com)で作ったものを公開したときは，"very swifty"と[コメント](https://www.reddit.com/r/swift/comments/34t3kn/swift_reddit_api_wrapper/)をもらいました．
-[reddift](https://github.com/sonsongithub/reddift)に対して，多少はSwiftっぽいという感想を持つエンジニアもいるようです（そのあと，なんかどうでも議論になったので・・・ｇｄｇｄでしたが）．
-
-[reddift](https://github.com/sonsongithub/reddift)で，Swiftらしいといえば，そのときは，`Result<T>`を使って戻り値を返すくらいでした．
+つまるところ，[reddift](https://github.com/sonsongithub/reddift)に対して，多少はSwiftっぽいという感想を持つエンジニアもいるようです（そのあと，なんかどうでも議論になったので・・・ｇｄｇｄでしたが）．
+当時の[reddift](https://github.com/sonsongithub/reddift)で，Swiftらしいといえば，そのときは，`Result<T>`を使って戻り値を返すくらいでした．
 現在では，データ型をすべて`struct`に置き換え，value type programmingスタイルに，`map`と`flatMap`を使ってunwrapするように作り変えています．
 
 <div class="github-widget" data-repo="sonsongithub/reddift"></div>
 
-### ディスカッションで私が感じたこと
-1. Swiftに関数型の考え方ではなく，強い型制約が入っている．
-2. 型制約を積極的に使って，コーディングすべきなのは間違いない．
-3. Swiftが関数型言語かというと，Haskellのような純粋関数型言語ではないし，どう考えても副作用や状態を保持しないといけないUIの要素を多分にコントロールする必要があるので，Swiftを関数型言語として実装するのはナンセンスだ．
+このことから安直に考えると，Swiftっぽいというのは，そういう関数型言語っぽいことを取り入れていくということ？と類推することができますが，アンケートであったとしても，データが少なすぎます．
+まぁ，こういうのは多分に主観的な感想なので，データで結論を出す類のものでもないのですが・・・宗教的な議論にもなりそうですし・・・・・
+それについて，シンポジウムでも多少議論がありました．
+
+#### シンポジウムのディスカッションの中で
+1. Swiftに純粋な関数型というより，強い型制約を使う思想が入っている．
+2. つまり型制約を積極的に使って，コーディングすべきなのは間違いない．
+3. Swiftが関数型言語かというと，Haskellのような純粋関数型言語ではないし，どう考えても副作用や状態を保持しないといけないUIの要素を多分にコントロールする必要があるので，Swiftを純粋関数型言語として実装するのはナンセンスだ．
 4. WWDC2015のあるセッションでも，Appleのエンジニアが，UIKitのクラスをValue Typeでコーディングするようなことは辞めろと指摘している．
 5. Swiftらしさを模索しながらコーディングしていくしかない・・・・
 
 これらは，大方賛成です．
-プレゼンの中でも述べた，Swiftっぽいコードを書くためにの流れも，これに割と適合しているんじゃないかと思います．
+まぁ，純粋関数型言語として書くのは違うけど，うまいこと取り入れよう！というように私には感じられます．
+プレゼンの中でも私が述べた，「Swiftっぽいコードを書くために」の勉強の流れも，これに割と適合しているんじゃないかと自画自賛します．
 
 1. `!`でunwrapしない
 2. できる限り高階関数で実装する
@@ -44,13 +48,13 @@ title: Swift 2 (& LLDB) シンポジウムで発表してきた
 このスタイルだと，疑問として投げ掛けられたときにすぐに実行結果やその実装や動きについて，参加者全員が議論できる．
 今後，同様のイベントをやるなら，これを定着させていくといいと思った．
 
-### invarianceについて勉強できた
+#### invarianceについて勉強できた
 継承関係があるときに，setとgetの対称関係が崩れるっていう話・・・・だと理解．
 covarianceとcontravarianceっていうらしい．
 [@soutaro](https://twitter.com/soutaro)さんが，説明用の[サンプルコード](https://gist.github.com/soutaro/4c4facc1ca7dd1528deb)を書いてくれました．
 invarianceについては，こんな[資料](https://docs.google.com/presentation/d/1H-cUi2GdBmFE8kBoaf6eogJU0IjafpNDLLaxu3C9CZw/present?slide=id.g10fda602e_10)も紹介されました．
 
-### エラー処理について議論できた
+#### エラー処理について議論できた
 `try-catch` vs `Result<T>`が議論されました．
 私は，`try-catch`は同期時，`Result<T>`は非同期時と考えている．
 今回のシンポジウムでは，おおかたの結論は同じところに行き着いたかなぁと考える．
@@ -72,4 +76,5 @@ invarianceについては，こんな[資料](https://docs.google.com/presentati
 Playgroundの結果をSNS的に共有できる仕組みがあったら，もっとおもしろいシンポジウムになったんじゃないかと思いました．
 また，この手のシンポジウムには，しばらく時間を置いてから（ネタがないもん），参加したいものです．
 
+## スライド
 <iframe src="http://www.slideshare.net/slideshow/embed_code/key/fi4Dt1ucKcUjs7" width="640" height="480" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
