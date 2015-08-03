@@ -6,23 +6,23 @@ title: Swiftでfoldrを作ってみた．reduceが速かった．
 ---
 
 Haskellの勉強をちょこちょこやってるので，```foldr```と```foldl```をSwiftに実装してみたくなった．
-再帰，ループと色々実装方法が有るが，@norio_nomuraに速度について突っ込まれたので計ってみた．
+再帰，ループと色々実装方法が有るが，[@norio_nomura](https://twitter.com/norio_nomura)に速度について突っ込まれたので計ってみた．
 ```CollectionType```の```extension```として実装してみた．
 
 	extension CollectionType {
-	    func foldr_recursive<B>(accm:B, f: (Self.Generator.Element, B) -> B) -> B {
+	    func foldr_recursive<T>(accm:T, f: (Self.Generator.Element, T) -> T) -> T {
 	        var g = self.generate()
-	        func next() -> B {
+	        func next() -> T {
 	            return g.next().map {x in f(x, next())} ?? accm
 	        }
 	        return next()
 	    }
 	    
-	    func foldr_reduce<B>(accm:B, f: (B, Self.Generator.Element) -> B) -> B {
+	    func foldr_reduce<T>(accm:T, f: (T, Self.Generator.Element) -> T) -> T {
 	        return self.reverse().reduce(accm, combine:f)
 	    }
 	    
-	    func foldr_loop<B>(accm:B, f: (Self.Generator.Element, B) -> B) -> B {
+	    func foldr_loop<T>(accm:T, f: (Self.Generator.Element, T) -> T) -> T {
 	        var result = accm
 	        for temp in self.reverse() {
 	            result = f(temp, result)
@@ -44,14 +44,14 @@ Haskellの勉強をちょこちょこやってるので，```foldr```と```foldl
 	}
 	
     let t1 = gett();
-    for var k = 0; k < sampling; k++ {
-        data.foldr_recursive(1) { (x, accm) -> Int in
-            return accm + 2 * x
-        }
+    data.foldr_recursive(1) { (x, accm) -> Int in
+        return accm + 2 * x
     }
-    result_re.append((gett() - t1) / 4.0)
+    print(gett() - t1)
 
 結果，以下に示すように```reduce```が一番高速という結果になった．
 ```foldl```や```foldr```は実装せずに，```reduce```を使いましょう・・・・．
 
 ![](http://sonson.s3.amazonaws.com/%E5%90%8D%E7%A7%B0%E6%9C%AA%E8%A8%AD%E5%AE%9A_3.jpg)
+
+計測コードは[こちら](https://gist.github.com/sonsongithub/b897f516005f53bc3748)．
