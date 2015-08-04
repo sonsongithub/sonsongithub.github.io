@@ -19,7 +19,7 @@ Haskellの勉強をちょこちょこやってるので，```foldr```と```foldl
 	    }
 	    
 	    func foldr_reduce<T>(accm:T, f: (T, Self.Generator.Element) -> T) -> T {
-	        return self.reverse().reduce(accm, combine:f)
+	        return self.reverse().reduce(accm){f($1, $0)}
 	    }
 	    
 	    func foldr_loop<T>(accm:T, f: (Self.Generator.Element, T) -> T) -> T {
@@ -42,6 +42,10 @@ Haskellの勉強をちょこちょこやってるので，```foldr```と```foldl
 	        }
 	        return result
 	    }
+	    
+	    func foldr_reduce2<T>(accm:T, @noescape f: (T, Self.Generator.Element) -> T) -> T {
+		    return self.reverse().reduce(accm) { f($0, $1) }
+	    }
 	}
 
 計測テストのコードは，以下のようになる．
@@ -50,9 +54,17 @@ Playgroundで測定したところ，最適化フラグの設定ができない�
 
 計測コードは[こちら](https://gist.github.com/sonsongithub/b897f516005f53bc3748)．
 
-<img src="http://sonson.s3.amazonaws.com/foldr-1.png" width="50%"/>
+<img src="http://sonson.s3.amazonaws.com/foldr-2.png" width="50%"/>
+
+ 1. recursive 普通に再帰で実装．
+ 2. loop リストをreverseで逆順にしてループで実装．
+ 3. loop2 リストをreverseでlazyに逆順にしてループで実装．
+ 4. reduce reduceを内部的に使ったfoldr.
+ 5. reduce2 上記のreduceがlazyなreverseを使うようにしたfoldr.
+ 6. test_reduce reduceのみで実装したバージョン．
 
 ```recursive```は配列のサイズが大きくなると，スタック食いつぶして実行できませんでした．
-また，ダントツで遅いのが，reduce(```self.reverse().reduce(accm, combine:f)```)をラップした場合でした．これは，```SequenceType```の```reverse()```が毎回律義に実行されて，逆順の配列が毎回生成されているからだと考察します．
+reduceとloopが遅い理由は，```SequenceType```の```reverse()```が毎回律義に実行されて，逆順の配列が毎回生成されているからだと考察します．
+これを回避するため，reduce2とloop2は，```CollectionType where Index : RandomAccessIndexType```のextensionとして実装しています．
 
-結果，foldrを実装するなら，loop2，つまり，```extension CollectionType where Index : RandomAccessIndexType```で実装したタイプのfoldrが速いという結果になり，これが一番イイと考える．
+結果，foldrを実装するなら，loop2，つまり，```extension CollectionType where Index : RandomAccessIndexType```で実装したタイプのfoldrが速いという結果になり，これが一番いいと言えるのかもしれません．
