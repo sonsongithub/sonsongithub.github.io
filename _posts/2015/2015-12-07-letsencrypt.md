@@ -62,7 +62,7 @@ webrootを使う場合は，letsencryptのクライアントは，ドメイン�
     ./letsencrypt-auto certonly --webroot -w /var/www/example/ -d www.example.com
 
 #### 証明書を確認する
-取得した証明書は，`/etc/letsencrypt`にインストールされます．
+取得した証明書は，`/etc/letsencrypt`にコピーされます．
 取得した証明書の内容は，opensslのコマンドで確認できます．
 
     openssl x509 -text -noout \
@@ -94,18 +94,19 @@ nginxを更新してみる．
     > nginx -t
     > nginx -s reload
 
-これで`https://www.exmple.com`にアクセスすれば，暗号化されたhttpsで通信できるはず．
+これで`https://www.exmple.com`にアクセスすれば，暗号化されたhttpsで通信できるはずです．
 
 #### 更新してみる
-更新は，同じコマンドを実行するだけでよい．
-新旧の証明書は，`/etc/letsencrypt/archive/www.example.com/`にアーカイブされる．
+更新は，同じコマンドを実行するだけです．
+新旧の証明書は，`/etc/letsencrypt/archive/www.example.com/`にアーカイブされていきます．
+`/etc/letsencrypt/live/www.exmple.com/`以下の証明書は，そのアーカイブへのシンボリックリンクになっています．
 
 #### nginxでiOSでも接続できるようにする - SSL Labsチェックをクリアする
-実は，この状態でiOSのSafari等からサーバにアクセスしても，証明書を素直に受け入れてくれません．
+実は，この状態でiOSのSafari等からサーバにアクセスしても，証明書はすぐには受け入れてもらえません．
 これは，SSLの設定がiOSの信用条件を満たしていないことに起因するようです．
-私は，ここで，iOSの条件を満たすついでにSSL Labsのテストもいい点が取れるように設定を調整してみることにしました．
-SSL Labsのテストは，ブラウザから調べたいサーバのアドレスを入れると，SSL Labsのサーバが指定したサーバに接続し，SSLの安全性等を検証してくれるものです．
-今回の作業であれば，SSL Labsでサーバをチェックしても，おそらくBかC程度の評価になるでしょう．
+私は，ここで，iOSの条件を満たすついでに[SSL Labsのテスト](https://www.ssllabs.com/ssltest/)もいい点が取れるように設定を調整してみることにしました．
+[SSL Labsのテスト](https://www.ssllabs.com/ssltest/)は，ブラウザから調べたいサーバのアドレスを入れると，SSL Labsのサーバが指定したサーバに接続し，SSLの安全性等を検証してくれるものです．
+ここまでの作業結果をSSL Labsでサーバをチェックした場合，おそらくBかC程度の評価になるでしょう．
 
 まずは，証明書を変更します．
 Let's encryptの指定のファイルではなく，fullchainを使います．
@@ -133,12 +134,12 @@ SSLセッションのキャッシュもセットします．
 ![a](https://sonson.s3.amazonaws.com/SSL_Server_Test__api2_sonson_jp__Powered_by_Qualys_SSL_Labs_.png)
 
 #### まとめ
-Let's encrypt，なんか使えそうです．
-ドキュメントにも書いて有りますが，90日で証明書の期限は切れます．
-Let's encrypt運営は，60日くらいで更新しろと言っているので2ヶ月に一度，SSLの更新を行うようにバッチスクリプトをしかけておけばよさそうです．
-しかしながら，証明書の作成・更新の回数には，制限があることです．
-2015/12/8現在，私は実験で証明書の更新を繰り返したために制限に達成されてしまいました．
-この変は，気を家ないとハマる人が続出すると考えられますね・・・．
+Let's encryptは，なんか使えそうです．
+ドキュメントにも書いて有りますが，証明書の期限は90日です．
+Let's encryptの運営は，60日くらいで更新しろと言っているので2ヶ月に一度，SSLの更新を行うようにバッチスクリプトをしかけておけばよさそうです．
+後から気付いて残念だったのは，証明書の作成・更新の回数に制限があることです．
+2015/12/8現在，私は実験で証明書の更新を繰り返したために制限に達してしまいました．
+この変は，気をつけないとハマる人が続出すると考えられますね・・・．
 
 [![](https://sonson.s3.amazonaws.com/Public_beta_rate_limits_-_Issuance_Tech_-_Let_s_Encrypt_Community_Support.png)](https://community.letsencrypt.org/t/public-beta-rate-limits/4772/3)
 
