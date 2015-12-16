@@ -42,6 +42,7 @@ permalink: /about/
 9. 電経新聞 2006年4月10日　研究派 – 58回 – DippingInterface
 
 ###業績・共著
+1. 関川雄介, 佐藤育郎, 鈴木幸一郎, 吉田悠一, 原孝介, 高速固有位相マッチング, VIEW2015
 1. Takahiro Hasegawa, Yuji Yamauchi, Mitsuru Ambai, Yuichi Yoshida, Hironobu Fujiyoshi, KEYPOINT DETECTION BY CASCADED FAST, ICIP2014
 1. Yuji Yamauchi, Mitsuru Ambai, Ikuro Sato, Yuichi Yoshida, Hironobu Fujiyoshi, Takayoshi Yamashita, Asymmetric Feature Representation for Object Recognition in Client Server System, ACCV2014
 1. 平林裕司, 吉澤顕, 近藤賢志, 奥谷知克, 吉田悠一, デンソーの情報通信技術動向, デンソーテクニカルレビュー, vol.18, (Dec. 2013) [PDF](https://www.denso.co.jp/ja/aboutdenso/technology/dtr/v18/files/20.pdf)
