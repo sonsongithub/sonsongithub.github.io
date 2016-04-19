@@ -7,20 +7,20 @@ permalink: /about/
 <!-- <center><div class="github-card" data-github="sonsongithub" data-width="400" data-height="317" data-theme="medium" style="margin-left:auto;margin-right:auto;width:400px;"></div></center>
 <script src="http://lab.lepture.com/github-cards/widget.js"></script> -->
 
-###著者紹介
+### 著者紹介
 * ハンドルネーム：sonson
 * 職業：デンソーアイティーラボラトリー所属
 * 略歴
 2003年大阪大学大学院基礎工学研究科博士前期課程修了，同年日本電信電話株式会社入社．2007年株式会社デンソーアイティーラボラトリ入社，現在に至る．コンピュータビジョン，ヒューマンインタラクション，モバイルコンピューティングサービスの研究開発に従事．
 
-###著作
+### 著作
 1. iPhoneアプリ開発エキスパートガイド iOS 6対応, 加藤 寛人, 藤川 宏之, 高丘 知央, 西方 夏子, 吉田 悠一, 関川 雄介 [Amazon](http://www.amazon.co.jp/exec/obidos/ASIN/4844333852/sonsonpicture-22/ref=nosim/)
 2. iOS5プログラミングブック, 加藤 寛人, 吉田 悠一, 藤川 宏之, 西方 夏子, 関川 雄介, 高丘 知央 [Amazon](http://www.amazon.co.jp/exec/obidos/ASIN/4844332228/sonsonpicture-22/ref=nosim/)
 3. 吉田 悠一, iPhone OSアプリ開発者の知恵袋【22】Storyboardで開発効率アップ！, 技術評論社刊 Software Design 2012年2月号(初出), [PDF](http://sonson.jp/downloads/sd201202.pdf)
 4. 吉田 悠一, iPhone OSアプリ開発者の知恵袋【14】Quartzでコントロールを作る, 技術評論社刊 Software Design 2011年6月号(初出), [PDF](http://sonson.jp/downloads/sd201206.pdf)
 5. iOS SDK Hacks　―プロが教えるiPhoneアプリ開発テクニック 吉田 悠一, 高山 征大, UICoderz [Amazon](http://www.amazon.co.jp/exec/obidos/ASIN/4873114721/sonsonpicture-22/ref=nosim/)
 
-###受賞
+### 受賞
 1. NaviCon – Tech100Award2013　優秀賞
 2. NaviCon – Android Application Award 2013 大賞, グローバル賞
 3. 長谷川昂宏, 山内悠嗣, 藤吉弘亘, 安倍満, 吉田悠一, Cascaded FASTによるキーポイント検出, SSII2013 オーディエンス賞
@@ -29,7 +29,7 @@ permalink: /about/
 6. モバイルプロジェクト・アワード2011 モバイルプラットフォーム部門 優秀賞 NaviCon[詳細](http://www.mcf.to/mpa/2011/winner/index.htm)
 7. 安倍満、吉田悠一：高速かつメモリ消費量の少ない局所特徴量．MIRU2011 インタラクティブセッション賞
 
-###講演等
+### 講演等
 1. 徹底討論「大学教員から見た『企業と大学の蜜月な関係』とは？」, 第2回Webインテリジェンスとインタラクション研究会
 1. エンジニアサポート新年会 2013 CROSS – セミナーセッション スマートフォンCROSS [link](http://response.jp/article/2013/01/25/189662.html)
 2. 「るるぶ」とスマホアプリが連動、画像認識で観光情報に直リンク ２次元バーコード不要、画像をキーにクラウドで照合, 日本経済新聞電子版, [link](http://www.nikkei.com/article/DGXNZO43531600Z00C12A7000000/)
@@ -41,7 +41,7 @@ permalink: /about/
 8. iPhone 開発者座談会, Developers Summit 2009, [link](http://codezine.jp/devsumi/2009/timetable/detail#719)
 9. 電経新聞 2006年4月10日　研究派 – 58回 – DippingInterface
 
-###業績・共著
+### 業績・共著
 1. 関川雄介, 佐藤育郎, 鈴木幸一郎, 吉田悠一, 原孝介, 高速固有位相マッチング, VIEW2015
 1. Takahiro Hasegawa, Yuji Yamauchi, Mitsuru Ambai, Yuichi Yoshida, Hironobu Fujiyoshi, KEYPOINT DETECTION BY CASCADED FAST, ICIP2014
 1. Yuji Yamauchi, Mitsuru Ambai, Ikuro Sato, Yuichi Yoshida, Hironobu Fujiyoshi, Takayoshi Yamashita, Asymmetric Feature Representation for Object Recognition in Client Server System, ACCV2014
