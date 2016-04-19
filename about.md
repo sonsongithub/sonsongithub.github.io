@@ -4,9 +4,6 @@ title: About
 permalink: /about/
 ---
 
-<!-- <center><div class="github-card" data-github="sonsongithub" data-width="400" data-height="317" data-theme="medium" style="margin-left:auto;margin-right:auto;width:400px;"></div></center>
-<script src="http://lab.lepture.com/github-cards/widget.js"></script> -->
-
 ### 著者紹介
 * ハンドルネーム：sonson
 * 職業：デンソーアイティーラボラトリー所属
