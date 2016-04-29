@@ -44,25 +44,25 @@ AWS API Gatewayは，Amazonのサービスで，Web APIのフロントエンド�
 このテストでは，AWS API Gatewayが私のEC2のサーバのnode.jsで作ったサーバを叩くようにする
 
 + 自宅のネットワークからcallback URLが正しくレスポンスをかえすか？
- + 返す
++ 　→　成功
 + LTEネットワーク経由でcallback URLが正しくレスポンスをかえすか？
- + 返す
++ 　→　返す
 + EC2のインスタンスからcallback URLが正しくレスポンスをかえすか？
- + 返す
++ 　→　返す
 + AWS API GatewayならばLINE Bot APIはPOSTしてくるのか？
- + 返さない，そもそもAWS API Gatewayのテストが動かない
++ 　→　返さない，そもそもAWS API Gatewayのテストが動かない
 
 これは，AWS API Gatewayの問題か・・・・？
 というわけで，全面的にLet's Encryptを疑う構成で追加的にAWS API Gatewayをテストする
  
 + AWS API GatewayでLet's EncryptでSSL通信するhttpsを叩く
- + 動かない，そもそもAWS API Gatewayのテストが動かない
++ 　→　動かない，そもそもAWS API Gatewayのテストが動かない
 + AWS API GatewayでSSL通信のhttps://github.comを叩く
- + 動く
++ 　→　動く
 + AWS API Gatewayで非SSL通信のURLを叩く
- + 動く
++ 　→　動く
 + AWS API Gatewayで非SSL通信にした自作のcallback URLを叩く
- + 動く
++ 　→　動く
 
 結論．
 AWS API GatewayもLet's EncryptのSSLを信用していなかったというオチである．
