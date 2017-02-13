@@ -39,6 +39,9 @@ permalink: /about/
 9. 電経新聞 2006年4月10日　研究派 – 58回 – DippingInterface
 
 ### 業績・共著
+1. 関川雄介，鈴木幸一郎，原孝介，佐藤育郎，吉田悠一, ” 高速固有位相マッチング”, 精密工学会誌 82巻12号 2016年12月5日
+1. Yusuke Sekikawa, Koichiro Suzuki, Kosuke Hara, Ikuro Sato, Yuichi Yoshida, “Fast Eigen Matching”, BMVC2016
+1. 吉田悠一，豊福剛, “二重特徴表現による特定物体認識”, MIRU2016
 1. 関川雄介, 佐藤育郎, 鈴木幸一郎, 吉田悠一, 原孝介, 高速固有位相マッチング, VIEW2015
 1. Takahiro Hasegawa, Yuji Yamauchi, Mitsuru Ambai, Yuichi Yoshida, Hironobu Fujiyoshi, KEYPOINT DETECTION BY CASCADED FAST, ICIP2014
 1. Yuji Yamauchi, Mitsuru Ambai, Ikuro Sato, Yuichi Yoshida, Hironobu Fujiyoshi, Takayoshi Yamashita, Asymmetric Feature Representation for Object Recognition in Client Server System, ACCV2014
