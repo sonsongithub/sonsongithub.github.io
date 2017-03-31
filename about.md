@@ -18,7 +18,7 @@ permalink: /about/
 5. iOS SDK Hacks　―プロが教えるiPhoneアプリ開発テクニック 吉田 悠一, 高山 征大, UICoderz [Amazon](http://www.amazon.co.jp/exec/obidos/ASIN/4873114721/sonsonpicture-22/ref=nosim/)
 
 ### 受賞
-1. numsw - Try swift! 2017 Hackathon Second Prize, SanSan Sponsor Prize, Yahoo! Japan Sponsor Prize, [link](https://tryswift.devpost.com/submissions)
+1. [numsw](https://github.com/sonsongithub/numsw) - Try swift! 2017 Hackathon Second Prize, SanSan Sponsor Prize, Yahoo! Japan Sponsor Prize, [link](https://tryswift.devpost.com/submissions)
 1. NaviCon – Tech100Award2013　優秀賞
 2. NaviCon – Android Application Award 2013 大賞, グローバル賞
 3. 長谷川昂宏, 山内悠嗣, 藤吉弘亘, 安倍満, 吉田悠一, Cascaded FASTによるキーポイント検出, SSII2013 オーディエンス賞
