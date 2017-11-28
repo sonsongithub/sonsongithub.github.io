@@ -11,6 +11,7 @@ permalink: /about/
 2003年大阪大学大学院基礎工学研究科博士前期課程修了，同年日本電信電話株式会社入社．2007年株式会社デンソーアイティーラボラトリ入社，現在に至る．コンピュータビジョン，ヒューマンインタラクション，モバイルコンピューティングサービスの研究開発に従事．
 
 ### 著作
+1. iOS 11 Programming, 堤 修一, 吉田 悠一. 池田 翔, 坂田 晃一, 加藤 尋樹. 所 友太, 永野 哲久, 岸川 克己, 川邉 雄介 [peaks](http://peaks.cc/sonson_twit/iOS11/)
 1. iPhoneアプリ開発エキスパートガイド iOS 6対応, 加藤 寛人, 藤川 宏之, 高丘 知央, 西方 夏子, 吉田 悠一, 関川 雄介 [Amazon](http://www.amazon.co.jp/exec/obidos/ASIN/4844333852/sonsonpicture-22/ref=nosim/)
 2. iOS5プログラミングブック, 加藤 寛人, 吉田 悠一, 藤川 宏之, 西方 夏子, 関川 雄介, 高丘 知央 [Amazon](http://www.amazon.co.jp/exec/obidos/ASIN/4844332228/sonsonpicture-22/ref=nosim/)
 3. 吉田 悠一, iPhone OSアプリ開発者の知恵袋【22】Storyboardで開発効率アップ！, 技術評論社刊 Software Design 2012年2月号(初出), [PDF](http://sonson.jp/downloads/sd201202.pdf)
