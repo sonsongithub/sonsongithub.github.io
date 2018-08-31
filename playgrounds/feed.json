@@ -1,0 +1,32 @@
+{
+    "title": "sonson",
+    "publisherName": "Yuichi Yoshida",
+    "feedIdentifier": "com.sonson.playground",
+    "contactURL": "mailto:sonson@sonson.jp",
+    "formatVersion": "1.0",
+    "documents": [
+        {
+            "title": "PlayPixels",
+            "overviewSubtitle": "To be written.",
+            "detailSubtitle": "サブタイトル詳細",
+            "description": "詳しい説明",
+            "contentIdentifier": "com.sonson.playground.PlayPixels",
+            "contentVersion": "1.0",
+            "url": "https://sonson.jp/playgrounds/playpixels/PlayPixels.playgroundbook.zip",
+            "publishedDate": "2018-05-18T12:00:00+00:00",
+            "lastUpdatedDate": "2018-05-18T12:00:00+00:00",
+            "thumbnailURL": "playpixels/thumbnail.png",
+            "bannerImageURL": "playpixels/thumbnail.png",
+            "additionalInformation": [
+                {
+                    "name": "Languages",
+                    "value": "English"
+                }
+            ],
+            "previewImageURLs": [
+                "https://sonson.jp/playgrounds/playpixels/preview00.png",
+                "https://sonson.jp/playgrounds/playpixels/preview01.png"
+            ]
+        }
+    ]
+}
