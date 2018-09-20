@@ -41,6 +41,10 @@ permalink: /about/
 9. 電経新聞 2006年4月10日　研究派 – 58回 – DippingInterface
 
 ### 業績・共著
+1. 住吉信一, 吉田悠一, 安倍満, 佐藤育郎, 石川康太, 鏡面性の強い間接反射光を抑制可能な高速アクティブ3D計測手法, MIRU2018
+1. Yusuke Sekikawa, Kohta Ishikawa, Kosuke Hara, Yuichi Yoshida, Koichiro Suzuki, Ikuro Sato, Hideo Saito, "Constant Velocity 3D Convolution", 3DV2018
+1. sonson, "Swift Playgrounds Bookの作り方と配り方〜カメラからの画像をリアルタイムにいじるPlayPixels ", iOSDC Japan 2018, [slide](https://speakerdeck.com/sonsongithub/how-to-make-and-publish-a-swift-playground-book-for-ipad)
+1. Kent Fujiwara, Ikuro Sato, Mitsuru Ambai, Yuichi Yoshida, Yoshiaki Sakakura, Canonical and Compact Point Cloud Representation for Shape Classification. arXiv:180904820, 2018
 1. Yuichi Yoshida, Tsuyoshi Toyofuku, “Image retrieval framework based on dual representation descriptor”, IEICE TRANSACTIONS on Information and Systems Vol.E100-D, No.10, (Oct. 2017)
 1. sonson, "Swiftで実装するHTML特殊文字の高速処理", iOSDC Japan 2017, [slide](https://speakerdeck.com/sonsongithub/swiftdeshi-zhuang-suruhtmlte-shu-wen-zi-falsegao-su-chu-li)
 1. 関川雄介，鈴木幸一郎，原孝介，佐藤育郎，吉田悠一, ” 高速固有位相マッチング”, 精密工学会誌 82巻12号 2016年12月5日
