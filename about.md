@@ -41,18 +41,19 @@ permalink: /about/
 9. 電経新聞 2006年4月10日　研究派 – 58回 – DippingInterface
 
 ### 業績・共著
-1. 住吉信一, 吉田悠一, 安倍満, 佐藤育郎, 石川康太, 鏡面性の強い間接反射光を抑制可能な高速アクティブ3D計測手法, MIRU2018
+1. 住吉信一, 吉田悠一, 安倍満, 佐藤育郎, 石川康太, "鏡面性の強い間接反射光を抑制可能な高速アクティブ3D計測手法", MIRU2018
 1. Yusuke Sekikawa, Kohta Ishikawa, Kosuke Hara, Yuichi Yoshida, Koichiro Suzuki, Ikuro Sato, Hideo Saito, "Constant Velocity 3D Convolution", 3DV2018
 1. sonson, "Swift Playgrounds Bookの作り方と配り方〜カメラからの画像をリアルタイムにいじるPlayPixels ", iOSDC Japan 2018, [slide](https://speakerdeck.com/sonsongithub/how-to-make-and-publish-a-swift-playground-book-for-ipad)
-1. Kent Fujiwara, Ikuro Sato, Mitsuru Ambai, Yuichi Yoshida, Yoshiaki Sakakura, Canonical and Compact Point Cloud Representation for Shape Classification. arXiv:180904820, 2018
-1. Yuichi Yoshida, Tsuyoshi Toyofuku, “Image retrieval framework based on dual representation descriptor”, IEICE TRANSACTIONS on Information and Systems Vol.E100-D, No.10, (Oct. 2017)
+1. Kent Fujiwara, Ikuro Sato, Mitsuru Ambai, Yuichi Yoshida, Yoshiaki Sakakura, Canonical and Compact Point Cloud Representation for Shape Classification. [arXiv:180904820](https://arxiv.org/abs/1809.04820), 2018
+1. Yuichi Yoshida, Tsuyoshi Toyofuku, “Image retrieval framework based on dual representation descriptor”, IEICE TRANSACTIONS on Information and Systems Vol.E100-D, No.10, (Oct. 2017), [PDF](https://www.jstage.jst.go.jp/article/transinf/E100.D/10/E100.D_2017EDP7050/_article/-char/ja)
 1. sonson, "Swiftで実装するHTML特殊文字の高速処理", iOSDC Japan 2017, [slide](https://speakerdeck.com/sonsongithub/swiftdeshi-zhuang-suruhtmlte-shu-wen-zi-falsegao-su-chu-li)
 1. 関川雄介，鈴木幸一郎，原孝介，佐藤育郎，吉田悠一, ” 高速固有位相マッチング”, 精密工学会誌 82巻12号 2016年12月5日
 1. Yusuke Sekikawa, Koichiro Suzuki, Kosuke Hara, Ikuro Sato, Yuichi Yoshida, “Fast Eigen Matching”, BMVC2016
 1. 吉田悠一，豊福剛, “二重特徴表現による特定物体認識”, MIRU2016
 1. 関川雄介, 佐藤育郎, 鈴木幸一郎, 吉田悠一, 原孝介, 高速固有位相マッチング, VIEW2015
-1. Takahiro Hasegawa, Yuji Yamauchi, Mitsuru Ambai, Yuichi Yoshida, Hironobu Fujiyoshi, KEYPOINT DETECTION BY CASCADED FAST, ICIP2014
-1. Yuji Yamauchi, Mitsuru Ambai, Ikuro Sato, Yuichi Yoshida, Hironobu Fujiyoshi, Takayoshi Yamashita, Asymmetric Feature Representation for Object Recognition in Client Server System, ACCV2014
+1. Takahiro Hasegawa, Yuji Yamauchi, Mitsuru Ambai, Yuichi Yoshida, Hironobu Fujiyoshi, 
+KEYPOINT DETECTION BY CASCADED FAST", ICIP2014
+1. Yuji Yamauchi, Mitsuru Ambai, Ikuro Sato, Yuichi Yoshida, Hironobu Fujiyoshi, Takayoshi Yamashita, "Asymmetric Feature Representation for Object Recognition in Client Server System", ACCV2014
 1. 平林裕司, 吉澤顕, 近藤賢志, 奥谷知克, 吉田悠一, デンソーの情報通信技術動向, デンソーテクニカルレビュー, vol.18, (Dec. 2013) [PDF](https://www.denso.co.jp/ja/aboutdenso/technology/dtr/v18/files/20.pdf)
 2. Yuji Yamauchi and Mitsuru Ambai and Ikuro Sato and Yuichi Yoshida and Hironobu Fujiyoshi, Distance Computation Between Binary Code and Real Vector for Efficient Keypoint Matching, IPSJ Transactions on Computer Vision and Applications, vol.5, pp.124-128, 2013
 3. Yuji Yamauchi, Mitsuru Ambai, Ikuro Sato, Yuichi Yoshida, Hironobu Fujiyoshi, Distance Computation between Binary Code and Real Vector for Efficient Keypoint Matching, MIRU2013
