@@ -41,6 +41,8 @@ permalink: /about/
 9. 電経新聞 2006年4月10日　研究派 – 58回 – DippingInterface
 
 ### 業績・共著
+1. S. Sumiyoshi and Y. Yoshida, “Estimating 3D Position of Strongly Occluded Object with Semi-Real Time by Using Auxiliary 3D Points in Occluded Space,” Int. J. Automation Technol., Vol.13, No.4, pp. 464-474, 2019.
+1. 住吉信一，吉田悠一，安倍満，佐藤育郎，石川康太，日浦慎作，鏡面相互反射光を抑制可能な高速アクティブ3D計測手法，SSII2019
 1. 住吉信一, 吉田悠一, 安倍満, 佐藤育郎, 石川康太, "鏡面性の強い間接反射光を抑制可能な高速アクティブ3D計測手法", MIRU2018
 1. Yusuke Sekikawa, Kohta Ishikawa, Kosuke Hara, Yuichi Yoshida, Koichiro Suzuki, Ikuro Sato, Hideo Saito, "Constant Velocity 3D Convolution", 3DV2018
 1. sonson, "Swift Playgrounds Bookの作り方と配り方〜カメラからの画像をリアルタイムにいじるPlayPixels ", iOSDC Japan 2018, [slide](https://speakerdeck.com/sonsongithub/how-to-make-and-publish-a-swift-playground-book-for-ipad)
