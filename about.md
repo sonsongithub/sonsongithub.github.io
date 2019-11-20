@@ -41,6 +41,7 @@ permalink: /about/
 9. 電経新聞 2006年4月10日　研究派 – 58回 – DippingInterface
 
 ### 業績・共著
+1. 住吉 信一, 吉田 悠一, 石川 康太, 安倍 満, 日浦 慎作, 少数の投影・撮影で鏡面相互反射光を抑制可能なアクティブ3次元計測, MIRU2019
 1. S. Sumiyoshi and Y. Yoshida, “Estimating 3D Position of Strongly Occluded Object with Semi-Real Time by Using Auxiliary 3D Points in Occluded Space,” Int. J. Automation Technol., Vol.13, No.4, pp. 464-474, 2019.
 1. 住吉信一，吉田悠一，安倍満，佐藤育郎，石川康太，日浦慎作，鏡面相互反射光を抑制可能な高速アクティブ3D計測手法，SSII2019
 1. 住吉信一, 吉田悠一, 安倍満, 佐藤育郎, 石川康太, "鏡面性の強い間接反射光を抑制可能な高速アクティブ3D計測手法", MIRU2018
