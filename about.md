@@ -11,6 +11,7 @@ permalink: /about/
 2003年大阪大学大学院基礎工学研究科博士前期課程修了，同年日本電信電話株式会社入社．2007年株式会社デンソーアイティーラボラトリ入社，現在に至る．コンピュータビジョン，ヒューマンインタラクション，モバイルコンピューティングサービスの研究開発に従事．
 
 ### 著作
+1. iOS 12 Programming, 加藤尋樹, 佐藤紘一, 石川洋資, 堤修一, 吉田悠一, 池田翔, 佐藤剛士, 大榎一司, 所友太, [peaks](https://peaks.cc/books/iOS12)
 1. iOS 11 Programming, 堤 修一, 吉田 悠一. 池田 翔, 坂田 晃一, 加藤 尋樹. 所 友太, 永野 哲久, 岸川 克己, 川邉 雄介 [peaks](http://peaks.cc/sonson_twit/iOS11/)
 1. iPhoneアプリ開発エキスパートガイド iOS 6対応, 加藤 寛人, 藤川 宏之, 高丘 知央, 西方 夏子, 吉田 悠一, 関川 雄介 [Amazon](http://www.amazon.co.jp/exec/obidos/ASIN/4844333852/sonsonpicture-22/ref=nosim/)
 2. iOS5プログラミングブック, 加藤 寛人, 吉田 悠一, 藤川 宏之, 西方 夏子, 関川 雄介, 高丘 知央 [Amazon](http://www.amazon.co.jp/exec/obidos/ASIN/4844332228/sonsonpicture-22/ref=nosim/)
@@ -18,7 +19,8 @@ permalink: /about/
 4. 吉田 悠一, iPhone OSアプリ開発者の知恵袋【14】Quartzでコントロールを作る, 技術評論社刊 Software Design 2011年6月号(初出), [PDF](http://sonson.jp/downloads/sd201206.pdf)
 5. iOS SDK Hacks　―プロが教えるiPhoneアプリ開発テクニック 吉田 悠一, 高山 征大, UICoderz [Amazon](http://www.amazon.co.jp/exec/obidos/ASIN/4873114721/sonsonpicture-22/ref=nosim/)
 
-### 受賞
+### 受賞等
+1. 住吉信一, 吉田悠一, 石川康太, 安倍満, 日浦慎作, ランダムパターンを用いた鏡面相互反射の影響を抑制可能な高速アクティブ３次元計測法, 情報処理学会論文誌, Vol.62 No.8, 特選論文
 1. [numsw](https://github.com/sonsongithub/numsw) - Try swift! 2017 Hackathon Second Prize, SanSan Sponsor Prize, Yahoo! Japan Sponsor Prize, [link](https://tryswift.devpost.com/submissions)
 1. NaviCon – Tech100Award2013　優秀賞
 2. NaviCon – Android Application Award 2013 大賞, グローバル賞
@@ -42,7 +44,7 @@ permalink: /about/
 
 ### 業績・共著
 1. Keisuke Ozawa, Shinichi Sumiyoshi, Yusuke Sekikawa, Keisuke Uto, Yuichi Yoshida, Mitsuru Ambai, Snapshot Multispectral Image Completion Via Self-Dictionary Transformed Tensor Nuclear Norm Minimization With Total Variation, 2021 IEEE International Conference on Image Processing (ICIP)
-1. 住吉信一, 吉田悠一, 石川康太, 安倍満, 日浦慎作, ランダムパターンを用いた鏡面相互反射の影響を抑制可能な高速アクティブ３次元計測法, 情報処理学会論文誌
+1. 住吉信一, 吉田悠一, 石川康太, 安倍満, 日浦慎作, ランダムパターンを用いた鏡面相互反射の影響を抑制可能な高速アクティブ３次元計測法, 情報処理学会論文誌, Vol.62 No.8
 1. 中神徹也, 吉田悠一, 意味喪失を抑止する直交正則化制約を用いた深層学習による画像圧縮手法の研究, MIRU2020
 1. 吉田悠一, 計算グラフのJITコンパイラをLLVM on C++で作ろう, iOSDC Japan 2020
 1. 住吉信一, 吉田悠一, 石川康太, 安倍満, 日浦慎作, 少数の投影・撮影で鏡面相互反射光を抑制可能なアクティブ3次元計測, MIRU2019
