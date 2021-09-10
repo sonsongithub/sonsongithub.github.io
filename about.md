@@ -41,7 +41,11 @@ permalink: /about/
 9. 電経新聞 2006年4月10日　研究派 – 58回 – DippingInterface
 
 ### 業績・共著
-1. 住吉 信一, 吉田 悠一, 石川 康太, 安倍 満, 日浦 慎作, 少数の投影・撮影で鏡面相互反射光を抑制可能なアクティブ3次元計測, MIRU2019
+1. Keisuke Ozawa, Shinichi Sumiyoshi, Yusuke Sekikawa, Keisuke Uto, Yuichi Yoshida, Mitsuru Ambai, Snapshot Multispectral Image Completion Via Self-Dictionary Transformed Tensor Nuclear Norm Minimization With Total Variation, 2021 IEEE International Conference on Image Processing (ICIP)
+1. 住吉信一, 吉田悠一, 石川康太, 安倍満, 日浦慎作, ランダムパターンを用いた鏡面相互反射の影響を抑制可能な高速アクティブ３次元計測法, 情報処理学会論文誌
+1. 中神徹也, 吉田悠一, 意味喪失を抑止する直交正則化制約を用いた深層学習による画像圧縮手法の研究, MIRU2020
+1. 吉田悠一, 計算グラフのJITコンパイラをLLVM on C++で作ろう, iOSDC Japan 2020
+1. 住吉信一, 吉田悠一, 石川康太, 安倍満, 日浦慎作, 少数の投影・撮影で鏡面相互反射光を抑制可能なアクティブ3次元計測, MIRU2019
 1. S. Sumiyoshi and Y. Yoshida, “Estimating 3D Position of Strongly Occluded Object with Semi-Real Time by Using Auxiliary 3D Points in Occluded Space,” Int. J. Automation Technol., Vol.13, No.4, pp. 464-474, 2019.
 1. 住吉信一，吉田悠一，安倍満，佐藤育郎，石川康太，日浦慎作，鏡面相互反射光を抑制可能な高速アクティブ3D計測手法，SSII2019
 1. 住吉信一, 吉田悠一, 安倍満, 佐藤育郎, 石川康太, "鏡面性の強い間接反射光を抑制可能な高速アクティブ3D計測手法", MIRU2018
