@@ -54,7 +54,7 @@ Playgroundで測定したところ，最適化フラグの設定ができない�
 
 計測コードは[こちら](https://gist.github.com/sonsongithub/b897f516005f53bc3748)．
 
-<img src="http://sonson.s3.amazonaws.com/foldr-2.png" width="50%"/>
+<img src="{{ site.baseurl }}/assets/foldr-2.png" width="50%"/>
 
  1. recursive 普通に再帰で実装．
  2. loop リストをreverseで逆順にしてループで実装．

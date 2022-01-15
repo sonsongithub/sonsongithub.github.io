@@ -25,16 +25,16 @@ title: 君は幅ゼロスペースを知っているか！？
 一文字も間違いはない．
 データに差違はない．
 
-![](http://sonson.s3.amazonaws.com/zerowidth-1.png)
+![]({{ site.baseurl }}/assets/zerowidth-1.png)
 
-この[テキストファイル](http://sonson.s3.amazonaws.com/zerowidth.txt)にデータをコピーし，精査する．
+この[テキストファイル]({{ site.baseurl }}/assets/zerowidth.txt)にデータをコピーし，精査する．
 やはり間違いはない．
 おかしい・・・・そして，abc@hoge.comを検索してみる．
 え・・・・・当たらない・・・検索されない．
 見た目はまったく同じなのに・・・・・．
 なんなんだ，これは・・・
 
-![](http://sonson.s3.amazonaws.com/binary_zerowidth.png)
+![]({{ site.baseurl }}/assets/binary_zerowidth.png)
 
 ### 文字コード U+200B〜衝撃の幅ゼロスペース
 

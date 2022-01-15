@@ -12,8 +12,10 @@ permalink: pretty
 twitter_username: sonson_twit
 github_username: sonsongithub
 
+plugins: [jekyll-paginate]
 paginate: 12
 paginate_path: "/blog/page/page:num"
+
 
 exclude:
  - ruby

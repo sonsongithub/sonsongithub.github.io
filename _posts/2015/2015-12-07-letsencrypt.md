@@ -131,7 +131,7 @@ SSLセッションのキャッシュもセットします．
 	
 これで完了．nginxをリロードして，SSL Labsからサーバを指定して，チェックしてみてください．
 
-![a](https://sonson.s3.amazonaws.com/SSL_Server_Test__api2_sonson_jp__Powered_by_Qualys_SSL_Labs_.png)
+![a]({{ site.baseurl }}/assets/SSL_Server_Test__api2_sonson_jp__Powered_by_Qualys_SSL_Labs_.png)
 
 #### まとめ
 Let's encryptは，なんか使えそうです．
@@ -141,6 +141,6 @@ Let's encryptの運営は，60日くらいで更新しろと言っているの�
 2015/12/8現在，私は実験で証明書の更新を繰り返したために制限に達してしまいました．
 この変は，気をつけないとハマる人が続出すると考えられますね・・・．
 
-[![](https://sonson.s3.amazonaws.com/Public_beta_rate_limits_-_Issuance_Tech_-_Let_s_Encrypt_Community_Support.png)](https://community.letsencrypt.org/t/public-beta-rate-limits/4772/3)
+[![]({{ site.baseurl }}/assets/Public_beta_rate_limits_-_Issuance_Tech_-_Let_s_Encrypt_Community_Support.png)](https://community.letsencrypt.org/t/public-beta-rate-limits/4772/3)
 
 

@@ -19,3 +19,5 @@ revision.plist
 .idea
 info.prefix
 /_site
+
+.jekyll-cache

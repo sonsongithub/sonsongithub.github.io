@@ -1,0 +1,2 @@
+abc​@hoge.com	// コピペ
+abc@hoge.com	// 手入力
