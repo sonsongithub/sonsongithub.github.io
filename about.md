@@ -43,6 +43,11 @@ permalink: /about/
 9. 電経新聞 2006年4月10日　研究派 – 58回 – DippingInterface
 
 ### 業績・共著
+1. 内田輝（東京工業大学）、吉田悠一（デンソーITラボラトリ）、池畑諭（国立情報学研究所、東京工業大学）、佐藤育郎（デンソーITラボラトリ、東京工業大学）,”不良品検出のためのデワーピング拡散モデル”,MIRU2024
+1. Yuta Kawachi, Mitsuru Ambai, Yuichi Yoshida, Gaku Takano,”PMSM transient response optimization by end-to-end optimal control”,arXiv
+1. 河内祐太、吉田 悠一,”重み共有階層的softmaxのグレイコードによる並び替えを用いた整数値表現”,IBIS2023
+1. 吉田悠一,”Dive into Mac Catalyst”,iOSDC2022
+1. 関川 雄介, 吉田 悠一,”Implicit画像表現を用いた解像度フリーな異常検知”,MIRU2022   
 1. Keisuke Ozawa, Shinichi Sumiyoshi, Yusuke Sekikawa, Keisuke Uto, Yuichi Yoshida, Mitsuru Ambai, Snapshot Multispectral Image Completion Via Self-Dictionary Transformed Tensor Nuclear Norm Minimization With Total Variation, 2021 IEEE International Conference on Image Processing (ICIP)
 1. 住吉信一, 吉田悠一, 石川康太, 安倍満, 日浦慎作, ランダムパターンを用いた鏡面相互反射の影響を抑制可能な高速アクティブ３次元計測法, 情報処理学会論文誌, Vol.62 No.8
 1. 中神徹也, 吉田悠一, 意味喪失を抑止する直交正則化制約を用いた深層学習による画像圧縮手法の研究, MIRU2020
